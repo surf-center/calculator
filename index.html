@@ -1,385 +1,489 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="nl">
 <head>
-   <meta charset="UTF-8">
-   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-   <title>Margins</title>
-   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500&display=swap" rel="stylesheet">
-   <link rel="icon" type="image/png" sizes="192x192" href="android-chrome-192x192.png">
-   <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
-   <meta name="apple-mobile-web-app-capable" content="yes">
-   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-   <meta name="theme-color" content="#ffffff">
-   <link rel="manifest" href="manifest.json">
-   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
-   <style>
-       * { margin: 0; padding: 0; box-sizing: border-box; }
-       html, body {
-           width: 100%; height: 100%; overflow-y: scroll;
-           background-color: #f4f4f4; font-family: 'Poppins', sans-serif;
-           display: flex; align-items: center; justify-content: center;
-           padding: 2vw;
-       }
-       .container {
-           width: 100%; max-width: 420px; background: white;
-           padding: 15px; border-radius: 8px;
-           box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-           display: flex; flex-direction: column; gap: 4px; /* Ruimte tussen de verschillende veld-elementen */
-       }
-       .field { 
-           display: flex; 
-           flex-direction: column; 
-           gap: 2px; /* Ruimte tussen label en invoerveld */
-       }
-       label { font-weight: 500; text-align: left; }
-       .row {
-           display: flex;
-           gap: 16px;
-       }
-       .row .field { 
-           flex: 1;
-           min-width: 160px;
-       }
-       .input-group {
-           display: flex;
-           align-items: center;
-           border: 1px solid #ccc;
-           border-radius: 5px;
-           overflow: hidden;
-       }
-       .input-group span {
-           background: #eee;
-           padding: 10px;
-           font-size: 14px;
-           border-right: 1px solid #ccc;
-           font-weight: 500;
-       }
-       .input-group input {
-           width: 100%; padding: 10px; border: none;
-           font-size: 14px; text-align: left;
-           border-radius: 0 5px 5px 0;
-           font-weight: 700; /* Verhoogde dikte voor cijfers */
-           outline: none;
-           background-color: white; /* Achtergrond wit bij Excl. en Incl. */
-       }
-       input[type="number"]::-webkit-outer-spin-button,
-       input[type="number"]::-webkit-inner-spin-button {
-           -webkit-appearance: none;
-           margin: 0;
-       }
-       input[type="number"] {
-           -moz-appearance: textfield;
-           appearance: textfield;
-       }
-       .input-group input[type="number"] {
-           -webkit-appearance: none;
-           -moz-appearance: none;
-           appearance: none;
-       }
-       button {
-           padding: 10px 15px;
-           background-color: #007bff;
-           color: white;
-           border: none;
-           cursor: pointer;
-           font-size: 14px;
-           border-radius: 5px;
-           width: 100%;
-           margin-top: 12px;
-           font-weight: 700;
-       }
-       button:hover {
-           background-color: #0056b3;
-       }
-       .input-group {
-           margin-bottom: 10px;
-       }
-       .field {
-           width: 100%;
-       }
-       @media only screen and (max-width: 768px) {
-           .row {
-               flex-direction: column;
-               gap: 4px; /* Ruimte tussen velden in een rij op mobiel */
-           }
-           .field {
-               gap: 2px; /* Ruimte tussen label en invoerveld op mobiel */
-           }
-           body {
-               padding-top: 10vh;
-           }
-       }
-   </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+  <title>Margins</title>
+
+  <link rel="icon" type="image/png" sizes="192x192" href="android-chrome-192x192.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="theme-color" content="#ffffff">
+  <link rel="manifest" href="manifest.json">
+
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body {
+      width: 100%; height: 100%; overflow-y: auto;
+      background: #f4f4f4;
+      font-family: "Poppins", sans-serif;
+      display: flex; align-items: center; justify-content: center;
+      padding: 2vw;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 420px;
+      background: #fff;
+      padding: 15px;
+      border-radius: 10px;
+      box-shadow: 0 2px 6px rgba(0,0,0,.10);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .logo {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 6px;
+    }
+    .logo img {
+      max-width: 170px;
+      height: auto;
+      display: block;
+    }
+
+    .field { display: flex; flex-direction: column; gap: 4px; }
+    label { font-weight: 600; text-align: left; font-size: 14px; }
+
+    .row { display: flex; gap: 12px; }
+    .row .field { flex: 1; min-width: 160px; }
+
+    .input-group {
+      display: flex;
+      align-items: center;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      overflow: hidden;
+      background: white;
+    }
+    .input-group span {
+      background: #eee;
+      padding: 10px;
+      font-size: 14px;
+      border-right: 1px solid #ccc;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+    .input-group input {
+      width: 100%;
+      padding: 10px;
+      border: none;
+      font-size: 14px;
+      text-align: left;
+      font-weight: 700;
+      outline: none;
+      background: #fff;
+    }
+    .input-group input[readonly] {
+      background: #fafafa;
+      color: #222;
+    }
+
+    input[type="number"]::-webkit-outer-spin-button,
+    input[type="number"]::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+    input[type="number"] { -moz-appearance: textfield; appearance: textfield; }
+
+    .divider {
+      height: 1px;
+      background: #eee;
+      margin: 4px 0;
+    }
+
+    button {
+      padding: 12px 14px;
+      background: #000;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+      font-size: 14px;
+      border-radius: 10px;
+      width: 100%;
+      margin-top: 8px;
+      font-weight: 800;
+    }
+    button:hover { background: #222; }
+
+    .hint {
+      font-size: 12px;
+      color: #666;
+      margin-top: -2px;
+    }
+
+    @media only screen and (max-width: 768px) {
+      .row { flex-direction: column; gap: 8px; }
+      body { padding-top: 8vh; }
+    }
+  </style>
 </head>
+
 <body>
-   <div class="container">
-       <!-- Purchase Price Section -->
-       <label>Purchase Price</label>
-       <div class="row">
-           <div class="field">
-               <div class="input-group">
-                   <span>€</span>
-                   <input type="number" id="purchasePrice" min="0" oninput="calculateFromPurchasePriceExcl()">
-                   <span>Excl.</span>
-               </div>
-           </div>
-           <div class="field">
-               <div class="input-group">
-                   <span>€</span>
-                   <input type="number" id="purchasePriceIncl" min="0" oninput="calculateFromPurchasePriceIncl()">
-                   <span>Incl.</span>
-               </div>
-           </div>
-       </div>
+  <div class="container">
+    <!-- LOGO -->
+    <div class="logo">
+      <img src="logo.png" alt="Logo" />
+    </div>
 
-       <!-- Selling Price Section -->
-       <label>Selling Price</label>
-       <div class="row">
-           <div class="field">
-               <div class="input-group">
-                   <span>€</span>
-                   <input type="number" id="sellPrice" min="0" oninput="calculate()">
-                   <span>Incl.</span>
-               </div>
-           </div>
-           <div class="field">
-               <div class="input-group">
-                   <span>€</span>
-                   <input type="number" id="netPrice" min="0" oninput="calculateFromNetPrice()">
-                   <span>Excl.</span>
-               </div>
-           </div>
-       </div>
+    <!-- Purchase Price -->
+    <label>Purchase Price</label>
+    <div class="row">
+      <div class="field">
+        <div class="input-group">
+          <span>€</span>
+          <input type="number" id="purchasePrice" min="0" inputmode="decimal" />
+          <span>Excl.</span>
+        </div>
+      </div>
+      <div class="field">
+        <div class="input-group">
+          <span>€</span>
+          <input type="number" id="purchasePriceIncl" min="0" inputmode="decimal" />
+          <span>Incl.</span>
+        </div>
+      </div>
+    </div>
 
-       <!-- Margin Section -->
-       <label>Margin</label>
-       <div class="row">
-           <div class="field">
-               <div class="input-group">
-                   <span>%</span>
-                   <input type="number" id="profitMargin" min="0" max="99" oninput="calculateMargin()">
-               </div>
-           </div>
-           <div class="field">
-               <div class="input-group">
-                   <span>€</span>
-                   <input type="number" id="profitAmount" min="0" oninput="calculateProfitAmount()">
-               </div>
-           </div>
-       </div>
+    <!-- Selling Price -->
+    <label>Selling Price</label>
+    <div class="row">
+      <div class="field">
+        <div class="input-group">
+          <span>€</span>
+          <input type="number" id="sellPrice" min="0" inputmode="decimal" />
+          <span>Incl.</span>
+        </div>
+      </div>
+      <div class="field">
+        <div class="input-group">
+          <span>€</span>
+          <input type="number" id="netPrice" min="0" inputmode="decimal" />
+          <span>Excl.</span>
+        </div>
+      </div>
+    </div>
 
-       <!-- Discount Section -->
-       <label>Discount</label>
-       <div class="row">
-           <div class="field">
-               <div class="input-group">
-                   <span>%</span>
-                   <input type="number" id="discountPercentage" min="0" max="99" oninput="calculateDiscount()">
-               </div>
-           </div>
-           <div class="field">
-               <div class="input-group">
-                   <span>€</span>
-                   <input type="number" id="discountAmount" min="0" oninput="updateDiscountAmount()">
-               </div>
-           </div>
-       </div>
+    <!-- Margin (normal) -->
+    <label>Margin</label>
+    <div class="row">
+      <div class="field">
+        <div class="input-group">
+          <span>%</span>
+          <input type="number" id="profitMargin" min="0" max="99" inputmode="decimal" />
+        </div>
+      </div>
+      <div class="field">
+        <div class="input-group">
+          <span>€</span>
+          <input type="number" id="profitAmount" min="0" inputmode="decimal" />
+        </div>
+      </div>
+    </div>
 
-       <label>New Price</label>
-       <div class="field">
-           <div class="input-group">
-               <span>€</span>
-               <input type="number" id="newPrice" min="0" oninput="updateNewPrice()">
-           </div>
-       </div>
+    <div class="divider"></div>
 
-       <button type="button" id="applyDiscount" onclick="applyDiscount()"> Discount</button>
-   </div>
+    <!-- Discount -->
+    <label>Discount</label>
+    <div class="row">
+      <div class="field">
+        <div class="input-group">
+          <span>%</span>
+          <input type="number" id="discountPercentage" min="0" max="99" inputmode="decimal" />
+        </div>
+      </div>
+      <div class="field">
+        <div class="input-group">
+          <span>€</span>
+          <input type="number" id="discountAmount" min="0" inputmode="decimal" />
+        </div>
+      </div>
+    </div>
 
-   <script>
-       function roundDown(value) {
-           return isNaN(value) ? "" : Math.floor(value);
-       }
+    <label>New Price</label>
+    <div class="field">
+      <div class="input-group">
+        <span>€</span>
+        <input type="number" id="newPrice" min="0" inputmode="decimal" />
+        <span>Incl.</span>
+      </div>
+      <div class="hint">Typ in één van de discount velden. Leegmaken = marge terug naar normaal.</div>
+    </div>
 
-       // Calculate based on Purchase Price Excl.
-       function calculateFromPurchasePriceExcl() {
-           let purchasePrice = parseFloat(document.getElementById('purchasePrice').value) || 0;
-           let purchasePriceIncl = purchasePrice * 1.21;
-           document.getElementById('purchasePriceIncl').value = roundDown(purchasePriceIncl);
+    <!-- Margin after discount -->
+    <label>Margin after discount</label>
+    <div class="row">
+      <div class="field">
+        <div class="input-group">
+          <span>%</span>
+          <input type="number" id="profitMarginDiscount" readonly />
+        </div>
+      </div>
+      <div class="field">
+        <div class="input-group">
+          <span>€</span>
+          <input type="number" id="profitAmountDiscount" readonly />
+        </div>
+      </div>
+    </div>
 
-           let sellingPrice = parseFloat(document.getElementById('sellPrice').value) || 0;
-           if (sellingPrice > 0) {
-               let netPrice = sellingPrice / 1.21;
-               let profitAmount = netPrice - purchasePrice;
-               let profitMargin = (profitAmount / netPrice) * 100;
-               if (profitMargin > 99) profitMargin = 99;
+    <!-- Button shows discounted margin live (text updated by JS) -->
+    <button type="button" id="applyDiscount">Discount</button>
+  </div>
 
-               document.getElementById('netPrice').value = roundDown(netPrice);
-               document.getElementById('profitAmount').value = roundDown(profitAmount);
-               document.getElementById('profitMargin').value = roundDown(profitMargin);
-           }
-       }
+  <script>
+    const VAT = 1.21;
 
-       // Calculate based on Purchase Price Incl.
-       function calculateFromPurchasePriceIncl() {
-           let purchasePriceIncl = parseFloat(document.getElementById('purchasePriceIncl').value) || 0;
-           let purchasePrice = purchasePriceIncl / 1.21;
-           document.getElementById('purchasePrice').value = roundDown(purchasePrice);
+    const el = (id) => document.getElementById(id);
 
-           let sellingPrice = parseFloat(document.getElementById('sellPrice').value) || 0;
-           if (sellingPrice > 0) {
-               let netPrice = sellingPrice / 1.21;
-               let profitAmount = netPrice - purchasePrice;
-               let profitMargin = (profitAmount / netPrice) * 100;
-               if (profitMargin > 99) profitMargin = 99;
+    function roundDown(value) {
+      return isNaN(value) ? "" : Math.floor(value);
+    }
 
-               document.getElementById('netPrice').value = roundDown(netPrice);
-               document.getElementById('profitAmount').value = roundDown(profitAmount);
-               document.getElementById('profitMargin').value = roundDown(profitMargin);
-           }
-       }
+    function num(id) {
+      const v = parseFloat(el(id).value);
+      return Number.isFinite(v) ? v : null;
+    }
 
-       function calculate() {
-           let purchasePrice = parseFloat(document.getElementById('purchasePrice').value) || 0;
-           let sellingPrice = parseFloat(document.getElementById('sellPrice').value) || 0;
+    function setVal(id, value) {
+      el(id).value = (value === null || value === "" || Number.isNaN(value)) ? "" : roundDown(value);
+    }
 
-           document.getElementById('discountPercentage').value = '';
-           document.getElementById('discountAmount').value = '';
+    let updating = false;
+    let lastEdited = null;
 
-           if (purchasePrice > 0 && sellingPrice > 0) {
-               let netPrice = sellingPrice / 1.21;
-               let profitAmount = netPrice - purchasePrice;
-               let profitMargin = (profitAmount / netPrice) * 100;
+    function discountActive() {
+      return el("discountPercentage").value.trim() !== "" ||
+             el("discountAmount").value.trim() !== "" ||
+             el("newPrice").value.trim() !== "";
+    }
 
-               if (profitMargin > 99) profitMargin = 99;
+    function clearDiscountFields(except = null) {
+      if (except !== "discountPercentage") el("discountPercentage").value = "";
+      if (except !== "discountAmount") el("discountAmount").value = "";
+      if (except !== "newPrice") el("newPrice").value = "";
+    }
 
-               document.getElementById('netPrice').value = roundDown(netPrice);
-               document.getElementById('profitAmount').value = roundDown(profitAmount);
-               document.getElementById('profitMargin').value = roundDown(profitMargin);
+    function effectiveSellIncl(sellIncl) {
+      if (!discountActive()) return sellIncl;
 
-               // Calculate Purchase Price Incl. immediately when Purchase Price is entered
-               document.getElementById('purchasePriceIncl').value = roundDown(purchasePrice * 1.21);
-           }
-       }
+      const newIncl = num("newPrice");
+      if (newIncl !== null) return newIncl;
 
-       function calculateFromNetPrice() {
-           let netPrice = parseFloat(document.getElementById('netPrice').value) || 0;
-           let purchasePrice = parseFloat(document.getElementById('purchasePrice').value) || 0;
+      const pct = num("discountPercentage");
+      if (pct !== null && sellIncl !== null) return sellIncl * (1 - pct / 100);
 
-           document.getElementById('discountPercentage').value = '';
-           document.getElementById('discountAmount').value = '';
+      const amt = num("discountAmount");
+      if (amt !== null && sellIncl !== null) return sellIncl - amt;
 
-           if (netPrice > 0) {
-               let sellingPrice = netPrice * 1.21;
-               let profitAmount = netPrice - purchasePrice;
-               let profitMargin = (profitAmount / netPrice) * 100;
+      return sellIncl;
+    }
 
-               if (profitMargin > 99) profitMargin = 99;
+    function updateButton(marginPct, profitEur) {
+      const btn = el("applyDiscount");
+      if (!btn) return;
 
-               document.getElementById('sellPrice').value = roundDown(sellingPrice);
-               document.getElementById('profitAmount').value = roundDown(profitAmount);
-               document.getElementById('profitMargin').value = roundDown(profitMargin);
-           }
-       }
+      if (marginPct === null || profitEur === null) {
+        btn.textContent = "Discount";
+        return;
+      }
+      btn.textContent = `Discount (marge: ${roundDown(marginPct)}% / €${roundDown(profitEur)})`;
+    }
 
-       function calculateMargin() {
-           let purchasePrice = parseFloat(document.getElementById('purchasePrice').value) || 0;
-           let profitMargin = parseFloat(document.getElementById('profitMargin').value) || 0;
+    function recalc() {
+      if (updating) return;
+      updating = true;
 
-           document.getElementById('discountPercentage').value = '';
-           document.getElementById('discountAmount').value = '';
+      // --- base values ---
+      let purchaseEx = num("purchasePrice");
+      let purchaseIn = num("purchasePriceIncl");
 
-           if (profitMargin > 99) {
-               profitMargin = 99;
-               document.getElementById('profitMargin').value = 99;
-           }
+      let sellIn = num("sellPrice");
+      let netEx = num("netPrice");
 
-           if (purchasePrice > 0) {
-               let netPrice = purchasePrice / (1 - (profitMargin / 100));
-               let sellingPrice = netPrice * 1.21;
-               let profitAmount = netPrice - purchasePrice;
+      let marginPct = num("profitMargin");
+      let profitEur = num("profitAmount");
 
-               document.getElementById('sellPrice').value = roundDown(sellingPrice);
-               document.getElementById('netPrice').value = roundDown(netPrice);
-               document.getElementById('profitAmount').value = roundDown(profitAmount);
+      // 1) Purchase sync
+      if (lastEdited === "purchasePriceIncl" && purchaseIn !== null) {
+        purchaseEx = purchaseIn / VAT;
+        setVal("purchasePrice", purchaseEx);
+      } else if (lastEdited === "purchasePrice" && purchaseEx !== null) {
+        purchaseIn = purchaseEx * VAT;
+        setVal("purchasePriceIncl", purchaseIn);
+      } else {
+        if (purchaseEx === null && purchaseIn !== null) {
+          purchaseEx = purchaseIn / VAT;
+          setVal("purchasePrice", purchaseEx);
+        }
+        if (purchaseIn === null && purchaseEx !== null) {
+          purchaseIn = purchaseEx * VAT;
+          setVal("purchasePriceIncl", purchaseIn);
+        }
+      }
 
-               // Recalculate Purchase Price Incl.
-               document.getElementById('purchasePriceIncl').value = roundDown(purchasePrice * 1.21);
-           }
-       }
+      // 2) Selling sync
+      if (lastEdited === "netPrice" && netEx !== null) {
+        sellIn = netEx * VAT;
+        setVal("sellPrice", sellIn);
+      } else if (lastEdited === "sellPrice" && sellIn !== null) {
+        netEx = sellIn / VAT;
+        setVal("netPrice", netEx);
+      } else {
+        if (sellIn === null && netEx !== null) {
+          sellIn = netEx * VAT;
+          setVal("sellPrice", sellIn);
+        }
+        if (netEx === null && sellIn !== null) {
+          netEx = sellIn / VAT;
+          setVal("netPrice", netEx);
+        }
+      }
 
-       function calculateProfitAmount() {
-           let purchasePrice = parseFloat(document.getElementById('purchasePrice').value) || 0;
-           let profitAmount = parseFloat(document.getElementById('profitAmount').value) || 0;
+      // 3) Profit fields can drive selling price (all editable)
+      if (purchaseEx !== null) {
+        if (lastEdited === "profitMargin" && marginPct !== null) {
+          const m = Math.min(Math.max(marginPct, 0), 99) / 100;
+          const net = purchaseEx / (1 - m);
+          netEx = net;
+          sellIn = net * VAT;
+          profitEur = net - purchaseEx;
 
-           document.getElementById('discountPercentage').value = '';
-           document.getElementById('discountAmount').value = '';
+          setVal("netPrice", netEx);
+          setVal("sellPrice", sellIn);
+          setVal("profitAmount", profitEur);
+        }
 
-           if (purchasePrice > 0) {
-               let netPrice = purchasePrice + profitAmount;
-               let sellingPrice = netPrice * 1.21;
-               let profitMargin = (profitAmount / netPrice) * 100;
+        if (lastEdited === "profitAmount" && profitEur !== null) {
+          const net = purchaseEx + profitEur;
+          netEx = net;
+          sellIn = net * VAT;
+          marginPct = net > 0 ? (profitEur / net) * 100 : 0;
 
-               if (profitMargin > 99) {
-                   profitMargin = 99;
-                   document.getElementById('profitMargin').value = 99;
-               }
+          setVal("netPrice", netEx);
+          setVal("sellPrice", sellIn);
+          setVal("profitMargin", marginPct);
+        }
+      }
 
-               document.getElementById('sellPrice').value = roundDown(sellingPrice);
-               document.getElementById('netPrice').value = roundDown(netPrice);
-               document.getElementById('profitMargin').value = roundDown(profitMargin);
+      // 4) Normal margin (on base netEx)
+      if (purchaseEx !== null && netEx !== null && netEx > 0) {
+        const profit = netEx - purchaseEx;
+        const m = (profit / netEx) * 100;
 
-               // Recalculate Purchase Price Incl.
-               document.getElementById('purchasePriceIncl').value = roundDown(purchasePrice * 1.21);
-           }
-       }
+        // Only overwrite margin inputs if user isn't currently editing them
+        if (lastEdited !== "profitAmount") setVal("profitAmount", profit);
+        if (lastEdited !== "profitMargin") setVal("profitMargin", Math.min(m, 99));
+      }
 
-       function calculateDiscount() {
-           let sellingPrice = parseFloat(document.getElementById('sellPrice').value) || 0;
-           let discountPercentage = parseFloat(document.getElementById('discountPercentage').value) || 0;
+      // 5) Discount calcs (source is lastEdited among discount fields)
+      if (!discountActive()) {
+        // discount cleared => reset "after discount" fields + button
+        el("profitMarginDiscount").value = "";
+        el("profitAmountDiscount").value = "";
+        updateButton(null, null);
+        updating = false;
+        return;
+      }
 
-           document.getElementById('discountAmount').value = '';
+      if (sellIn !== null) {
+        if (lastEdited === "discountPercentage") {
+          const pct = num("discountPercentage");
+          if (pct !== null) {
+            const newIncl = sellIn * (1 - pct / 100);
+            setVal("newPrice", newIncl);
+            setVal("discountAmount", sellIn - newIncl);
+          }
+        }
 
-           if (sellingPrice > 0 && discountPercentage >= 0) {
-               let discountAmount = (sellingPrice * discountPercentage) / 100;
-               let newSellingPrice = sellingPrice - discountAmount;
-               document.getElementById('discountAmount').value = roundDown(discountAmount);
-               document.getElementById('newPrice').value = roundDown(newSellingPrice);
-           }
-       }
+        if (lastEdited === "discountAmount") {
+          const amt = num("discountAmount");
+          if (amt !== null) {
+            const newIncl = sellIn - amt;
+            setVal("newPrice", newIncl);
+            const pct = sellIn > 0 ? (amt / sellIn) * 100 : 0;
+            setVal("discountPercentage", pct);
+          }
+        }
 
-       function updateDiscountAmount() {
-           let discountedPrice = parseFloat(document.getElementById('newPrice').value) || 0;
-           let originalPrice = parseFloat(document.getElementById('sellPrice').value) || 0;
+        if (lastEdited === "newPrice") {
+          const newIncl = num("newPrice");
+          if (newIncl !== null) {
+            const amt = sellIn - newIncl;
+            const pct = sellIn > 0 ? (amt / sellIn) * 100 : 0;
+            setVal("discountAmount", amt);
+            setVal("discountPercentage", pct);
+          }
+        }
+      }
 
-           if (originalPrice > 0) {
-               let discountAmount = originalPrice - discountedPrice;
-               let discountPercentage = (discountAmount / originalPrice) * 100;
-               document.getElementById('discountPercentage').value = roundDown(discountPercentage);
-           }
-       }
+      // 6) Margin after discount (effective price)
+      const effIncl = effectiveSellIncl(sellIn);
+      const effNet = effIncl !== null ? (effIncl / VAT) : null;
 
-       function updateNewPrice() {
-           let discountedPrice = parseFloat(document.getElementById('newPrice').value) || 0;
-           let originalPrice = parseFloat(document.getElementById('sellPrice').value) || 0;
+      if (purchaseEx !== null && effNet !== null && effNet > 0) {
+        const profitD = effNet - purchaseEx;
+        const marginD = (profitD / effNet) * 100;
 
-           if (originalPrice > 0) {
-               let discountAmount = originalPrice - discountedPrice;
-               let discountPercentage = (discountAmount / originalPrice) * 100;
-               document.getElementById('discountPercentage').value = roundDown(discountPercentage);
-               document.getElementById('discountAmount').value = roundDown(discountAmount);
-           }
-       }
+        setVal("profitAmountDiscount", profitD);
+        setVal("profitMarginDiscount", Math.min(marginD, 99));
 
-       function applyDiscount() {
-           let sellPriceWithDiscount = document.getElementById('newPrice').value;
-           document.getElementById('sellPrice').value = sellPriceWithDiscount;
+        updateButton(Math.min(marginD, 99), profitD);
+      } else {
+        el("profitMarginDiscount").value = "";
+        el("profitAmountDiscount").value = "";
+        updateButton(null, null);
+      }
 
-           document.getElementById('discountPercentage').value = '';
-           document.getElementById('discountAmount').value = '';
+      updating = false;
+    }
 
-           calculate();
-       }
-   </script>
+    function bind(id) {
+      const input = el(id);
+      if (!input) return;
+      input.addEventListener("input", () => {
+        lastEdited = id;
+
+        // Veiligste keuze in winkel: als basisprijs wijzigt, reset korting
+        // (voorkomt dat oude korting per ongeluk blijft hangen op een nieuwe sellPrice)
+        if (id === "sellPrice" || id === "netPrice" || id === "purchasePrice" || id === "purchasePriceIncl") {
+          clearDiscountFields(); // comment deze regel uit als je korting wilt laten staan
+        }
+
+        recalc();
+      });
+    }
+
+    window.addEventListener("DOMContentLoaded", () => {
+      [
+        "purchasePrice","purchasePriceIncl",
+        "sellPrice","netPrice",
+        "profitMargin","profitAmount",
+        "discountPercentage","discountAmount","newPrice"
+      ].forEach(bind);
+
+      // Button: copy discounted price -> selling price (bewuste actie)
+      const btn = el("applyDiscount");
+      btn.addEventListener("click", () => {
+        const baseSell = num("sellPrice");
+        if (baseSell === null) return;
+
+        const eff = effectiveSellIncl(baseSell);
+        if (eff !== null) {
+          el("sellPrice").value = roundDown(eff);
+          lastEdited = "sellPrice";
+          clearDiscountFields();
+          recalc();
+        }
+      });
+
+      recalc();
+    });
+  </script>
 </body>
 </html>
