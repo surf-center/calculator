@@ -39,7 +39,6 @@
     .logo{display:flex;justify-content:center;padding:6px 0 12px}
     .logo img{width:min(320px,86vw);height:auto;display:block}
 
-    /* minimalist titles */
     .section{display:flex;flex-direction:column;gap:8px;padding:10px 0}
     .section + .section{border-top:1px solid #f1f1f1}
     .section-title{
@@ -87,7 +86,6 @@
     input[type="number"]::-webkit-inner-spin-button{ -webkit-appearance:none; margin:0; }
     input[type="number"]{ -moz-appearance:textfield; appearance:textfield; }
 
-    /* blue margin (tight, editable) */
     .summary{
       margin-top:12px;
       padding:14px;
@@ -142,7 +140,7 @@
       </div>
     </div>
 
-    <!-- Selling (final price if discount active) -->
+    <!-- Selling -->
     <div class="section">
       <div class="section-title">Selling</div>
       <div class="row2">
@@ -204,8 +202,18 @@
       const v = parseFloat(el(id).value);
       return Number.isFinite(v) ? v : null;
     };
+
+    // Default UI rounding (keeps it consistent with your earlier tools)
     const floorOrEmpty = (v) => (v === null || v === "" || Number.isNaN(v)) ? "" : Math.floor(v);
     const setVal = (id, v) => { el(id).value = floorOrEmpty(v); };
+
+    // Prefill rounding rules:
+    // - Purchase: ALWAYS round UP (ceiling)  ✅ "inkoopprijs naar boven"
+    // - Selling/others: round DOWN (floor) to keep numbers stable
+    const ceilOrEmpty = (v) => (v === null || v === "" || Number.isNaN(v)) ? "" : Math.ceil(v);
+    const setPrefillPurchase = (id, v) => { el(id).value = ceilOrEmpty(v); };
+    const setPrefillOther = (id, v) => { el(id).value = floorOrEmpty(v); };
+
     const clear = (ids) => ids.forEach(i => el(i).value = "");
     const clamp = (n,a,b) => Math.min(Math.max(n,a),b);
 
@@ -428,9 +436,126 @@
       });
     }
 
+    // ------------------ AUTO PREFILL (URL + localStorage + API) ------------------
+
+    function setPrices({ purchaseEx=null, purchaseIn=null, sellIn=null, sellEx=null, discPct=null, discEur=null } = {}) {
+      updating = true;
+
+      // Prefill rounding:
+      if (purchaseEx !== null) setPrefillPurchase("purchaseEx", purchaseEx);
+      if (purchaseIn !== null) setPrefillPurchase("purchaseIn", purchaseIn);
+
+      if (sellIn !== null) setPrefillOther("sellIn", sellIn);
+      if (sellEx !== null) setPrefillOther("sellEx", sellEx);
+
+      if (discPct !== null) el("discPct").value = floorOrEmpty(discPct);
+      if (discEur !== null) el("discEur").value = floorOrEmpty(discEur);
+
+      // Reset transient state so it stays predictable
+      marginLock = null;
+      baseSellIncl = null;
+      discountWasActive = false;
+
+      // Sync pairs once without triggering loops
+      lastEdited = null;
+      syncPair("purchaseIn","purchaseEx", VAT);
+      syncPair("sellIn","sellEx", VAT);
+
+      updating = false;
+
+      // Trigger margin refresh
+      lastEdited = "sellIn";
+      recalc();
+    }
+
+    function loadFromQueryString() {
+      const qs = new URLSearchParams(window.location.search);
+
+      // p = purchase excl, pi = purchase incl
+      // s = sell incl,     se = sell excl
+      // dp = discount %,   de = discount €
+      const p  = qs.get("p");
+      const pi = qs.get("pi");
+      const s  = qs.get("s");
+      const se = qs.get("se");
+      const dp = qs.get("dp");
+      const de = qs.get("de");
+
+      const obj = {};
+      if (p  !== null && p  !== "") obj.purchaseEx = parseFloat(p);
+      if (pi !== null && pi !== "") obj.purchaseIn = parseFloat(pi);
+      if (s  !== null && s  !== "") obj.sellIn     = parseFloat(s);
+      if (se !== null && se !== "") obj.sellEx     = parseFloat(se);
+      if (dp !== null && dp !== "") obj.discPct    = parseFloat(dp);
+      if (de !== null && de !== "") obj.discEur    = parseFloat(de);
+
+      if (Object.keys(obj).length) setPrices(obj);
+    }
+
+    function saveToLocal() {
+      const data = {
+        purchaseEx: raw("purchaseEx"),
+        purchaseIn: raw("purchaseIn"),
+        sellIn: raw("sellIn"),
+        sellEx: raw("sellEx"),
+        discPct: raw("discPct"),
+        discEur: raw("discEur")
+      };
+      localStorage.setItem("margins_tool_state_v1", JSON.stringify(data));
+    }
+
+    function loadFromLocal() {
+      try {
+        const s = localStorage.getItem("margins_tool_state_v1");
+        if (!s) return false;
+        const data = JSON.parse(s);
+
+        const any = ["purchaseEx","purchaseIn","sellIn","sellEx","discPct","discEur"]
+          .some(k => (data[k] ?? "").toString().trim() !== "");
+        if (!any) return false;
+
+        const obj = {
+          purchaseEx: data.purchaseEx !== "" ? parseFloat(data.purchaseEx) : null,
+          purchaseIn: data.purchaseIn !== "" ? parseFloat(data.purchaseIn) : null,
+          sellIn:     data.sellIn     !== "" ? parseFloat(data.sellIn)     : null,
+          sellEx:     data.sellEx     !== "" ? parseFloat(data.sellEx)     : null,
+          discPct:    data.discPct    !== "" ? parseFloat(data.discPct)    : null,
+          discEur:    data.discEur    !== "" ? parseFloat(data.discEur)    : null
+        };
+
+        setPrices(obj);
+        return true;
+      } catch {
+        return false;
+      }
+    }
+
+    function attachAutosave() {
+      ["purchaseEx","purchaseIn","sellIn","sellEx","discPct","discEur","mPct","mEur"].forEach(id => {
+        el(id).addEventListener("input", () => {
+          clearTimeout(window.__saveT);
+          window.__saveT = setTimeout(saveToLocal, 150);
+        });
+      });
+    }
+
     window.addEventListener("DOMContentLoaded", () => {
       ["purchaseEx","purchaseIn","sellIn","sellEx","discPct","discEur","mPct","mEur"].forEach(bind);
-      recalc();
+
+      // 1) restore last state (mobile-friendly)
+      const loadedLocal = loadFromLocal();
+
+      // 2) URL overrides (product links etc.)
+      loadFromQueryString();
+
+      // 3) autosave
+      attachAutosave();
+
+      // Init if nothing loaded
+      if (!loadedLocal && !window.location.search) recalc();
+
+      // Expose API
+      window.setPrices = setPrices;
     });
   </script>
 </body>
