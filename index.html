@@ -22,12 +22,10 @@
       font-family: "Poppins", sans-serif;
       overflow-y: auto;
 
-      /* Belangrijk: geen "center" die de top afsnijdt op mobiel */
       display: flex;
       justify-content: center;
       align-items: flex-start;
 
-      /* safe-area top voor iPhone notch + extra ruimte */
       padding: calc(env(safe-area-inset-top) + 14px) 18px 18px;
     }
 
@@ -60,13 +58,15 @@
     }
     .section + .section { border-top: 1px solid #efefef; }
 
-    .grid {
+    .row2 {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 10px;
     }
-    @media (max-width: 520px) {
-      .grid { grid-template-columns: 1fr; }
+    .row1 {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
     }
 
     .field { display: flex; flex-direction: column; gap: 6px; }
@@ -144,7 +144,6 @@
       line-height: 1.1;
     }
 
-    /* verborgen technische inputs */
     .hidden-tech { display: none !important; }
   </style>
 </head>
@@ -155,14 +154,15 @@
       <img src="logo.png" alt="Logo">
     </div>
 
-    <!-- Purchase (geen titel boven; wel 2 velden) -->
+    <!-- Purchase (excl + incl naast elkaar) -->
     <div class="section">
-      <div class="grid">
+      <div class="row2">
         <div class="field">
           <div class="label">Purchase Excl.</div>
           <div class="input">
             <div class="prefix">€</div>
             <input type="number" id="purchasePrice" min="0" inputmode="decimal" />
+            <div class="suffix">Excl.</div>
           </div>
         </div>
 
@@ -171,19 +171,21 @@
           <div class="input">
             <div class="prefix">€</div>
             <input type="number" id="purchasePriceIncl" min="0" inputmode="decimal" />
+            <div class="suffix">Incl.</div>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- Selling (geen titel boven; wel 2 velden) -->
+    <!-- Selling (incl + excl naast elkaar) -->
     <div class="section">
-      <div class="grid">
+      <div class="row2">
         <div class="field">
           <div class="label">Selling Incl.</div>
           <div class="input">
             <div class="prefix">€</div>
             <input type="number" id="sellPrice" min="0" inputmode="decimal" />
+            <div class="suffix">Incl.</div>
           </div>
         </div>
 
@@ -192,14 +194,15 @@
           <div class="input">
             <div class="prefix">€</div>
             <input type="number" id="netPrice" min="0" inputmode="decimal" />
+            <div class="suffix">Excl.</div>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- Discount (zonder "(incl.)" tekst) -->
+    <!-- Discount (% + € naast elkaar) + New price onder -->
     <div class="section">
-      <div class="grid">
+      <div class="row2">
         <div class="field">
           <div class="label">Discount %</div>
           <div class="input">
@@ -217,25 +220,27 @@
         </div>
       </div>
 
-      <div class="field">
-        <div class="label">New price</div>
-        <div class="input">
-          <div class="prefix">€</div>
-          <input type="number" id="newPrice" min="0" inputmode="decimal" />
+      <div class="row1">
+        <div class="field">
+          <div class="label">New price</div>
+          <div class="input">
+            <div class="prefix">€</div>
+            <input type="number" id="newPrice" min="0" inputmode="decimal" />
+          </div>
         </div>
       </div>
     </div>
 
-    <!-- LEADING MARGIN (geen dubbele €/% meer: symbool alleen in waarde) -->
+    <!-- LEADING MARGIN (geen "-" tonen; alleen symbool) -->
     <div class="summary" id="summary">
       <div class="summary-grid">
         <div class="pill">
           <div class="k">Margin</div>
-          <div class="v" id="summaryMarginPct">–%</div>
+          <div class="v" id="summaryMarginPct">%</div>
         </div>
         <div class="pill">
           <div class="k">Profit</div>
-          <div class="v" id="summaryMarginEur">€–</div>
+          <div class="v" id="summaryMarginEur">€</div>
         </div>
       </div>
     </div>
@@ -244,8 +249,6 @@
     <div class="hidden-tech">
       <input type="number" id="profitMargin" />
       <input type="number" id="profitAmount" />
-      <input type="number" id="profitMarginDiscount" />
-      <input type="number" id="profitAmountDiscount" />
     </div>
   </div>
 
@@ -287,8 +290,8 @@
     }
 
     function setSummary(pct, eur) {
-      el("summaryMarginPct").textContent = (pct === null) ? "–%" : `${roundDown(pct)}%`;
-      el("summaryMarginEur").textContent = (eur === null) ? "€–" : `€${roundDown(eur)}`;
+      el("summaryMarginPct").textContent = (pct === null) ? "%" : `${roundDown(pct)}%`;
+      el("summaryMarginEur").textContent = (eur === null) ? "€" : `€${roundDown(eur)}`;
     }
 
     function recalc() {
@@ -365,7 +368,6 @@
         const profit = effNet - purchaseEx;
         const margin = (profit / effNet) * 100;
 
-        // store hidden (optional)
         setVal("profitAmount", profit);
         setVal("profitMargin", Math.min(margin, 99));
 
@@ -387,7 +389,11 @@
     }
 
     window.addEventListener("DOMContentLoaded", () => {
-      ["purchasePrice","purchasePriceIncl","sellPrice","netPrice","discountPercentage","discountAmount","newPrice"].forEach(bind);
+      [
+        "purchasePrice","purchasePriceIncl",
+        "sellPrice","netPrice",
+        "discountPercentage","discountAmount","newPrice"
+      ].forEach(bind);
       recalc();
     });
   </script>
