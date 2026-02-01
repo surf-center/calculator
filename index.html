@@ -39,6 +39,7 @@
     .logo{display:flex;justify-content:center;padding:6px 0 12px}
     .logo img{width:min(320px,86vw);height:auto;display:block}
 
+    /* minimalist titles */
     .section{display:flex;flex-direction:column;gap:8px;padding:10px 0}
     .section + .section{border-top:1px solid #f1f1f1}
     .section-title{
@@ -86,6 +87,7 @@
     input[type="number"]::-webkit-inner-spin-button{ -webkit-appearance:none; margin:0; }
     input[type="number"]{ -moz-appearance:textfield; appearance:textfield; }
 
+    /* blue margin (tight, editable) */
     .summary{
       margin-top:12px;
       padding:14px;
@@ -140,7 +142,7 @@
       </div>
     </div>
 
-    <!-- Selling -->
+    <!-- Selling (final price if discount active) -->
     <div class="section">
       <div class="section-title">Selling</div>
       <div class="row2">
@@ -202,22 +204,20 @@
       const v = parseFloat(el(id).value);
       return Number.isFinite(v) ? v : null;
     };
-
-    // ✅ jij gebruikte floor; laat ik hetzelfde houden
     const floorOrEmpty = (v) => (v === null || v === "" || Number.isNaN(v)) ? "" : Math.floor(v);
     const setVal = (id, v) => { el(id).value = floorOrEmpty(v); };
-
     const clear = (ids) => ids.forEach(i => el(i).value = "");
     const clamp = (n,a,b) => Math.min(Math.max(n,a),b);
 
     let updating = false;
     let lastEdited = null;
 
-    // Margin lock: active only after editing margin.
+    // Margin lock: active only after editing margin
     let marginLock = null; // { mode: "pct"|"eur", value:number } | null
 
-    // Discount base: stores pre-discount selling incl.
-    let baseSellIncl = null;
+    // Discount state: base price restore when discount cleared
+    let baseSellIncl = null;        // pre-discount selling incl
+    let discountWasActive = false;  // edge detection
 
     function discountActive(){
       return raw("discPct").trim() !== "" || raw("discEur").trim() !== "";
@@ -242,16 +242,17 @@
       if (lastEdited === "mPct"){
         if (raw("mPct").trim() === "") { marginLock = null; return; }
         const p = num("mPct"); if (p === null) return;
-        marginLock = { mode:"pct", value:clamp(p,0,99) };
+        marginLock = { mode:"pct", value: clamp(p,0,99) };
       }
       if (lastEdited === "mEur"){
         if (raw("mEur").trim() === "") { marginLock = null; return; }
         const e = num("mEur"); if (e === null) return;
-        marginLock = { mode:"eur", value:Math.max(e,0) };
+        marginLock = { mode:"eur", value: Math.max(e,0) };
       }
     }
 
     function unlockMarginIfNeeded(){
+      // if user edits anything except margin itself, margin stops forcing selling
       if (["purchaseEx","purchaseIn","sellIn","sellEx","discPct","discEur"].includes(lastEdited)) {
         marginLock = null;
       }
@@ -262,13 +263,14 @@
       if (!purchaseEx || purchaseEx <= 0) return;
       if (!marginLock) return;
 
-      // margin drives base price -> reset discount
+      // margin drives base => reset discount + base restore state
       baseSellIncl = null;
+      discountWasActive = false;
       clear(["discPct","discEur"]);
 
       if (marginLock.mode === "pct"){
         const p = clamp(marginLock.value,0,99);
-        const net = purchaseEx / (1 - (p/100));      // selling excl
+        const net = purchaseEx / (1 - (p/100));
         const profit = net - purchaseEx;
         setVal("sellEx", net);
         setVal("sellIn", net * VAT);
@@ -285,25 +287,39 @@
       }
     }
 
-    function ensureBaseSell(){
-      if (discountActive() && baseSellIncl === null){
+    function handleDiscountEdges(){
+      const active = discountActive();
+
+      // turned ON: capture base once
+      if (active && !discountWasActive){
         const s = num("sellIn");
         if (s !== null) baseSellIncl = s;
       }
-      if (!discountActive()){
+
+      // turned OFF: restore base
+      if (!active && discountWasActive){
+        if (baseSellIncl !== null){
+          setVal("sellIn", baseSellIncl);
+          setVal("sellEx", baseSellIncl / VAT);
+        }
         baseSellIncl = null;
       }
+
+      discountWasActive = active;
     }
 
     function applyDiscountToSelling(){
+      // if user clears one field => clear both
       if (["discPct","discEur"].includes(lastEdited) && raw(lastEdited).trim() === ""){
         clear(["discPct","discEur"]);
       }
 
-      ensureBaseSell();
-      if (!discountActive() || baseSellIncl === null) return;
+      handleDiscountEdges();
 
-      // If user edits selling while discount active -> interpret as final price
+      if (!discountActive()) return;
+      if (baseSellIncl === null) return;
+
+      // if user edits selling while discount active => treat as final price, update discount
       if (lastEdited === "sellIn"){
         const finalIncl = num("sellIn");
         if (finalIncl !== null){
@@ -327,7 +343,7 @@
         return;
       }
 
-      // Normal: discount fields drive final selling
+      // normal: discount fields drive final selling
       if (lastEdited === "discPct"){
         const pct = num("discPct");
         if (pct !== null){
@@ -353,6 +369,7 @@
     }
 
     function updateMarginFromCurrent(){
+      // don't overwrite while typing margin
       if (lastEdited === "mPct" || lastEdited === "mEur") return;
 
       const purchaseEx = num("purchaseEx");
@@ -373,21 +390,27 @@
       if (updating) return;
       updating = true;
 
+      // sync both pairs always
       syncPair("purchaseIn","purchaseEx", VAT);
       syncPair("sellIn","sellEx", VAT);
 
+      // margin lock rules
       unlockMarginIfNeeded();
       captureMarginLock();
 
+      // if margin edited -> drives selling + resets discount
       if (["mPct","mEur"].includes(lastEdited)) {
         applyMarginIfPossible();
         syncPair("sellIn","sellEx", VAT);
       }
 
+      // discount drives selling + restores original when cleared
       applyDiscountToSelling();
       if (["discPct","discEur"].includes(lastEdited)) syncPair("sellIn","sellEx", VAT);
 
+      // always show correct margin for current selling
       updateMarginFromCurrent();
+
       updating = false;
     }
 
@@ -405,32 +428,8 @@
       });
     }
 
-    // ✅ PREFILL (purchasePrice + sellPrice)
-    function parseQueryNumber(v){
-      if (v === null) return null;
-      const s = String(v).trim().replace(",", ".");
-      const n = Number(s);
-      return Number.isFinite(n) ? n : null;
-    }
-
-    function applyPrefillFromQuery(){
-      const qs = new URLSearchParams(window.location.search);
-
-      const purchaseEx = parseQueryNumber(qs.get("purchasePrice")); // excl
-      const sellIn = parseQueryNumber(qs.get("sellPrice"));         // incl
-
-      if (purchaseEx !== null) el("purchaseEx").value = purchaseEx;
-      if (sellIn !== null) el("sellIn").value = sellIn;
-
-      // zodat jouw logica meteen correct rekent
-      if (sellIn !== null) lastEdited = "sellIn";
-      else if (purchaseEx !== null) lastEdited = "purchaseEx";
-    }
-
     window.addEventListener("DOMContentLoaded", () => {
       ["purchaseEx","purchaseIn","sellIn","sellEx","discPct","discEur","mPct","mEur"].forEach(bind);
-
-      applyPrefillFromQuery();
       recalc();
     });
   </script>
