@@ -110,6 +110,10 @@
       color: #111;
       background: #fff;
     }
+    input[readonly] {
+      background: #fafafa;
+      color: #111;
+    }
 
     input[type="number"]::-webkit-outer-spin-button,
     input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
@@ -160,13 +164,13 @@
       <div class="row2">
         <div class="input">
           <div class="prefix">€</div>
-          <input type="number" id="purchasePrice" min="0" inputmode="decimal" />
+          <input type="number" id="purchasePrice" min="0" inputmode="decimal" readonly />
           <div class="suffix">Excl.</div>
         </div>
 
         <div class="input">
           <div class="prefix">€</div>
-          <input type="number" id="purchasePriceIncl" min="0" inputmode="decimal" />
+          <input type="number" id="purchasePriceIncl" min="0" inputmode="decimal" readonly />
           <div class="suffix">Incl.</div>
         </div>
       </div>
@@ -178,13 +182,13 @@
       <div class="row2">
         <div class="input">
           <div class="prefix">€</div>
-          <input type="number" id="sellPrice" min="0" inputmode="decimal" />
+          <input type="number" id="sellPrice" min="0" inputmode="decimal" readonly />
           <div class="suffix">Incl.</div>
         </div>
 
         <div class="input">
           <div class="prefix">€</div>
-          <input type="number" id="netPrice" min="0" inputmode="decimal" />
+          <input type="number" id="netPrice" min="0" inputmode="decimal" readonly />
           <div class="suffix">Excl.</div>
         </div>
       </div>
@@ -196,24 +200,41 @@
       <div class="row2">
         <div class="input">
           <div class="prefix">%</div>
-          <input type="number" id="discountPercentage" min="0" max="99" inputmode="decimal" />
+          <input type="number" id="discountPercentage" min="0" max="99" inputmode="decimal" readonly />
         </div>
 
         <div class="input">
           <div class="prefix">€</div>
-          <input type="number" id="discountAmount" min="0" inputmode="decimal" />
+          <input type="number" id="discountAmount" min="0" inputmode="decimal" readonly />
         </div>
       </div>
 
       <div class="row1">
         <div class="input">
           <div class="prefix">€</div>
-          <input type="number" id="newPrice" min="0" inputmode="decimal" />
+          <input type="number" id="newPrice" min="0" inputmode="decimal" readonly />
         </div>
       </div>
     </div>
 
-    <!-- Margin summary -->
+    <!-- Margin inputs (ENKEL deze twee zijn editable) -->
+    <div class="section">
+      <div class="section-title">Margin</div>
+      <div class="row2">
+        <div class="input">
+          <div class="prefix">%</div>
+          <input type="number" id="marginInputPct" min="0" max="99" inputmode="decimal" />
+        </div>
+
+        <div class="input">
+          <div class="prefix">€</div>
+          <input type="number" id="marginInputEur" min="0" inputmode="decimal" />
+          <div class="suffix">Excl.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Summary -->
     <div class="summary" id="summary">
       <div class="summary-grid">
         <div class="pill">
@@ -229,50 +250,22 @@
   </div>
 
   <script>
-    const VAT = 1.21;
+    // NOTE: zonder purchase/selling inputs is marge niet te berekenen naar prijzen.
+    // Dit script houdt daarom alleen de twee margin velden synchroon met elkaar (pct <-> eur)
+    // via een "referentie netto prijs" die jij hieronder kunt zetten.
+    // Als je wilt dat margin de prijzen berekent, moeten we minimaal purchase + selling (of 1 van beide) invulbaar houden.
+
+    const REFERENCE_NET_EXCL = null; // <-- Zet hier bv. 867 (net excl) als vaste basis, anders laten we alleen tonen wat je invult.
+
     const el = (id) => document.getElementById(id);
-
     function roundDown(value) { return isNaN(value) ? "" : Math.floor(value); }
-
-    // Raw string (voor "is leeg?")
-    function raw(id) { return el(id).value; }
-
     function num(id) {
       const v = parseFloat(el(id).value);
       return Number.isFinite(v) ? v : null;
     }
 
-    function setVal(id, value) {
-      el(id).value = (value === null || value === "" || Number.isNaN(value)) ? "" : roundDown(value);
-    }
-
-    function clear(ids) {
-      ids.forEach(i => el(i).value = "");
-    }
-
     let updating = false;
     let lastEdited = null;
-
-    function discountActive() {
-      return raw("discountPercentage").trim() !== "" ||
-             raw("discountAmount").trim() !== "" ||
-             raw("newPrice").trim() !== "";
-    }
-
-    function effectiveSellIncl(sellIncl) {
-      if (!discountActive()) return sellIncl;
-
-      const newIncl = num("newPrice");
-      if (newIncl !== null) return newIncl;
-
-      const pct = num("discountPercentage");
-      if (pct !== null && sellIncl !== null) return sellIncl * (1 - pct / 100);
-
-      const amt = num("discountAmount");
-      if (amt !== null && sellIncl !== null) return sellIncl - amt;
-
-      return sellIncl;
-    }
 
     function setSummary(pct, eur) {
       el("summaryMarginPct").textContent = (pct === null) ? "%" : `${roundDown(pct)}%`;
@@ -283,126 +276,45 @@
       if (updating) return;
       updating = true;
 
-      // --- PURCHASE sync (beide kanten editbaar, leegmaken reset beide) ---
-      if (lastEdited === "purchasePrice" && raw("purchasePrice").trim() === "") {
-        clear(["purchasePriceIncl"]);
-      }
-      if (lastEdited === "purchasePriceIncl" && raw("purchasePriceIncl").trim() === "") {
-        clear(["purchasePrice"]);
+      const pct = num("marginInputPct");
+      const eur = num("marginInputEur");
+
+      // Als we geen referentie hebben: gewoon tonen wat ingevuld is, en niet "terugrekenen"
+      if (REFERENCE_NET_EXCL === null) {
+        setSummary(pct, eur);
+        updating = false;
+        return;
       }
 
-      let purchaseEx = num("purchasePrice");
-      let purchaseIn = num("purchasePriceIncl");
-
-      if (lastEdited === "purchasePriceIncl" && purchaseIn !== null) {
-        setVal("purchasePrice", purchaseIn / VAT);
-        purchaseEx = num("purchasePrice");
-      } else if (lastEdited === "purchasePrice" && purchaseEx !== null) {
-        setVal("purchasePriceIncl", purchaseEx * VAT);
-        purchaseIn = num("purchasePriceIncl");
+      // Met referentie kunnen we pct <-> eur syncen
+      if (lastEdited === "marginInputPct" && pct !== null) {
+        const p = Math.min(Math.max(pct, 0), 99);
+        const profit = REFERENCE_NET_EXCL * (p / 100);
+        el("marginInputEur").value = roundDown(profit);
+        setSummary(p, profit);
+      } else if (lastEdited === "marginInputEur" && eur !== null) {
+        const profit = Math.max(eur, 0);
+        const p = (profit / REFERENCE_NET_EXCL) * 100;
+        el("marginInputPct").value = roundDown(Math.min(p, 99));
+        setSummary(Math.min(p, 99), profit);
       } else {
-        // alleen aanvullen als één kant gevuld is (en de ander leeg), maar NIET terug-rammen als user net leeg maakte
-        if (purchaseEx === null && purchaseIn !== null) setVal("purchasePrice", purchaseIn / VAT);
-        if (purchaseIn === null && purchaseEx !== null) setVal("purchasePriceIncl", purchaseEx * VAT);
-        purchaseEx = num("purchasePrice");
-      }
-
-      // --- SELLING sync (beide kanten editbaar, leegmaken reset beide) ---
-      if (lastEdited === "sellPrice" && raw("sellPrice").trim() === "") {
-        clear(["netPrice"]);
-      }
-      if (lastEdited === "netPrice" && raw("netPrice").trim() === "") {
-        clear(["sellPrice"]);
-      }
-
-      let sellIn = num("sellPrice");
-      let netEx  = num("netPrice");
-
-      if (lastEdited === "netPrice" && netEx !== null) {
-        setVal("sellPrice", netEx * VAT);
-        sellIn = num("sellPrice");
-      } else if (lastEdited === "sellPrice" && sellIn !== null) {
-        setVal("netPrice", sellIn / VAT);
-        netEx = num("netPrice");
-      } else {
-        if (sellIn === null && netEx !== null) setVal("sellPrice", netEx * VAT);
-        if (netEx === null && sellIn !== null) setVal("netPrice", sellIn / VAT);
-        sellIn = num("sellPrice");
-      }
-
-      // --- DISCOUNT linking (leegmaken = reset alle discount velden) ---
-      if (["discountPercentage","discountAmount","newPrice"].includes(lastEdited)) {
-        if (raw(lastEdited).trim() === "") {
-          clear(["discountPercentage","discountAmount","newPrice"]);
-        }
-      }
-
-      // Als er een basis sell prijs is: koppel discount velden (elk veld editbaar)
-      if (sellIn !== null) {
-        if (lastEdited === "discountPercentage") {
-          const pct = num("discountPercentage");
-          if (pct !== null) {
-            const newIncl = sellIn * (1 - pct / 100);
-            setVal("newPrice", newIncl);
-            setVal("discountAmount", sellIn - newIncl);
-          }
-        }
-
-        if (lastEdited === "discountAmount") {
-          const amt = num("discountAmount");
-          if (amt !== null) {
-            const newIncl = sellIn - amt;
-            setVal("newPrice", newIncl);
-            const pct = sellIn > 0 ? (amt / sellIn) * 100 : 0;
-            setVal("discountPercentage", pct);
-          }
-        }
-
-        if (lastEdited === "newPrice") {
-          const newIncl = num("newPrice");
-          if (newIncl !== null) {
-            const amt = sellIn - newIncl;
-            const pct = sellIn > 0 ? (amt / sellIn) * 100 : 0;
-            setVal("discountAmount", amt);
-            setVal("discountPercentage", pct);
-          }
-        }
-      }
-
-      // --- LEADING margin ---
-      purchaseEx = num("purchasePrice"); // refresh
-      sellIn = num("sellPrice");         // refresh
-
-      const effIncl = effectiveSellIncl(sellIn);
-      const effNet  = (effIncl !== null) ? (effIncl / VAT) : null;
-
-      if (purchaseEx !== null && effNet !== null && effNet > 0) {
-        const profit = effNet - purchaseEx;
-        const margin = (profit / effNet) * 100;
-        setSummary(Math.min(margin, 99), profit);
-      } else {
-        setSummary(null, null);
+        setSummary(pct, eur);
       }
 
       updating = false;
     }
 
     function bind(id) {
-      const input = el(id);
-      if (!input) return;
-      input.addEventListener("input", () => {
+      el(id).addEventListener("input", () => {
         lastEdited = id;
         recalc();
       });
     }
 
     window.addEventListener("DOMContentLoaded", () => {
-      [
-        "purchasePrice","purchasePriceIncl",
-        "sellPrice","netPrice",
-        "discountPercentage","discountAmount","newPrice"
-      ].forEach(bind);
-
+      // alleen deze 2 editable
+      bind("marginInputPct");
+      bind("marginInputEur");
       recalc();
     });
   </script>
