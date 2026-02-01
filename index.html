@@ -56,7 +56,6 @@
     }
 
     .row2{ display:grid; grid-template-columns:1fr 1fr; gap:10px; }
-    .row1{ display:grid; grid-template-columns:1fr; gap:10px; }
 
     .input{
       display:flex;
@@ -92,7 +91,7 @@
     input[type="number"]::-webkit-inner-spin-button{ -webkit-appearance:none; margin:0; }
     input[type="number"]{ -moz-appearance:textfield; appearance:textfield; }
 
-    /* BLUE MARGIN (editable) */
+    /* STRAK BLAUW VAK (oude look, maar editable) */
     .summary{
       margin-top:14px;
       padding:14px;
@@ -107,7 +106,7 @@
     }
     .pill{
       border-radius:14px;
-      padding:10px;
+      padding:12px;
       background:rgba(255,255,255,.14);
       border:1px solid rgba(255,255,255,.22);
     }
@@ -115,26 +114,38 @@
       font-size:12px;
       opacity:.95;
       font-weight:900;
-      margin-bottom:6px;
+      margin-bottom:8px;
       letter-spacing:.02em;
     }
-    .pill .input{
-      border-color: rgba(255,255,255,.28);
-      background: rgba(255,255,255,.12);
+    .biginput{
+      display:flex;
+      align-items:baseline;
+      gap:6px;
     }
-    .pill .prefix{
-      background: rgba(255,255,255,.18);
+    .bigprefix{
+      font-size:18px;
+      font-weight:900;
+      opacity:.95;
+      line-height:1;
+    }
+    .biginput input{
+      border:none;
+      outline:none;
+      background:transparent;
       color:#fff;
-      border-right-color: rgba(255,255,255,.22);
+      font-size:26px;
+      font-weight:900;
+      width:100%;
+      padding:0;
+      line-height:1.05;
     }
-    .pill input[type="number"]{
-      background: transparent;
-      color:#fff;
-    }
-    .pill input::placeholder{ color: rgba(255,255,255,.75); }
+    .biginput input::placeholder{ color: rgba(255,255,255,.75); }
 
-    /* Make tap overwrite easier */
-    input[type="number"]{ -webkit-tap-highlight-color: transparent; }
+    /* Mobile: keep 2 columns (zoals jij wil), maar iets strakker */
+    @media (max-width: 380px){
+      .logo img{ width:min(300px, 86vw); }
+      .biginput input{ font-size:24px; }
+    }
   </style>
 </head>
 
@@ -162,7 +173,7 @@
       </div>
     </div>
 
-    <!-- Selling -->
+    <!-- Selling (dit is nu de EINDPRIJS als discount actief is) -->
     <div class="section">
       <div class="section-title">Selling</div>
       <div class="row2">
@@ -180,7 +191,7 @@
       </div>
     </div>
 
-    <!-- Discount -->
+    <!-- Discount (zonder “price after discount” box) -->
     <div class="section">
       <div class="section-title">Discount</div>
       <div class="row2">
@@ -194,13 +205,6 @@
           <input type="number" id="discountAmount" min="0" inputmode="decimal" />
         </div>
       </div>
-
-      <div class="row1">
-        <div class="input">
-          <div class="prefix">€</div>
-          <input type="number" id="newPrice" min="0" inputmode="decimal" />
-        </div>
-      </div>
     </div>
 
     <!-- Margin (editable, leading) -->
@@ -208,16 +212,16 @@
       <div class="summary-grid">
         <div class="pill">
           <div class="k">Margin</div>
-          <div class="input">
-            <div class="prefix">%</div>
+          <div class="biginput">
+            <span class="bigprefix">%</span>
             <input type="number" id="marginPct" min="0" max="99" inputmode="decimal" placeholder="" />
           </div>
         </div>
 
         <div class="pill">
           <div class="k">Margin</div>
-          <div class="input">
-            <div class="prefix">€</div>
+          <div class="biginput">
+            <span class="bigprefix">€</span>
             <input type="number" id="marginEur" min="0" inputmode="decimal" placeholder="" />
           </div>
         </div>
@@ -230,7 +234,7 @@
     const el = (id) => document.getElementById(id);
 
     function raw(id){ return el(id).value; }
-    function roundDown(value){ return isNaN(value) ? "" : Math.floor(value); }
+    function roundDown(v){ return isNaN(v) ? "" : Math.floor(v); }
     function num(id){
       const v = parseFloat(el(id).value);
       return Number.isFinite(v) ? v : null;
@@ -244,33 +248,39 @@
     let updating = false;
     let lastEdited = null;
 
+    // "Desired margin" onthouden zodat volgorde niet uitmaakt
+    let desiredMarginMode = null; // "pct" | "eur" | null
+    let desiredMarginValue = null;
+
+    // Discount: selling wordt de eindprijs -> we onthouden de basisprijs (voor discount)
+    let baseSellIncl = null; // incl
     function discountActive(){
-      return raw("discountPercentage").trim() !== "" ||
-             raw("discountAmount").trim() !== "" ||
-             raw("newPrice").trim() !== "";
+      return raw("discountPercentage").trim() !== "" || raw("discountAmount").trim() !== "";
     }
 
-    function effectiveSellIncl(sellIncl){
-      if (!discountActive()) return sellIncl;
-
-      const newIncl = num("newPrice");
-      if (newIncl !== null) return newIncl;
-
-      const pct = num("discountPercentage");
-      if (pct !== null && sellIncl !== null) return sellIncl * (1 - pct / 100);
-
-      const amt = num("discountAmount");
-      if (amt !== null && sellIncl !== null) return sellIncl - amt;
-
-      return sellIncl;
+    function captureDesiredMargin(){
+      if (lastEdited === "marginPct"){
+        if (raw("marginPct").trim() === "") { desiredMarginMode=null; desiredMarginValue=null; return; }
+        const p = num("marginPct");
+        if (p === null) return;
+        desiredMarginMode = "pct";
+        desiredMarginValue = clamp(p, 0, 99);
+      }
+      if (lastEdited === "marginEur"){
+        if (raw("marginEur").trim() === "") { desiredMarginMode=null; desiredMarginValue=null; return; }
+        const e = num("marginEur");
+        if (e === null) return;
+        desiredMarginMode = "eur";
+        desiredMarginValue = Math.max(e, 0);
+      }
     }
 
     function syncPurchase(){
       if (lastEdited === "purchasePrice" && raw("purchasePrice").trim() === "") clear(["purchasePriceIncl"]);
       if (lastEdited === "purchasePriceIncl" && raw("purchasePriceIncl").trim() === "") clear(["purchasePrice"]);
 
-      let ex = num("purchasePrice");
-      let inc = num("purchasePriceIncl");
+      const ex = num("purchasePrice");
+      const inc = num("purchasePriceIncl");
 
       if (lastEdited === "purchasePriceIncl" && inc !== null){
         setVal("purchasePrice", inc / VAT);
@@ -282,12 +292,13 @@
       }
     }
 
-    function syncSelling(){
+    function syncSellingPair(){
+      // Selling pair blijft 2-weg editable (incl/excl)
       if (lastEdited === "sellPrice" && raw("sellPrice").trim() === "") clear(["netPrice"]);
       if (lastEdited === "netPrice" && raw("netPrice").trim() === "") clear(["sellPrice"]);
 
-      let inc = num("sellPrice");
-      let ex  = num("netPrice");
+      const inc = num("sellPrice");
+      const ex  = num("netPrice");
 
       if (lastEdited === "netPrice" && ex !== null){
         setVal("sellPrice", ex * VAT);
@@ -299,22 +310,104 @@
       }
     }
 
-    function syncDiscount(){
-      // leegmaken van één discount veld -> reset alle discount velden
-      if (["discountPercentage","discountAmount","newPrice"].includes(lastEdited)){
-        if (raw(lastEdited).trim() === "") clear(["discountPercentage","discountAmount","newPrice"]);
+    function applyDesiredMarginIfPossible(){
+      const purchaseEx = num("purchasePrice");
+      if (purchaseEx === null || purchaseEx <= 0) return;
+      if (!desiredMarginMode || desiredMarginValue === null) return;
+
+      // margin stuurt basisprijs -> discount resetten (nieuwe basis)
+      if (["marginPct","marginEur","purchasePrice","purchasePriceIncl"].includes(lastEdited)){
+        baseSellIncl = null;
+        clear(["discountPercentage","discountAmount"]);
       }
 
-      const sellIncl = num("sellPrice");
-      if (sellIncl === null) return;
+      if (desiredMarginMode === "pct"){
+        const p = clamp(desiredMarginValue, 0, 99);
+        const net = purchaseEx / (1 - (p / 100)); // excl
+        const profit = net - purchaseEx;
+        setVal("netPrice", net);
+        setVal("sellPrice", net * VAT);
+        setVal("marginEur", profit);
+        setVal("marginPct", p);
+      } else if (desiredMarginMode === "eur"){
+        const profit = Math.max(desiredMarginValue, 0);
+        const net = purchaseEx + profit;
+        const pct = net > 0 ? (profit / net) * 100 : 0;
+        setVal("netPrice", net);
+        setVal("sellPrice", net * VAT);
+        setVal("marginPct", clamp(pct, 0, 99));
+        setVal("marginEur", profit);
+      }
+    }
 
+    function ensureBaseSellStored(){
+      // Als discount net aangezet wordt: onthoud huidige selling als basis
+      if (discountActive() && baseSellIncl === null){
+        const current = num("sellPrice");
+        if (current !== null) baseSellIncl = current;
+      }
+      // Als discount uit: basis vergeten
+      if (!discountActive() && baseSellIncl !== null){
+        baseSellIncl = null;
+      }
+    }
+
+    function syncDiscountToSelling(){
+      // Leegmaken van één discount veld -> reset beide en herstel basisprijs
+      if (["discountPercentage","discountAmount"].includes(lastEdited)){
+        if (raw(lastEdited).trim() === ""){
+          clear(["discountPercentage","discountAmount"]);
+        }
+      }
+
+      ensureBaseSellStored();
+
+      // Geen discount? dan niets doen (selling blijft wat het is)
+      if (!discountActive()){
+        // als net discount verwijderd: zet selling terug naar basis als we die hadden
+        // (baseSellIncl is al null gezet in ensureBaseSellStored)
+        return;
+      }
+
+      // Als base nog niet bekend is (geen selling ingevuld), dan kunnen we niks toepassen
+      if (baseSellIncl === null) return;
+
+      // Als user selling aanpast terwijl discount actief is -> interpreteer als "nieuwe eindprijs"
+      // en bereken discount terug t.o.v. base.
+      if (lastEdited === "sellPrice"){
+        const finalIncl = num("sellPrice");
+        if (finalIncl !== null){
+          const amt = Math.max(baseSellIncl - finalIncl, 0);
+          const pct = baseSellIncl > 0 ? (amt / baseSellIncl) * 100 : 0;
+          setVal("discountAmount", amt);
+          setVal("discountPercentage", clamp(pct, 0, 99));
+          // netPrice pair syncen laten we daarna doen
+        }
+        return;
+      }
+
+      if (lastEdited === "netPrice"){
+        const finalEx = num("netPrice");
+        if (finalEx !== null){
+          const finalIncl = finalEx * VAT;
+          setVal("sellPrice", finalIncl);
+          const amt = Math.max(baseSellIncl - finalIncl, 0);
+          const pct = baseSellIncl > 0 ? (amt / baseSellIncl) * 100 : 0;
+          setVal("discountAmount", amt);
+          setVal("discountPercentage", clamp(pct, 0, 99));
+        }
+        return;
+      }
+
+      // Normal discount editing:
       if (lastEdited === "discountPercentage"){
         const pct = num("discountPercentage");
         if (pct !== null){
           const p = clamp(pct, 0, 99);
-          const newIncl = sellIncl * (1 - p / 100);
-          setVal("newPrice", newIncl);
-          setVal("discountAmount", sellIncl - newIncl);
+          const finalIncl = baseSellIncl * (1 - p / 100);
+          setVal("sellPrice", finalIncl);
+          setVal("discountAmount", baseSellIncl - finalIncl);
+          setVal("netPrice", finalIncl / VAT);
         }
       }
 
@@ -322,106 +415,59 @@
         const amt = num("discountAmount");
         if (amt !== null){
           const a = Math.max(amt, 0);
-          const newIncl = sellIncl - a;
-          setVal("newPrice", newIncl);
-          const pct = sellIncl > 0 ? (a / sellIncl) * 100 : 0;
+          const finalIncl = Math.max(baseSellIncl - a, 0);
+          setVal("sellPrice", finalIncl);
+          setVal("netPrice", finalIncl / VAT);
+          const pct = baseSellIncl > 0 ? (a / baseSellIncl) * 100 : 0;
           setVal("discountPercentage", clamp(pct, 0, 99));
         }
       }
 
-      if (lastEdited === "newPrice"){
-        const newIncl = num("newPrice");
-        if (newIncl !== null){
-          const amt = sellIncl - newIncl;
-          const pct = sellIncl > 0 ? (amt / sellIncl) * 100 : 0;
-          setVal("discountAmount", Math.max(amt, 0));
-          setVal("discountPercentage", clamp(pct, 0, 99));
-        }
-      }
+      // Als user begon met discount invullen maar we hadden nog geen baseSellIncl:
+      // -> zodra selling ingevuld wordt, wordt baseSellIncl gezet en discount toegepast bij volgende input
     }
 
-    function applyMarginEdits(){
-      const purchaseEx = num("purchasePrice");
-      if (purchaseEx === null || purchaseEx <= 0) return;
+    function updateMarginFromCurrentSelling(){
+      // Niet overschrijven als user de blauwe inputs aan het typen is
+      if (lastEdited === "marginPct" || lastEdited === "marginEur") return;
 
-      // Als user margin aanpast: we recalculeren base selling en resetten discount (want nieuwe basisprijs)
-      if (lastEdited === "marginPct"){
-        if (raw("marginPct").trim() === "") return; // leeg laten is ok
-        clear(["discountPercentage","discountAmount","newPrice"]);
-
-        const pct = num("marginPct");
-        if (pct === null) return;
-        const p = clamp(pct, 0, 99);
-
-        const net = purchaseEx / (1 - (p / 100)); // net excl
-        const profit = net - purchaseEx;
-        setVal("netPrice", net);
-        setVal("sellPrice", net * VAT);
-        setVal("marginEur", profit);
-        setVal("marginPct", p);
-      }
-
-      if (lastEdited === "marginEur"){
-        if (raw("marginEur").trim() === "") return;
-        clear(["discountPercentage","discountAmount","newPrice"]);
-
-        const profit = num("marginEur");
-        if (profit === null) return;
-        const pr = Math.max(profit, 0);
-
-        const net = purchaseEx + pr;
-        const pct = net > 0 ? (pr / net) * 100 : 0;
-
-        setVal("netPrice", net);
-        setVal("sellPrice", net * VAT);
-        setVal("marginPct", clamp(pct, 0, 99));
-        setVal("marginEur", pr);
-      }
-    }
-
-    function updateMarginBoxFromCurrent(){
-      // update margin fields from current effective price (discounted if active)
       const purchaseEx = num("purchasePrice");
       const sellIncl = num("sellPrice");
-      if (purchaseEx === null || sellIncl === null || purchaseEx <= 0) {
-        // niets afdwingen; laat wat er staat, of leeg
-        if (raw("marginPct").trim() === "") setVal("marginPct", null);
-        if (raw("marginEur").trim() === "") setVal("marginEur", null);
-        return;
-      }
+      if (purchaseEx === null || sellIncl === null || purchaseEx <= 0) return;
 
-      const effIncl = effectiveSellIncl(sellIncl);
-      if (effIncl === null) return;
+      const net = sellIncl / VAT;
+      if (!(net > 0)) return;
 
-      const effNet = effIncl / VAT;
-      if (!(effNet > 0)) return;
+      const profit = net - purchaseEx;
+      const pct = (profit / net) * 100;
 
-      const profit = effNet - purchaseEx;
-      const pct = (profit / effNet) * 100;
-
-      // Niet overschrijven als user net margin aan het typen is
-      if (lastEdited !== "marginPct" && lastEdited !== "marginEur") {
-        setVal("marginPct", clamp(pct, 0, 99));
-        setVal("marginEur", profit);
-      }
+      setVal("marginPct", clamp(pct, 0, 99));
+      setVal("marginEur", profit);
     }
 
     function recalc(){
       if (updating) return;
       updating = true;
 
+      // basis sync
       syncPurchase();
-      syncSelling();
+      syncSellingPair();
 
-      // Margin edits should drive selling, while keeping the old logic intact.
-      applyMarginEdits();
+      // desired margin vastleggen en toepassen zodra purchase er is
+      captureDesiredMargin();
+      applyDesiredMarginIfPossible();
 
-      // Discount affects effective price -> margin box should reflect that.
-      // Discount itself still linked as before.
-      syncDiscount();
+      // discount zonder "after discount" box:
+      // discount stuurt SELLING (eindprijs)
+      syncDiscountToSelling();
 
-      // Finally update margin values from current state (base or discounted).
-      updateMarginBoxFromCurrent();
+      // daarna pair sync nog eens om consistent te houden (bijv. als sellPrice gezet werd)
+      if (["discountPercentage","discountAmount"].includes(lastEdited)){
+        syncSellingPair();
+      }
+
+      // margin tonen op basis van huidige (eventueel discounted) selling
+      updateMarginFromCurrentSelling();
 
       updating = false;
     }
@@ -435,9 +481,7 @@
         recalc();
       });
 
-      // Quick overwrite
       input.addEventListener("focus", () => {
-        // select all on focus (mobile friendly)
         setTimeout(() => { try { input.select(); } catch(e){} }, 0);
       });
     }
@@ -446,7 +490,7 @@
       [
         "purchasePrice","purchasePriceIncl",
         "sellPrice","netPrice",
-        "discountPercentage","discountAmount","newPrice",
+        "discountPercentage","discountAmount",
         "marginPct","marginEur"
       ].forEach(bind);
 
