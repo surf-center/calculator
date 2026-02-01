@@ -28,7 +28,7 @@
       justify-content:center;
       align-items:center;
 
-      padding: calc(env(safe-area-inset-top) + 20px) 18px calc(env(safe-area-inset-bottom) + 20px);
+      padding: calc(env(safe-area-inset-top) + 18px) 16px calc(env(safe-area-inset-bottom) + 18px);
     }
 
     .card{
@@ -41,18 +41,21 @@
       padding:18px;
     }
 
-    .logo{ display:flex; justify-content:center; padding:6px 0 14px; }
+    .logo{ display:flex; justify-content:center; padding:6px 0 12px; }
     .logo img{ width:min(320px,86vw); height:auto; display:block; }
 
-    .section{ display:flex; flex-direction:column; gap:10px; padding:12px 0; }
-    .section + .section{ border-top:1px solid #efefef; }
+    /* Minimalistischere secties */
+    .section{ display:flex; flex-direction:column; gap:8px; padding:10px 0; }
+    .section + .section{ border-top:1px solid #f1f1f1; }
 
     .section-title{
-      font-size:12px;
-      font-weight:900;
+      font-size:11px;
+      font-weight:800;
       color:#111;
-      opacity:.85;
-      letter-spacing:.02em;
+      opacity:.55;          /* subtieler */
+      letter-spacing:.03em; /* strakker */
+      text-transform: uppercase;
+      margin-left:2px;
     }
 
     .row2{ display:grid; grid-template-columns:1fr 1fr; gap:10px; }
@@ -87,13 +90,18 @@
       color:#111;
       background:#fff;
     }
+    input[readonly]{
+      background:#fafafa;
+      color:#111;
+    }
+
     input[type="number"]::-webkit-outer-spin-button,
     input[type="number"]::-webkit-inner-spin-button{ -webkit-appearance:none; margin:0; }
     input[type="number"]{ -moz-appearance:textfield; appearance:textfield; }
 
-    /* STRAK BLAUW VAK (oude look, maar editable) */
+    /* STRAK BLAUW VAK (editable) */
     .summary{
-      margin-top:14px;
+      margin-top:12px;
       padding:14px;
       border-radius:14px;
       background:#007bff;
@@ -141,7 +149,6 @@
     }
     .biginput input::placeholder{ color: rgba(255,255,255,.75); }
 
-    /* Mobile: keep 2 columns (zoals jij wil), maar iets strakker */
     @media (max-width: 380px){
       .logo img{ width:min(300px, 86vw); }
       .biginput input{ font-size:24px; }
@@ -155,25 +162,25 @@
       <img src="logo.png" alt="Logo">
     </div>
 
-    <!-- Purchase -->
+    <!-- Purchase (READONLY: enkel nodig als input, maar jij wil nu alleen selling aanpassen) -->
     <div class="section">
       <div class="section-title">Purchase</div>
       <div class="row2">
         <div class="input">
           <div class="prefix">€</div>
-          <input type="number" id="purchasePrice" min="0" inputmode="decimal" />
+          <input type="number" id="purchasePrice" min="0" inputmode="decimal" readonly />
           <div class="suffix">Excl.</div>
         </div>
 
         <div class="input">
           <div class="prefix">€</div>
-          <input type="number" id="purchasePriceIncl" min="0" inputmode="decimal" />
+          <input type="number" id="purchasePriceIncl" min="0" inputmode="decimal" readonly />
           <div class="suffix">Incl.</div>
         </div>
       </div>
     </div>
 
-    <!-- Selling (dit is nu de EINDPRIJS als discount actief is) -->
+    <!-- Selling (ENKEL DIT is aanpasbaar) -->
     <div class="section">
       <div class="section-title">Selling</div>
       <div class="row2">
@@ -191,7 +198,7 @@
       </div>
     </div>
 
-    <!-- Discount (zonder “price after discount” box) -->
+    <!-- Discount (stuurt selling eindprijs; blijft aanpasbaar) -->
     <div class="section">
       <div class="section-title">Discount</div>
       <div class="row2">
@@ -214,7 +221,7 @@
           <div class="k">Margin</div>
           <div class="biginput">
             <span class="bigprefix">%</span>
-            <input type="number" id="marginPct" min="0" max="99" inputmode="decimal" placeholder="" />
+            <input type="number" id="marginPct" min="0" max="99" inputmode="decimal" />
           </div>
         </div>
 
@@ -222,7 +229,7 @@
           <div class="k">Margin</div>
           <div class="biginput">
             <span class="bigprefix">€</span>
-            <input type="number" id="marginEur" min="0" inputmode="decimal" placeholder="" />
+            <input type="number" id="marginEur" min="0" inputmode="decimal" />
           </div>
         </div>
       </div>
@@ -248,12 +255,13 @@
     let updating = false;
     let lastEdited = null;
 
-    // "Desired margin" onthouden zodat volgorde niet uitmaakt
+    // Desired margin (order independent), but purchase is readonly here.
     let desiredMarginMode = null; // "pct" | "eur" | null
     let desiredMarginValue = null;
 
-    // Discount: selling wordt de eindprijs -> we onthouden de basisprijs (voor discount)
-    let baseSellIncl = null; // incl
+    // Discount uses Selling as end price, but needs base sell.
+    let baseSellIncl = null;
+
     function discountActive(){
       return raw("discountPercentage").trim() !== "" || raw("discountAmount").trim() !== "";
     }
@@ -275,25 +283,8 @@
       }
     }
 
-    function syncPurchase(){
-      if (lastEdited === "purchasePrice" && raw("purchasePrice").trim() === "") clear(["purchasePriceIncl"]);
-      if (lastEdited === "purchasePriceIncl" && raw("purchasePriceIncl").trim() === "") clear(["purchasePrice"]);
-
-      const ex = num("purchasePrice");
-      const inc = num("purchasePriceIncl");
-
-      if (lastEdited === "purchasePriceIncl" && inc !== null){
-        setVal("purchasePrice", inc / VAT);
-      } else if (lastEdited === "purchasePrice" && ex !== null){
-        setVal("purchasePriceIncl", ex * VAT);
-      } else {
-        if (ex === null && inc !== null) setVal("purchasePrice", inc / VAT);
-        if (inc === null && ex !== null) setVal("purchasePriceIncl", ex * VAT);
-      }
-    }
-
+    // Selling pair remains 2-way editable
     function syncSellingPair(){
-      // Selling pair blijft 2-weg editable (incl/excl)
       if (lastEdited === "sellPrice" && raw("sellPrice").trim() === "") clear(["netPrice"]);
       if (lastEdited === "netPrice" && raw("netPrice").trim() === "") clear(["sellPrice"]);
 
@@ -310,29 +301,32 @@
       }
     }
 
-    function applyDesiredMarginIfPossible(){
+    function applyMarginToSellingIfPossible(){
+      // purchase is required (even if readonly, it must have a value from your product list)
       const purchaseEx = num("purchasePrice");
       if (purchaseEx === null || purchaseEx <= 0) return;
       if (!desiredMarginMode || desiredMarginValue === null) return;
 
-      // margin stuurt basisprijs -> discount resetten (nieuwe basis)
-      if (["marginPct","marginEur","purchasePrice","purchasePriceIncl"].includes(lastEdited)){
+      // margin change implies new base price -> reset discount + base
+      if (["marginPct","marginEur"].includes(lastEdited)){
         baseSellIncl = null;
         clear(["discountPercentage","discountAmount"]);
       }
 
       if (desiredMarginMode === "pct"){
         const p = clamp(desiredMarginValue, 0, 99);
-        const net = purchaseEx / (1 - (p / 100)); // excl
+        const net = purchaseEx / (1 - (p / 100));
         const profit = net - purchaseEx;
+
         setVal("netPrice", net);
         setVal("sellPrice", net * VAT);
         setVal("marginEur", profit);
         setVal("marginPct", p);
-      } else if (desiredMarginMode === "eur"){
+      } else {
         const profit = Math.max(desiredMarginValue, 0);
         const net = purchaseEx + profit;
         const pct = net > 0 ? (profit / net) * 100 : 0;
+
         setVal("netPrice", net);
         setVal("sellPrice", net * VAT);
         setVal("marginPct", clamp(pct, 0, 99));
@@ -341,39 +335,26 @@
     }
 
     function ensureBaseSellStored(){
-      // Als discount net aangezet wordt: onthoud huidige selling als basis
       if (discountActive() && baseSellIncl === null){
         const current = num("sellPrice");
         if (current !== null) baseSellIncl = current;
       }
-      // Als discount uit: basis vergeten
       if (!discountActive() && baseSellIncl !== null){
         baseSellIncl = null;
       }
     }
 
     function syncDiscountToSelling(){
-      // Leegmaken van één discount veld -> reset beide en herstel basisprijs
       if (["discountPercentage","discountAmount"].includes(lastEdited)){
-        if (raw(lastEdited).trim() === ""){
-          clear(["discountPercentage","discountAmount"]);
-        }
+        if (raw(lastEdited).trim() === "") clear(["discountPercentage","discountAmount"]);
       }
 
       ensureBaseSellStored();
 
-      // Geen discount? dan niets doen (selling blijft wat het is)
-      if (!discountActive()){
-        // als net discount verwijderd: zet selling terug naar basis als we die hadden
-        // (baseSellIncl is al null gezet in ensureBaseSellStored)
-        return;
-      }
-
-      // Als base nog niet bekend is (geen selling ingevuld), dan kunnen we niks toepassen
+      if (!discountActive()) return;
       if (baseSellIncl === null) return;
 
-      // Als user selling aanpast terwijl discount actief is -> interpreteer als "nieuwe eindprijs"
-      // en bereken discount terug t.o.v. base.
+      // If user edits selling while discount active => treat as final price
       if (lastEdited === "sellPrice"){
         const finalIncl = num("sellPrice");
         if (finalIncl !== null){
@@ -381,11 +362,9 @@
           const pct = baseSellIncl > 0 ? (amt / baseSellIncl) * 100 : 0;
           setVal("discountAmount", amt);
           setVal("discountPercentage", clamp(pct, 0, 99));
-          // netPrice pair syncen laten we daarna doen
         }
         return;
       }
-
       if (lastEdited === "netPrice"){
         const finalEx = num("netPrice");
         if (finalEx !== null){
@@ -399,15 +378,14 @@
         return;
       }
 
-      // Normal discount editing:
       if (lastEdited === "discountPercentage"){
         const pct = num("discountPercentage");
         if (pct !== null){
           const p = clamp(pct, 0, 99);
           const finalIncl = baseSellIncl * (1 - p / 100);
           setVal("sellPrice", finalIncl);
-          setVal("discountAmount", baseSellIncl - finalIncl);
           setVal("netPrice", finalIncl / VAT);
+          setVal("discountAmount", baseSellIncl - finalIncl);
         }
       }
 
@@ -422,13 +400,10 @@
           setVal("discountPercentage", clamp(pct, 0, 99));
         }
       }
-
-      // Als user begon met discount invullen maar we hadden nog geen baseSellIncl:
-      // -> zodra selling ingevuld wordt, wordt baseSellIncl gezet en discount toegepast bij volgende input
     }
 
     function updateMarginFromCurrentSelling(){
-      // Niet overschrijven als user de blauwe inputs aan het typen is
+      // don't overwrite while typing in blue box
       if (lastEdited === "marginPct" || lastEdited === "marginEur") return;
 
       const purchaseEx = num("purchasePrice");
@@ -449,24 +424,22 @@
       if (updating) return;
       updating = true;
 
-      // basis sync
-      syncPurchase();
+      // Selling is the only editable price pair.
       syncSellingPair();
 
-      // desired margin vastleggen en toepassen zodra purchase er is
+      // Capture + apply margin (drives selling)
       captureDesiredMargin();
-      applyDesiredMarginIfPossible();
+      applyMarginToSellingIfPossible();
 
-      // discount zonder "after discount" box:
-      // discount stuurt SELLING (eindprijs)
+      // Discount drives selling final price
       syncDiscountToSelling();
 
-      // daarna pair sync nog eens om consistent te houden (bijv. als sellPrice gezet werd)
+      // Keep pair in sync after discount updates
       if (["discountPercentage","discountAmount"].includes(lastEdited)){
         syncSellingPair();
       }
 
-      // margin tonen op basis van huidige (eventueel discounted) selling
+      // Update margin view from current selling (final if discounted)
       updateMarginFromCurrentSelling();
 
       updating = false;
@@ -488,11 +461,13 @@
 
     window.addEventListener("DOMContentLoaded", () => {
       [
-        "purchasePrice","purchasePriceIncl",
         "sellPrice","netPrice",
         "discountPercentage","discountAmount",
         "marginPct","marginEur"
       ].forEach(bind);
+
+      // Purchase is readonly but must be prefilled by your system (e.g. from product selection).
+      // If you later set purchase values via JS, call recalc() afterwards.
 
       recalc();
     });
