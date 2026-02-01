@@ -17,16 +17,20 @@
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     html, body { width: 100%; height: 100%; }
+
     body {
       background: #f3f3f3;
       font-family: "Poppins", sans-serif;
       overflow-y: auto;
 
+      min-height: 100vh;
       display: flex;
       justify-content: center;
-      align-items: flex-start;
+      align-items: center;
 
-      padding: calc(env(safe-area-inset-top) + 14px) 18px 18px;
+      padding: calc(env(safe-area-inset-top) + 20px)
+               18px
+               calc(env(safe-area-inset-bottom) + 20px);
     }
 
     .card {
@@ -53,10 +57,18 @@
     .section {
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      gap: 10px;
       padding: 12px 0;
     }
     .section + .section { border-top: 1px solid #efefef; }
+
+    .section-title {
+      font-size: 12px;
+      font-weight: 900;
+      color: #111;
+      opacity: .85;
+      letter-spacing: .02em;
+    }
 
     .row2 {
       display: grid;
@@ -69,14 +81,6 @@
       gap: 10px;
     }
 
-    .field { display: flex; flex-direction: column; gap: 6px; }
-    .label {
-      font-size: 12px;
-      font-weight: 700;
-      color: #222;
-      opacity: .85;
-    }
-
     .input {
       display: flex;
       align-items: center;
@@ -87,7 +91,7 @@
     }
     .prefix, .suffix {
       font-size: 13px;
-      font-weight: 800;
+      font-weight: 900;
       color: #111;
       background: #f4f4f4;
       padding: 10px 10px;
@@ -107,12 +111,10 @@
       background: #fff;
     }
 
-    /* Hide spinners */
     input[type="number"]::-webkit-outer-spin-button,
     input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
     input[type="number"]{ -moz-appearance: textfield; appearance: textfield; }
 
-    /* Leading margin summary (blue) */
     .summary {
       margin-top: 14px;
       padding: 14px;
@@ -134,7 +136,7 @@
     .pill .k {
       font-size: 12px;
       opacity: .95;
-      font-weight: 800;
+      font-weight: 900;
       margin-bottom: 6px;
       letter-spacing: .02em;
     }
@@ -143,8 +145,6 @@
       font-weight: 900;
       line-height: 1.1;
     }
-
-    .hidden-tech { display: none !important; }
   </style>
 </head>
 
@@ -154,84 +154,66 @@
       <img src="logo.png" alt="Logo">
     </div>
 
-    <!-- Purchase (excl + incl naast elkaar) -->
+    <!-- Purchase -->
     <div class="section">
+      <div class="section-title">Purchase</div>
       <div class="row2">
-        <div class="field">
-          <div class="label">Purchase Excl.</div>
-          <div class="input">
-            <div class="prefix">€</div>
-            <input type="number" id="purchasePrice" min="0" inputmode="decimal" />
-            <div class="suffix">Excl.</div>
-          </div>
+        <div class="input">
+          <div class="prefix">€</div>
+          <input type="number" id="purchasePrice" min="0" inputmode="decimal" />
+          <div class="suffix">Excl.</div>
         </div>
 
-        <div class="field">
-          <div class="label">Purchase Incl.</div>
-          <div class="input">
-            <div class="prefix">€</div>
-            <input type="number" id="purchasePriceIncl" min="0" inputmode="decimal" />
-            <div class="suffix">Incl.</div>
-          </div>
+        <div class="input">
+          <div class="prefix">€</div>
+          <input type="number" id="purchasePriceIncl" min="0" inputmode="decimal" />
+          <div class="suffix">Incl.</div>
         </div>
       </div>
     </div>
 
-    <!-- Selling (incl + excl naast elkaar) -->
+    <!-- Selling -->
     <div class="section">
+      <div class="section-title">Selling</div>
       <div class="row2">
-        <div class="field">
-          <div class="label">Selling Incl.</div>
-          <div class="input">
-            <div class="prefix">€</div>
-            <input type="number" id="sellPrice" min="0" inputmode="decimal" />
-            <div class="suffix">Incl.</div>
-          </div>
+        <div class="input">
+          <div class="prefix">€</div>
+          <input type="number" id="sellPrice" min="0" inputmode="decimal" />
+          <div class="suffix">Incl.</div>
         </div>
 
-        <div class="field">
-          <div class="label">Selling Excl.</div>
-          <div class="input">
-            <div class="prefix">€</div>
-            <input type="number" id="netPrice" min="0" inputmode="decimal" />
-            <div class="suffix">Excl.</div>
-          </div>
+        <div class="input">
+          <div class="prefix">€</div>
+          <input type="number" id="netPrice" min="0" inputmode="decimal" />
+          <div class="suffix">Excl.</div>
         </div>
       </div>
     </div>
 
-    <!-- Discount (% + € naast elkaar) + New price onder -->
+    <!-- Discount -->
     <div class="section">
+      <div class="section-title">Discount</div>
       <div class="row2">
-        <div class="field">
-          <div class="label">Discount %</div>
-          <div class="input">
-            <div class="prefix">%</div>
-            <input type="number" id="discountPercentage" min="0" max="99" inputmode="decimal" />
-          </div>
+        <div class="input">
+          <div class="prefix">%</div>
+          <input type="number" id="discountPercentage" min="0" max="99" inputmode="decimal" />
         </div>
 
-        <div class="field">
-          <div class="label">Discount €</div>
-          <div class="input">
-            <div class="prefix">€</div>
-            <input type="number" id="discountAmount" min="0" inputmode="decimal" />
-          </div>
+        <div class="input">
+          <div class="prefix">€</div>
+          <input type="number" id="discountAmount" min="0" inputmode="decimal" />
         </div>
       </div>
 
       <div class="row1">
-        <div class="field">
-          <div class="label">New price</div>
-          <div class="input">
-            <div class="prefix">€</div>
-            <input type="number" id="newPrice" min="0" inputmode="decimal" />
-          </div>
+        <div class="input">
+          <div class="prefix">€</div>
+          <input type="number" id="newPrice" min="0" inputmode="decimal" />
         </div>
       </div>
     </div>
 
-    <!-- LEADING MARGIN (geen "-" tonen; alleen symbool) -->
+    <!-- Margin summary -->
     <div class="summary" id="summary">
       <div class="summary-grid">
         <div class="pill">
@@ -239,16 +221,10 @@
           <div class="v" id="summaryMarginPct">%</div>
         </div>
         <div class="pill">
-          <div class="k">Profit</div>
+          <div class="k">Margin</div>
           <div class="v" id="summaryMarginEur">€</div>
         </div>
       </div>
-    </div>
-
-    <!-- Verborgen (voor interne berekeningen / compat) -->
-    <div class="hidden-tech">
-      <input type="number" id="profitMargin" />
-      <input type="number" id="profitAmount" />
     </div>
   </div>
 
@@ -257,21 +233,30 @@
     const el = (id) => document.getElementById(id);
 
     function roundDown(value) { return isNaN(value) ? "" : Math.floor(value); }
+
+    // Raw string (voor "is leeg?")
+    function raw(id) { return el(id).value; }
+
     function num(id) {
       const v = parseFloat(el(id).value);
       return Number.isFinite(v) ? v : null;
     }
+
     function setVal(id, value) {
       el(id).value = (value === null || value === "" || Number.isNaN(value)) ? "" : roundDown(value);
+    }
+
+    function clear(ids) {
+      ids.forEach(i => el(i).value = "");
     }
 
     let updating = false;
     let lastEdited = null;
 
     function discountActive() {
-      return el("discountPercentage").value.trim() !== "" ||
-             el("discountAmount").value.trim() !== "" ||
-             el("newPrice").value.trim() !== "";
+      return raw("discountPercentage").trim() !== "" ||
+             raw("discountAmount").trim() !== "" ||
+             raw("newPrice").trim() !== "";
     }
 
     function effectiveSellIncl(sellIncl) {
@@ -298,37 +283,61 @@
       if (updating) return;
       updating = true;
 
-      // Purchase sync (both editable)
+      // --- PURCHASE sync (beide kanten editbaar, leegmaken reset beide) ---
+      if (lastEdited === "purchasePrice" && raw("purchasePrice").trim() === "") {
+        clear(["purchasePriceIncl"]);
+      }
+      if (lastEdited === "purchasePriceIncl" && raw("purchasePriceIncl").trim() === "") {
+        clear(["purchasePrice"]);
+      }
+
       let purchaseEx = num("purchasePrice");
       let purchaseIn = num("purchasePriceIncl");
 
       if (lastEdited === "purchasePriceIncl" && purchaseIn !== null) {
-        purchaseEx = purchaseIn / VAT;
-        setVal("purchasePrice", purchaseEx);
+        setVal("purchasePrice", purchaseIn / VAT);
+        purchaseEx = num("purchasePrice");
       } else if (lastEdited === "purchasePrice" && purchaseEx !== null) {
-        purchaseIn = purchaseEx * VAT;
-        setVal("purchasePriceIncl", purchaseIn);
+        setVal("purchasePriceIncl", purchaseEx * VAT);
+        purchaseIn = num("purchasePriceIncl");
       } else {
-        if (purchaseEx === null && purchaseIn !== null) { purchaseEx = purchaseIn / VAT; setVal("purchasePrice", purchaseEx); }
-        if (purchaseIn === null && purchaseEx !== null) { purchaseIn = purchaseEx * VAT; setVal("purchasePriceIncl", purchaseIn); }
+        // alleen aanvullen als één kant gevuld is (en de ander leeg), maar NIET terug-rammen als user net leeg maakte
+        if (purchaseEx === null && purchaseIn !== null) setVal("purchasePrice", purchaseIn / VAT);
+        if (purchaseIn === null && purchaseEx !== null) setVal("purchasePriceIncl", purchaseEx * VAT);
+        purchaseEx = num("purchasePrice");
       }
 
-      // Selling sync (both editable)
+      // --- SELLING sync (beide kanten editbaar, leegmaken reset beide) ---
+      if (lastEdited === "sellPrice" && raw("sellPrice").trim() === "") {
+        clear(["netPrice"]);
+      }
+      if (lastEdited === "netPrice" && raw("netPrice").trim() === "") {
+        clear(["sellPrice"]);
+      }
+
       let sellIn = num("sellPrice");
       let netEx  = num("netPrice");
 
       if (lastEdited === "netPrice" && netEx !== null) {
-        sellIn = netEx * VAT;
-        setVal("sellPrice", sellIn);
+        setVal("sellPrice", netEx * VAT);
+        sellIn = num("sellPrice");
       } else if (lastEdited === "sellPrice" && sellIn !== null) {
-        netEx = sellIn / VAT;
-        setVal("netPrice", netEx);
+        setVal("netPrice", sellIn / VAT);
+        netEx = num("netPrice");
       } else {
-        if (sellIn === null && netEx !== null) { sellIn = netEx * VAT; setVal("sellPrice", sellIn); }
-        if (netEx === null && sellIn !== null) { netEx = sellIn / VAT; setVal("netPrice", netEx); }
+        if (sellIn === null && netEx !== null) setVal("sellPrice", netEx * VAT);
+        if (netEx === null && sellIn !== null) setVal("netPrice", sellIn / VAT);
+        sellIn = num("sellPrice");
       }
 
-      // Discount linking (each discount field editable)
+      // --- DISCOUNT linking (leegmaken = reset alle discount velden) ---
+      if (["discountPercentage","discountAmount","newPrice"].includes(lastEdited)) {
+        if (raw(lastEdited).trim() === "") {
+          clear(["discountPercentage","discountAmount","newPrice"]);
+        }
+      }
+
+      // Als er een basis sell prijs is: koppel discount velden (elk veld editbaar)
       if (sellIn !== null) {
         if (lastEdited === "discountPercentage") {
           const pct = num("discountPercentage");
@@ -360,17 +369,16 @@
         }
       }
 
-      // Leading margin uses discounted price if discount active, else base sell
+      // --- LEADING margin ---
+      purchaseEx = num("purchasePrice"); // refresh
+      sellIn = num("sellPrice");         // refresh
+
       const effIncl = effectiveSellIncl(sellIn);
       const effNet  = (effIncl !== null) ? (effIncl / VAT) : null;
 
       if (purchaseEx !== null && effNet !== null && effNet > 0) {
         const profit = effNet - purchaseEx;
         const margin = (profit / effNet) * 100;
-
-        setVal("profitAmount", profit);
-        setVal("profitMargin", Math.min(margin, 99));
-
         setSummary(Math.min(margin, 99), profit);
       } else {
         setSummary(null, null);
@@ -394,6 +402,7 @@
         "sellPrice","netPrice",
         "discountPercentage","discountAmount","newPrice"
       ].forEach(bind);
+
       recalc();
     });
   </script>
