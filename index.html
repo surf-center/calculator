@@ -12,244 +12,329 @@
   <meta name="theme-color" content="#ffffff">
   <link rel="manifest" href="manifest.json">
 
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
 
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     html, body {
-      width: 100%; height: 100%; overflow-y: auto;
-      background: #f4f4f4;
+      width: 100%;
+      height: 100%;
+      background: #f3f3f3;
       font-family: "Poppins", sans-serif;
-      display: flex; align-items: center; justify-content: center;
-      padding: 2vw;
+    }
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 18px;
     }
 
-    .container {
+    /* Card */
+    .card {
       width: 100%;
       max-width: 420px;
       background: #fff;
-      padding: 15px;
-      border-radius: 10px;
-      box-shadow: 0 2px 6px rgba(0,0,0,.10);
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
+      border: 1px solid #e8e8e8;
+      border-radius: 16px;
+      box-shadow: 0 8px 24px rgba(0,0,0,.06);
+      padding: 18px;
     }
 
+    /* Logo */
     .logo {
       display: flex;
       justify-content: center;
-      margin-bottom: 6px;
+      padding: 8px 0 14px;
     }
     .logo img {
-      max-width: 170px;
+      width: min(260px, 75vw); /* groter */
       height: auto;
       display: block;
     }
 
-    .field { display: flex; flex-direction: column; gap: 4px; }
-    label { font-weight: 600; text-align: left; font-size: 14px; }
+    /* Sections */
+    .section {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      padding: 10px 0;
+    }
+    .section + .section {
+      border-top: 1px solid #efefef;
+    }
+    .title {
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      color: #111;
+      opacity: .8;
+    }
 
-    .row { display: flex; gap: 12px; }
-    .row .field { flex: 1; min-width: 160px; }
+    /* Inputs */
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    @media (max-width: 520px) {
+      .grid { grid-template-columns: 1fr; }
+    }
 
-    .input-group {
+    .field { display: flex; flex-direction: column; gap: 6px; }
+    .label {
+      font-size: 12px;
+      color: #333;
+      font-weight: 600;
+      opacity: .85;
+    }
+
+    .input {
       display: flex;
       align-items: center;
-      border: 1px solid #ccc;
-      border-radius: 8px;
+      border: 1px solid #dcdcdc;
+      border-radius: 12px;
       overflow: hidden;
-      background: white;
-    }
-    .input-group span {
-      background: #eee;
-      padding: 10px;
-      font-size: 14px;
-      border-right: 1px solid #ccc;
-      font-weight: 600;
-      white-space: nowrap;
-    }
-    .input-group input {
-      width: 100%;
-      padding: 10px;
-      border: none;
-      font-size: 14px;
-      text-align: left;
-      font-weight: 700;
-      outline: none;
       background: #fff;
     }
-    .input-group input[readonly] {
-      background: #fafafa;
-      color: #222;
-    }
-
-    input[type="number"]::-webkit-outer-spin-button,
-    input[type="number"]::-webkit-inner-spin-button {
-      -webkit-appearance: none;
-      margin: 0;
-    }
-    input[type="number"] { -moz-appearance: textfield; appearance: textfield; }
-
-    .divider {
-      height: 1px;
-      background: #eee;
-      margin: 4px 0;
-    }
-
-    button {
-      padding: 12px 14px;
-      background: #000;
-      color: #fff;
-      border: none;
-      cursor: pointer;
-      font-size: 14px;
-      border-radius: 10px;
-      width: 100%;
-      margin-top: 8px;
+    .prefix, .suffix {
+      font-size: 13px;
       font-weight: 800;
+      color: #111;
+      background: #f4f4f4;
+      padding: 10px 10px;
+      border-right: 1px solid #e2e2e2;
+      white-space: nowrap;
     }
-    button:hover { background: #222; }
+    .suffix {
+      border-right: none;
+      border-left: 1px solid #e2e2e2;
+    }
+    input[type="number"]{
+      width: 100%;
+      border: none;
+      outline: none;
+      padding: 10px 12px;
+      font-size: 14px;
+      font-weight: 800;
+      color: #111;
+      background: #fff;
+    }
+    input[readonly]{
+      background: #fafafa;
+      color: #111;
+      opacity: .9;
+    }
 
-    .hint {
+    /* Hide spinners */
+    input[type="number"]::-webkit-outer-spin-button,
+    input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+    input[type="number"]{ -moz-appearance: textfield; appearance: textfield; }
+
+    /* Bottom summary (leading) */
+    .summary {
+      margin-top: 12px;
+      padding: 14px;
+      border-radius: 14px;
+      background: #0b0b0b;
+      color: #fff;
+    }
+    .summary-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+    .summary-title {
+      font-size: 14px;
+      font-weight: 900;
+      letter-spacing: .02em;
+    }
+    .summary-sub {
       font-size: 12px;
-      color: #666;
-      margin-top: -2px;
+      opacity: .8;
+      font-weight: 600;
+    }
+    .summary-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    .pill {
+      border-radius: 14px;
+      padding: 12px;
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.14);
+    }
+    .pill .k {
+      font-size: 12px;
+      opacity: .85;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+    .pill .v {
+      font-size: 22px;
+      font-weight: 900;
+      line-height: 1.1;
     }
 
-    @media only screen and (max-width: 768px) {
-      .row { flex-direction: column; gap: 8px; }
-      body { padding-top: 8vh; }
-    }
+    /* After-discount block (optional + hidden by default) */
+    #afterDiscountWrap[hidden] { display: none !important; }
   </style>
 </head>
 
 <body>
-  <div class="container">
-    <!-- LOGO -->
+  <div class="card">
     <div class="logo">
-      <img src="logo.png" alt="Logo" />
+      <img src="logo.png" alt="Logo">
     </div>
 
-    <!-- Purchase Price -->
-    <label>Purchase Price</label>
-    <div class="row">
-      <div class="field">
-        <div class="input-group">
-          <span>€</span>
-          <input type="number" id="purchasePrice" min="0" inputmode="decimal" />
-          <span>Excl.</span>
+    <!-- PURCHASE -->
+    <div class="section">
+      <div class="title">Purchase</div>
+      <div class="grid">
+        <div class="field">
+          <div class="label">Excl. VAT</div>
+          <div class="input">
+            <div class="prefix">€</div>
+            <input type="number" id="purchasePrice" min="0" inputmode="decimal" />
+            <div class="suffix">Excl.</div>
+          </div>
         </div>
-      </div>
-      <div class="field">
-        <div class="input-group">
-          <span>€</span>
-          <input type="number" id="purchasePriceIncl" min="0" inputmode="decimal" />
-          <span>Incl.</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- Selling Price -->
-    <label>Selling Price</label>
-    <div class="row">
-      <div class="field">
-        <div class="input-group">
-          <span>€</span>
-          <input type="number" id="sellPrice" min="0" inputmode="decimal" />
-          <span>Incl.</span>
-        </div>
-      </div>
-      <div class="field">
-        <div class="input-group">
-          <span>€</span>
-          <input type="number" id="netPrice" min="0" inputmode="decimal" />
-          <span>Excl.</span>
+        <div class="field">
+          <div class="label">Incl. VAT</div>
+          <div class="input">
+            <div class="prefix">€</div>
+            <input type="number" id="purchasePriceIncl" min="0" inputmode="decimal" />
+            <div class="suffix">Incl.</div>
+          </div>
         </div>
       </div>
     </div>
 
-    <!-- Margin (normal) -->
-    <label>Margin</label>
-    <div class="row">
-      <div class="field">
-        <div class="input-group">
-          <span>%</span>
-          <input type="number" id="profitMargin" min="0" max="99" inputmode="decimal" />
+    <!-- SELL -->
+    <div class="section">
+      <div class="title">Sell</div>
+      <div class="grid">
+        <div class="field">
+          <div class="label">Incl. VAT</div>
+          <div class="input">
+            <div class="prefix">€</div>
+            <input type="number" id="sellPrice" min="0" inputmode="decimal" />
+            <div class="suffix">Incl.</div>
+          </div>
         </div>
-      </div>
-      <div class="field">
-        <div class="input-group">
-          <span>€</span>
-          <input type="number" id="profitAmount" min="0" inputmode="decimal" />
-        </div>
-      </div>
-    </div>
-
-    <div class="divider"></div>
-
-    <!-- Discount -->
-    <label>Discount</label>
-    <div class="row">
-      <div class="field">
-        <div class="input-group">
-          <span>%</span>
-          <input type="number" id="discountPercentage" min="0" max="99" inputmode="decimal" />
-        </div>
-      </div>
-      <div class="field">
-        <div class="input-group">
-          <span>€</span>
-          <input type="number" id="discountAmount" min="0" inputmode="decimal" />
+        <div class="field">
+          <div class="label">Excl. VAT</div>
+          <div class="input">
+            <div class="prefix">€</div>
+            <input type="number" id="netPrice" min="0" inputmode="decimal" />
+            <div class="suffix">Excl.</div>
+          </div>
         </div>
       </div>
     </div>
 
-    <label>New Price</label>
-    <div class="field">
-      <div class="input-group">
-        <span>€</span>
-        <input type="number" id="newPrice" min="0" inputmode="decimal" />
-        <span>Incl.</span>
-      </div>
-      <div class="hint">Typ in één van de discount velden. Leegmaken = marge terug naar normaal.</div>
-    </div>
-
-    <!-- Margin after discount -->
-    <label>Margin after discount</label>
-    <div class="row">
-      <div class="field">
-        <div class="input-group">
-          <span>%</span>
-          <input type="number" id="profitMarginDiscount" readonly />
+    <!-- MARGIN (editable) -->
+    <div class="section">
+      <div class="title">Margin (editable)</div>
+      <div class="grid">
+        <div class="field">
+          <div class="label">Margin %</div>
+          <div class="input">
+            <div class="prefix">%</div>
+            <input type="number" id="profitMargin" min="0" max="99" inputmode="decimal" />
+          </div>
         </div>
-      </div>
-      <div class="field">
-        <div class="input-group">
-          <span>€</span>
-          <input type="number" id="profitAmountDiscount" readonly />
+        <div class="field">
+          <div class="label">Margin € (excl.)</div>
+          <div class="input">
+            <div class="prefix">€</div>
+            <input type="number" id="profitAmount" min="0" inputmode="decimal" />
+          </div>
         </div>
       </div>
     </div>
 
-    <!-- Button shows discounted margin live (text updated by JS) -->
-    <button type="button" id="applyDiscount">Discount</button>
+    <!-- DISCOUNT -->
+    <div class="section">
+      <div class="title">Discount (what-if)</div>
+      <div class="grid">
+        <div class="field">
+          <div class="label">Discount %</div>
+          <div class="input">
+            <div class="prefix">%</div>
+            <input type="number" id="discountPercentage" min="0" max="99" inputmode="decimal" />
+          </div>
+        </div>
+        <div class="field">
+          <div class="label">Discount € (incl.)</div>
+          <div class="input">
+            <div class="prefix">€</div>
+            <input type="number" id="discountAmount" min="0" inputmode="decimal" />
+          </div>
+        </div>
+      </div>
+
+      <div class="field">
+        <div class="label">New price (incl.)</div>
+        <div class="input">
+          <div class="prefix">€</div>
+          <input type="number" id="newPrice" min="0" inputmode="decimal" />
+          <div class="suffix">Incl.</div>
+        </div>
+      </div>
+
+      <!-- Hidden unless discount is active -->
+      <div id="afterDiscountWrap" hidden>
+        <div class="grid" style="margin-top:10px;">
+          <div class="field">
+            <div class="label">After discount %</div>
+            <div class="input">
+              <div class="prefix">%</div>
+              <input type="number" id="profitMarginDiscount" readonly />
+            </div>
+          </div>
+          <div class="field">
+            <div class="label">After discount € (excl.)</div>
+            <div class="input">
+              <div class="prefix">€</div>
+              <input type="number" id="profitAmountDiscount" readonly />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- LEADING SUMMARY (bottom) -->
+    <div class="summary" id="summary">
+      <div class="summary-head">
+        <div class="summary-title" id="summaryTitle">Margin</div>
+        <div class="summary-sub" id="summarySub">Based on selling price</div>
+      </div>
+      <div class="summary-grid">
+        <div class="pill">
+          <div class="k">%</div>
+          <div class="v" id="summaryMarginPct">–</div>
+        </div>
+        <div class="pill">
+          <div class="k">€</div>
+          <div class="v" id="summaryMarginEur">–</div>
+        </div>
+      </div>
+    </div>
   </div>
 
   <script>
     const VAT = 1.21;
-
     const el = (id) => document.getElementById(id);
 
-    function roundDown(value) {
-      return isNaN(value) ? "" : Math.floor(value);
-    }
-
+    function roundDown(value) { return isNaN(value) ? "" : Math.floor(value); }
     function num(id) {
       const v = parseFloat(el(id).value);
       return Number.isFinite(v) ? v : null;
     }
-
     function setVal(id, value) {
       el(id).value = (value === null || value === "" || Number.isNaN(value)) ? "" : roundDown(value);
     }
@@ -262,7 +347,6 @@
              el("discountAmount").value.trim() !== "" ||
              el("newPrice").value.trim() !== "";
     }
-
     function clearDiscountFields(except = null) {
       if (except !== "discountPercentage") el("discountPercentage").value = "";
       if (except !== "discountAmount") el("discountAmount").value = "";
@@ -284,22 +368,17 @@
       return sellIncl;
     }
 
-    function updateButton(marginPct, profitEur) {
-      const btn = el("applyDiscount");
-      if (!btn) return;
-
-      if (marginPct === null || profitEur === null) {
-        btn.textContent = "Discount";
-        return;
-      }
-      btn.textContent = `Discount (marge: ${roundDown(marginPct)}% / €${roundDown(profitEur)})`;
+    function setSummary({ pct, eur, afterDiscount }) {
+      el("summaryMarginPct").textContent = (pct === null) ? "–" : `${roundDown(pct)}%`;
+      el("summaryMarginEur").textContent = (eur === null) ? "–" : `€${roundDown(eur)}`;
+      el("summaryTitle").textContent = afterDiscount ? "Margin (after discount)" : "Margin";
+      el("summarySub").textContent = afterDiscount ? "Based on discounted price" : "Based on selling price";
     }
 
     function recalc() {
       if (updating) return;
       updating = true;
 
-      // --- base values ---
       let purchaseEx = num("purchasePrice");
       let purchaseIn = num("purchasePriceIncl");
 
@@ -309,7 +388,7 @@
       let marginPct = num("profitMargin");
       let profitEur = num("profitAmount");
 
-      // 1) Purchase sync
+      // Purchase sync
       if (lastEdited === "purchasePriceIncl" && purchaseIn !== null) {
         purchaseEx = purchaseIn / VAT;
         setVal("purchasePrice", purchaseEx);
@@ -317,17 +396,11 @@
         purchaseIn = purchaseEx * VAT;
         setVal("purchasePriceIncl", purchaseIn);
       } else {
-        if (purchaseEx === null && purchaseIn !== null) {
-          purchaseEx = purchaseIn / VAT;
-          setVal("purchasePrice", purchaseEx);
-        }
-        if (purchaseIn === null && purchaseEx !== null) {
-          purchaseIn = purchaseEx * VAT;
-          setVal("purchasePriceIncl", purchaseIn);
-        }
+        if (purchaseEx === null && purchaseIn !== null) { purchaseEx = purchaseIn / VAT; setVal("purchasePrice", purchaseEx); }
+        if (purchaseIn === null && purchaseEx !== null) { purchaseIn = purchaseEx * VAT; setVal("purchasePriceIncl", purchaseIn); }
       }
 
-      // 2) Selling sync
+      // Sell sync
       if (lastEdited === "netPrice" && netEx !== null) {
         sellIn = netEx * VAT;
         setVal("sellPrice", sellIn);
@@ -335,17 +408,11 @@
         netEx = sellIn / VAT;
         setVal("netPrice", netEx);
       } else {
-        if (sellIn === null && netEx !== null) {
-          sellIn = netEx * VAT;
-          setVal("sellPrice", sellIn);
-        }
-        if (netEx === null && sellIn !== null) {
-          netEx = sellIn / VAT;
-          setVal("netPrice", netEx);
-        }
+        if (sellIn === null && netEx !== null) { sellIn = netEx * VAT; setVal("sellPrice", sellIn); }
+        if (netEx === null && sellIn !== null) { netEx = sellIn / VAT; setVal("netPrice", netEx); }
       }
 
-      // 3) Profit fields can drive selling price (all editable)
+      // Profit fields can drive sell price
       if (purchaseEx !== null) {
         if (lastEdited === "profitMargin" && marginPct !== null) {
           const m = Math.min(Math.max(marginPct, 0), 99) / 100;
@@ -371,22 +438,44 @@
         }
       }
 
-      // 4) Normal margin (on base netEx)
+      // Normal margin
+      let normalProfit = null, normalMargin = null;
       if (purchaseEx !== null && netEx !== null && netEx > 0) {
-        const profit = netEx - purchaseEx;
-        const m = (profit / netEx) * 100;
+        normalProfit = netEx - purchaseEx;
+        normalMargin = (normalProfit / netEx) * 100;
 
-        // Only overwrite margin inputs if user isn't currently editing them
-        if (lastEdited !== "profitAmount") setVal("profitAmount", profit);
-        if (lastEdited !== "profitMargin") setVal("profitMargin", Math.min(m, 99));
+        if (lastEdited !== "profitAmount") setVal("profitAmount", normalProfit);
+        if (lastEdited !== "profitMargin") setVal("profitMargin", Math.min(normalMargin, 99));
       }
 
-      // 5) Discount calcs (source is lastEdited among discount fields)
+      // Discount calculations
+      const afterWrap = el("afterDiscountWrap");
+
       if (!discountActive()) {
-        // discount cleared => reset "after discount" fields + button
+        afterWrap.hidden = true;
         el("profitMarginDiscount").value = "";
         el("profitAmountDiscount").value = "";
-        updateButton(null, null);
+        setSummary({
+          pct: normalMargin === null ? null : Math.min(normalMargin, 99),
+          eur: normalProfit,
+          afterDiscount: false
+        });
+        updating = false;
+        return;
+      }
+
+      // If user edits base values, safest is to reset discount (prevent stale discount)
+      // Comment these out if you prefer discount to persist.
+      if (["sellPrice","netPrice","purchasePrice","purchasePriceIncl"].includes(lastEdited)) {
+        clearDiscountFields();
+        afterWrap.hidden = true;
+        el("profitMarginDiscount").value = "";
+        el("profitAmountDiscount").value = "";
+        setSummary({
+          pct: normalMargin === null ? null : Math.min(normalMargin, 99),
+          eur: normalProfit,
+          afterDiscount: false
+        });
         updating = false;
         return;
       }
@@ -400,7 +489,6 @@
             setVal("discountAmount", sellIn - newIncl);
           }
         }
-
         if (lastEdited === "discountAmount") {
           const amt = num("discountAmount");
           if (amt !== null) {
@@ -410,7 +498,6 @@
             setVal("discountPercentage", pct);
           }
         }
-
         if (lastEdited === "newPrice") {
           const newIncl = num("newPrice");
           if (newIncl !== null) {
@@ -422,7 +509,7 @@
         }
       }
 
-      // 6) Margin after discount (effective price)
+      // Margin after discount
       const effIncl = effectiveSellIncl(sellIn);
       const effNet = effIncl !== null ? (effIncl / VAT) : null;
 
@@ -433,11 +520,17 @@
         setVal("profitAmountDiscount", profitD);
         setVal("profitMarginDiscount", Math.min(marginD, 99));
 
-        updateButton(Math.min(marginD, 99), profitD);
+        afterWrap.hidden = false;
+        setSummary({ pct: Math.min(marginD, 99), eur: profitD, afterDiscount: true });
       } else {
+        afterWrap.hidden = true;
         el("profitMarginDiscount").value = "";
         el("profitAmountDiscount").value = "";
-        updateButton(null, null);
+        setSummary({
+          pct: normalMargin === null ? null : Math.min(normalMargin, 99),
+          eur: normalProfit,
+          afterDiscount: false
+        });
       }
 
       updating = false;
@@ -448,13 +541,6 @@
       if (!input) return;
       input.addEventListener("input", () => {
         lastEdited = id;
-
-        // Veiligste keuze in winkel: als basisprijs wijzigt, reset korting
-        // (voorkomt dat oude korting per ongeluk blijft hangen op een nieuwe sellPrice)
-        if (id === "sellPrice" || id === "netPrice" || id === "purchasePrice" || id === "purchasePriceIncl") {
-          clearDiscountFields(); // comment deze regel uit als je korting wilt laten staan
-        }
-
         recalc();
       });
     }
@@ -466,21 +552,6 @@
         "profitMargin","profitAmount",
         "discountPercentage","discountAmount","newPrice"
       ].forEach(bind);
-
-      // Button: copy discounted price -> selling price (bewuste actie)
-      const btn = el("applyDiscount");
-      btn.addEventListener("click", () => {
-        const baseSell = num("sellPrice");
-        if (baseSell === null) return;
-
-        const eff = effectiveSellIncl(baseSell);
-        if (eff !== null) {
-          el("sellPrice").value = roundDown(eff);
-          lastEdited = "sellPrice";
-          clearDiscountFields();
-          recalc();
-        }
-      });
 
       recalc();
     });
