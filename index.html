@@ -125,7 +125,7 @@
       <img src="logo.png" alt="Logo">
     </div>
 
-    <!-- Purchase -->
+    <!-- Purchase (editable) -->
     <div class="section">
       <div class="section-title">Purchase</div>
       <div class="row2">
@@ -142,7 +142,7 @@
       </div>
     </div>
 
-    <!-- Selling (dit is EINDPRIJS als discount actief is) -->
+    <!-- Selling (final price if discount active) -->
     <div class="section">
       <div class="section-title">Selling</div>
       <div class="row2">
@@ -159,7 +159,7 @@
       </div>
     </div>
 
-    <!-- Discount (stuurt selling) -->
+    <!-- Discount (drives selling) -->
     <div class="section">
       <div class="section-title">Discount</div>
       <div class="row2">
@@ -212,19 +212,18 @@
     let updating = false;
     let lastEdited = null;
 
-    // "lock" = alleen actief nadat jij margin invult.
-    // Zodra jij selling óf discount wijzigt -> lock gaat UIT, zodat je eindeloos kunt spelen.
-    let marginLock = null; // { mode: "pct"|"eur", value: number } | null
+    // Margin lock: active only after editing margin.
+    // Editing purchase/selling/discount unlocks it so you can keep playing.
+    let marginLock = null; // { mode: "pct"|"eur", value:number } | null
 
-    // Discount gebruikt een basisprijs (pre-discount) om %/€ te berekenen.
+    // Discount base: stores pre-discount selling incl.
     let baseSellIncl = null;
 
     function discountActive(){
       return raw("discPct").trim() !== "" || raw("discEur").trim() !== "";
     }
 
-    function syncPair(aId, bId, mult, editedA, editedB){
-      // Leegmaken: beide leeg
+    function syncPair(aId, bId, mult){
       if (lastEdited === aId && raw(aId).trim() === "") { clear([bId]); return; }
       if (lastEdited === bId && raw(bId).trim() === "") { clear([aId]); return; }
 
@@ -243,18 +242,18 @@
       if (lastEdited === "mPct"){
         if (raw("mPct").trim() === "") { marginLock = null; return; }
         const p = num("mPct"); if (p === null) return;
-        marginLock = { mode: "pct", value: clamp(p, 0, 99) };
+        marginLock = { mode:"pct", value:clamp(p,0,99) };
       }
       if (lastEdited === "mEur"){
         if (raw("mEur").trim() === "") { marginLock = null; return; }
         const e = num("mEur"); if (e === null) return;
-        marginLock = { mode: "eur", value: Math.max(e, 0) };
+        marginLock = { mode:"eur", value:Math.max(e,0) };
       }
     }
 
     function unlockMarginIfNeeded(){
-      // Als jij Selling of Discount aanpast: margin lock uit (anders wordt selling steeds overschreven).
-      if (["sellIn","sellEx","discPct","discEur"].includes(lastEdited)) {
+      // If user edits anything except margin itself, margin stops forcing selling
+      if (["purchaseEx","purchaseIn","sellIn","sellEx","discPct","discEur"].includes(lastEdited)) {
         marginLock = null;
       }
     }
@@ -264,25 +263,25 @@
       if (!purchaseEx || purchaseEx <= 0) return;
       if (!marginLock) return;
 
-      // margin stuurt basisprijs => discount resetten
+      // margin drives base price -> reset discount
       baseSellIncl = null;
       clear(["discPct","discEur"]);
 
       if (marginLock.mode === "pct"){
-        const p = clamp(marginLock.value, 0, 99);
-        const net = purchaseEx / (1 - (p / 100));      // selling excl
+        const p = clamp(marginLock.value,0,99);
+        const net = purchaseEx / (1 - (p/100));      // selling excl
         const profit = net - purchaseEx;
         setVal("sellEx", net);
         setVal("sellIn", net * VAT);
         setVal("mEur", profit);
         setVal("mPct", p);
       } else {
-        const profit = Math.max(marginLock.value, 0);
-        const net = purchaseEx + profit;               // selling excl
+        const profit = Math.max(marginLock.value,0);
+        const net = purchaseEx + profit;
         const pct = (profit / net) * 100;
         setVal("sellEx", net);
         setVal("sellIn", net * VAT);
-        setVal("mPct", clamp(pct, 0, 99));
+        setVal("mPct", clamp(pct,0,99));
         setVal("mEur", profit);
       }
     }
@@ -298,7 +297,6 @@
     }
 
     function applyDiscountToSelling(){
-      // Leegmaken discount veld => alles leeg (en selling terug naar base als die bestond: doen we simpel door base los te laten)
       if (["discPct","discEur"].includes(lastEdited) && raw(lastEdited).trim() === ""){
         clear(["discPct","discEur"]);
       }
@@ -306,14 +304,14 @@
       ensureBaseSell();
       if (!discountActive() || baseSellIncl === null) return;
 
-      // Als jij selling aanpast terwijl discount actief is: interpretatie = "dit is eindprijs"
+      // If user edits selling while discount active -> interpret as final price
       if (lastEdited === "sellIn"){
         const finalIncl = num("sellIn");
         if (finalIncl !== null){
           const amt = Math.max(baseSellIncl - finalIncl, 0);
           const pct = baseSellIncl > 0 ? (amt / baseSellIncl) * 100 : 0;
           setVal("discEur", amt);
-          setVal("discPct", clamp(pct, 0, 99));
+          setVal("discPct", clamp(pct,0,99));
         }
         return;
       }
@@ -325,17 +323,17 @@
           const amt = Math.max(baseSellIncl - finalIncl, 0);
           const pct = baseSellIncl > 0 ? (amt / baseSellIncl) * 100 : 0;
           setVal("discEur", amt);
-          setVal("discPct", clamp(pct, 0, 99));
+          setVal("discPct", clamp(pct,0,99));
         }
         return;
       }
 
-      // Normaal: discount veld stuurt selling eindprijs
+      // Normal: discount fields drive final selling
       if (lastEdited === "discPct"){
         const pct = num("discPct");
         if (pct !== null){
-          const p = clamp(pct, 0, 99);
-          const finalIncl = baseSellIncl * (1 - p / 100);
+          const p = clamp(pct,0,99);
+          const finalIncl = baseSellIncl * (1 - p/100);
           setVal("sellIn", finalIncl);
           setVal("sellEx", finalIncl / VAT);
           setVal("discEur", baseSellIncl - finalIncl);
@@ -345,18 +343,18 @@
       if (lastEdited === "discEur"){
         const amt = num("discEur");
         if (amt !== null){
-          const a = Math.max(amt, 0);
+          const a = Math.max(amt,0);
           const finalIncl = Math.max(baseSellIncl - a, 0);
           setVal("sellIn", finalIncl);
           setVal("sellEx", finalIncl / VAT);
           const pct = baseSellIncl > 0 ? (a / baseSellIncl) * 100 : 0;
-          setVal("discPct", clamp(pct, 0, 99));
+          setVal("discPct", clamp(pct,0,99));
         }
       }
     }
 
     function updateMarginFromCurrent(){
-      // Niet overschrijven terwijl je margin typt
+      // Don't overwrite while typing margin
       if (lastEdited === "mPct" || lastEdited === "mEur") return;
 
       const purchaseEx = num("purchaseEx");
@@ -369,7 +367,7 @@
       const profit = net - purchaseEx;
       const pct = (profit / net) * 100;
 
-      setVal("mPct", clamp(pct, 0, 99));
+      setVal("mPct", clamp(pct,0,99));
       setVal("mEur", profit);
     }
 
@@ -377,27 +375,29 @@
       if (updating) return;
       updating = true;
 
-      // Sync pairs (purchase + selling)
+      // Always sync both pairs (purchase + selling)
       syncPair("purchaseIn","purchaseEx", VAT);
       syncPair("sellIn","sellEx", VAT);
 
-      // Lock/Unlock rules
-      unlockMarginIfNeeded();
-      captureMarginLock();
+      // Allow endless playing: only the field you JUST edited is "king"
+      unlockMarginIfNeeded();   // unlock margin when editing other fields
+      captureMarginLock();      // lock margin when editing margin
 
-      // If margin locked => drives selling (and clears discount)
-      if (["mPct","mEur","purchaseEx","purchaseIn"].includes(lastEdited)) {
+      // If margin edited -> it drives selling (and clears discount)
+      if (["mPct","mEur"].includes(lastEdited)) {
         applyMarginIfPossible();
-        // keep selling pair consistent after applying margin
         syncPair("sellIn","sellEx", VAT);
       }
 
-      // Discount drives selling (selling is end price when discount active)
+      // If purchase edited while margin lock exists (rare because we unlock on purchase edit),
+      // we still recompute margin later from current selling, so it "meebeweegt".
+      // If you want purchase change to keep SAME margin lock: remove purchase from unlock list above.
+
+      // Discount drives selling (final price)
       applyDiscountToSelling();
-      // keep selling pair consistent after discount changes
       if (["discPct","discEur"].includes(lastEdited)) syncPair("sellIn","sellEx", VAT);
 
-      // Always show current margin based on current selling (discounted or not)
+      // Keep margin display always correct for current selling
       updateMarginFromCurrent();
 
       updating = false;
