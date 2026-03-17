@@ -1,328 +1,265 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+  <title>Margins</title>
+
+  <link rel="icon" type="image/png" sizes="192x192" href="android-chrome-192x192.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="theme-color" content="#ffffff">
+  <link rel="manifest" href="manifest.json">
+
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    html,body{width:100%;height:100%}
+    body{
+      background:#f3f3f3;
+      font-family:"Poppins",sans-serif;
+      overflow-y:auto;
+      min-height:100vh;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      padding:calc(env(safe-area-inset-top) + 18px) 16px calc(env(safe-area-inset-bottom) + 18px);
+    }
+    .card{
+      width:100%;
+      max-width:420px;
+      background:#fff;
+      border:1px solid #e8e8e8;
+      border-radius:16px;
+      box-shadow:0 8px 24px rgba(0,0,0,.06);
+      padding:18px;
+    }
+    .logo{display:flex;justify-content:center;padding:6px 0 12px}
+    .logo img{width:min(320px,86vw);height:auto;display:block}
+
+    .section{display:flex;flex-direction:column;gap:8px;padding:10px 0}
+    .section + .section{border-top:1px solid #f1f1f1}
+    .section-title{
+      font-size:11px;
+      font-weight:800;
+      color:#111;
+      opacity:.55;
+      letter-spacing:.03em;
+      text-transform:uppercase;
+      margin-left:2px;
+    }
+
+    .row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+
+    .input{
+      display:flex;
+      align-items:center;
+      border:1px solid #dcdcdc;
+      border-radius:12px;
+      overflow:hidden;
+      background:#fff;
+    }
+    .prefix,.suffix{
+      font-size:13px;
+      font-weight:900;
+      color:#111;
+      background:#f4f4f4;
+      padding:10px 10px;
+      white-space:nowrap;
+    }
+    .prefix{border-right:1px solid #e2e2e2}
+    .suffix{border-left:1px solid #e2e2e2}
+
+    input[type="number"]{
+      width:100%;
+      border:none;
+      outline:none;
+      padding:12px 12px;
+      font-size:16px;
+      font-weight:900;
+      color:#111;
+      background:#fff;
+    }
+    input[type="number"]::-webkit-outer-spin-button,
+    input[type="number"]::-webkit-inner-spin-button{ -webkit-appearance:none; margin:0; }
+    input[type="number"]{ -moz-appearance:textfield; appearance:textfield; }
+
+    .summary{
+      margin-top:12px;
+      padding:14px;
+      border-radius:14px;
+      background:#007bff;
+      color:#fff;
+    }
+    .summary-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    .pill{
+      border-radius:14px;
+      padding:12px;
+      background:rgba(255,255,255,.14);
+      border:1px solid rgba(255,255,255,.22);
+    }
+    .pill .k{
+      font-size:12px;
+      opacity:.95;
+      font-weight:900;
+      margin-bottom:8px;
+    }
+    .biginput{display:flex;align-items:baseline;gap:6px}
+    .bigprefix{font-size:18px;font-weight:900}
+    .biginput input{
+      border:none;outline:none;background:transparent;color:#fff;
+      font-size:26px;font-weight:900;width:100%;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="card">
+    <div class="logo">
+      <img src="logo.png" alt="Logo">
+    </div>
+
+    <div class="section">
+      <div class="section-title">Purchase</div>
+      <div class="row2">
+        <div class="input">
+          <div class="prefix">€</div>
+          <input type="number" id="purchaseEx" />
+          <div class="suffix">Excl.</div>
+        </div>
+        <div class="input">
+          <div class="prefix">€</div>
+          <input type="number" id="purchaseIn" />
+          <div class="suffix">Incl.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Selling</div>
+      <div class="row2">
+        <div class="input">
+          <div class="prefix">€</div>
+          <input type="number" id="sellIn" />
+          <div class="suffix">Incl.</div>
+        </div>
+        <div class="input">
+          <div class="prefix">€</div>
+          <input type="number" id="sellEx" />
+          <div class="suffix">Excl.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Discount</div>
+      <div class="row2">
+        <div class="input">
+          <div class="prefix">%</div>
+          <input type="number" id="discPct" />
+        </div>
+        <div class="input">
+          <div class="prefix">€</div>
+          <input type="number" id="discEur" />
+        </div>
+      </div>
+    </div>
+
+    <div class="summary">
+      <div class="summary-grid">
+        <div class="pill">
+          <div class="k">Margin %</div>
+          <div class="biginput">
+            <span class="bigprefix">%</span>
+            <input type="number" id="mPct" />
+          </div>
+        </div>
+        <div class="pill">
+          <div class="k">Margin €</div>
+          <div class="biginput">
+            <span class="bigprefix">€</span>
+            <input type="number" id="mEur" />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
 <script>
-  const VAT = 1.21;
-  const el = (id) => document.getElementById(id);
+const VAT = 1.21;
+const el = id => document.getElementById(id);
 
-  const raw = (id) => el(id).value;
-  const num = (id) => {
-    const v = parseFloat(el(id).value);
-    return Number.isFinite(v) ? v : null;
-  };
+const num = id => {
+  const v = parseFloat(el(id).value);
+  return Number.isFinite(v) ? v : null;
+};
 
-  const floorOrEmpty = (v) =>
-    (v === null || v === "" || Number.isNaN(v)) ? "" : Math.floor(v);
+const set = (id, v) => el(id).value = v === null ? "" : Math.floor(v);
 
-  const setVal = (id, v) => { el(id).value = floorOrEmpty(v); };
+let last = null;
 
-  const ceilOrEmpty = (v) =>
-    (v === null || v === "" || Number.isNaN(v)) ? "" : Math.ceil(v);
+function sync(a,b,m){
+  const A=num(a), B=num(b);
+  if(last===a && A!==null) set(b, A/m);
+  else if(last===b && B!==null) set(a, B*m);
+}
 
-  const setPrefillPurchase = (id, v) => { el(id).value = ceilOrEmpty(v); };
-  const setPrefillOther = (id, v) => { el(id).value = floorOrEmpty(v); };
+function discountSync(){
+  const sell = num("sellIn");
+  if(!sell) return;
 
-  const clear = (ids) => ids.forEach(i => el(i).value = "");
-  const clamp = (n, a, b) => Math.min(Math.max(n, a), b);
-
-  let updating = false;
-  let lastEdited = null;
-
-  // Margin lock: actief alleen nadat margin handmatig is aangepast
-  let marginLock = null; // { mode:"pct"|"eur", value:number } | null
-
-  function syncPair(aId, bId, mult){
-    if (lastEdited === aId && raw(aId).trim() === "") { clear([bId]); return; }
-    if (lastEdited === bId && raw(bId).trim() === "") { clear([aId]); return; }
-
-    const a = num(aId);
-    const b = num(bId);
-
-    if (lastEdited === bId && b !== null) setVal(aId, b * mult);
-    else if (lastEdited === aId && a !== null) setVal(bId, a / mult);
-    else {
-      if (a === null && b !== null) setVal(aId, b * mult);
-      if (b === null && a !== null) setVal(bId, a / mult);
-    }
+  if(last==="discPct"){
+    const p=num("discPct");
+    if(p!==null) set("discEur", sell*(p/100));
   }
 
-  function captureMarginLock(){
-    if (lastEdited === "mPct"){
-      if (raw("mPct").trim() === "") { marginLock = null; return; }
-      const p = num("mPct");
-      if (p === null) return;
-      marginLock = { mode: "pct", value: clamp(p, 0, 99) };
-    }
-
-    if (lastEdited === "mEur"){
-      if (raw("mEur").trim() === "") { marginLock = null; return; }
-      const e = num("mEur");
-      if (e === null) return;
-      marginLock = { mode: "eur", value: Math.max(e, 0) };
-    }
+  if(last==="discEur"){
+    const e=num("discEur");
+    if(e!==null) set("discPct", (e/sell)*100);
   }
+}
 
-  function unlockMarginIfNeeded(){
-    if (["purchaseEx","purchaseIn","sellIn","sellEx","discPct","discEur"].includes(lastEdited)) {
-      marginLock = null;
-    }
-  }
+function effectiveSell(){
+  const sell=num("sellIn");
+  if(!sell) return null;
 
-  function applyMarginIfPossible(){
-    const purchaseEx = num("purchaseEx");
-    if (!purchaseEx || purchaseEx <= 0) return;
-    if (!marginLock) return;
+  const p=num("discPct");
+  const e=num("discEur");
 
-    // Margin bepaalt basis selling price
-    clear(["discPct","discEur"]);
+  if(p!==null) return sell*(1-p/100);
+  if(e!==null) return sell-e;
 
-    if (marginLock.mode === "pct"){
-      const p = clamp(marginLock.value, 0, 99);
-      const net = purchaseEx / (1 - (p / 100));
-      const profit = net - purchaseEx;
+  return sell;
+}
 
-      setVal("sellEx", net);
-      setVal("sellIn", net * VAT);
-      setVal("mEur", profit);
-      setVal("mPct", p);
-    } else {
-      const profit = Math.max(marginLock.value, 0);
-      const net = purchaseEx + profit;
-      const pct = (profit / net) * 100;
+function margin(){
+  const buy=num("purchaseEx");
+  const sell=effectiveSell();
+  if(!buy||!sell) return;
 
-      setVal("sellEx", net);
-      setVal("sellIn", net * VAT);
-      setVal("mPct", clamp(pct, 0, 99));
-      setVal("mEur", profit);
-    }
-  }
+  const net=sell/VAT;
+  const profit=net-buy;
+  set("mEur", profit);
+  set("mPct", (profit/net)*100);
+}
 
-  // -------- DISCOUNT FIX --------
-  // Korting mag NIET sellIn/sellEx wijzigen.
-  // Alleen discPct <-> discEur synchroniseren op basis van huidige sellIn.
-  function syncDiscountFields(){
-    const sellIn = num("sellIn");
+function recalc(){
+  sync("purchaseIn","purchaseEx",VAT);
+  sync("sellIn","sellEx",VAT);
+  discountSync();
+  margin();
+}
 
-    // bij leegmaken van kortingveld ook counterpart leegmaken
-    if (["discPct","discEur"].includes(lastEdited) && raw(lastEdited).trim() === ""){
-      clear(["discPct","discEur"]);
-      return;
-    }
-
-    if (!sellIn || sellIn <= 0) {
-      if (["discPct","discEur"].includes(lastEdited)) {
-        clear(["discPct","discEur"]);
-      }
-      return;
-    }
-
-    if (lastEdited === "discPct"){
-      const pct = num("discPct");
-      if (pct === null) return;
-
-      const p = clamp(pct, 0, 99);
-      const eur = sellIn * (p / 100);
-
-      setVal("discPct", p);
-      setVal("discEur", eur);
-    }
-
-    if (lastEdited === "discEur"){
-      const eur = num("discEur");
-      if (eur === null) return;
-
-      const e = Math.max(eur, 0);
-      const pct = sellIn > 0 ? (e / sellIn) * 100 : 0;
-
-      setVal("discEur", e);
-      setVal("discPct", clamp(pct, 0, 99));
-    }
-  }
-
-  function getEffectiveSellIncl(){
-    const sellIn = num("sellIn");
-    if (sellIn === null) return null;
-
-    const discPct = num("discPct");
-    const discEur = num("discEur");
-
-    if (raw("discPct").trim() !== "" && discPct !== null) {
-      return Math.max(sellIn * (1 - clamp(discPct, 0, 99) / 100), 0);
-    }
-
-    if (raw("discEur").trim() !== "" && discEur !== null) {
-      return Math.max(sellIn - Math.max(discEur, 0), 0);
-    }
-
-    return sellIn;
-  }
-
-  function updateMarginFromCurrent(){
-    if (lastEdited === "mPct" || lastEdited === "mEur") return;
-
-    const purchaseEx = num("purchaseEx");
-    const effectiveSellIncl = getEffectiveSellIncl();
-
-    if (!purchaseEx || !effectiveSellIncl || purchaseEx <= 0) return;
-
-    const net = effectiveSellIncl / VAT;
-    if (!(net > 0)) return;
-
-    const profit = net - purchaseEx;
-    const pct = (profit / net) * 100;
-
-    setVal("mPct", clamp(pct, 0, 99));
-    setVal("mEur", profit);
-  }
-
-  function recalc(){
-    if (updating) return;
-    updating = true;
-
-    // aankoop en verkoop incl/excl syncen
-    syncPair("purchaseIn", "purchaseEx", VAT);
-    syncPair("sellIn", "sellEx", VAT);
-
-    // margin lock regels
-    unlockMarginIfNeeded();
-    captureMarginLock();
-
-    // margin stuurt verkoopprijs
-    if (["mPct","mEur"].includes(lastEdited)) {
-      applyMarginIfPossible();
-      syncPair("sellIn", "sellEx", VAT);
-    }
-
-    // korting synct alleen zichzelf, niet de selling price
-    syncDiscountFields();
-
-    // margin altijd herberekenen op basis van prijs na korting
-    updateMarginFromCurrent();
-
-    updating = false;
-  }
-
-  function bind(id){
-    const input = el(id);
-    if (!input) return;
-
-    input.addEventListener("input", () => {
-      lastEdited = id;
-      recalc();
-    });
-
-    input.addEventListener("focus", () => {
-      setTimeout(() => { try { input.select(); } catch(e){} }, 0);
-    });
-  }
-
-  // ------------------ AUTO PREFILL (URL + localStorage + API) ------------------
-
-  function setPrices({
-    purchaseEx = null,
-    purchaseIn = null,
-    sellIn = null,
-    sellEx = null,
-    discPct = null,
-    discEur = null
-  } = {}) {
-    updating = true;
-
-    if (purchaseEx !== null) setPrefillPurchase("purchaseEx", purchaseEx);
-    if (purchaseIn !== null) setPrefillPurchase("purchaseIn", purchaseIn);
-
-    if (sellIn !== null) setPrefillOther("sellIn", sellIn);
-    if (sellEx !== null) setPrefillOther("sellEx", sellEx);
-
-    if (discPct !== null) el("discPct").value = floorOrEmpty(discPct);
-    if (discEur !== null) el("discEur").value = floorOrEmpty(discEur);
-
-    marginLock = null;
-
-    lastEdited = null;
-    syncPair("purchaseIn", "purchaseEx", VAT);
-    syncPair("sellIn", "sellEx", VAT);
-
-    updating = false;
-
-    lastEdited = "sellIn";
+["purchaseEx","purchaseIn","sellIn","sellEx","discPct","discEur"]
+.forEach(id=>{
+  el(id).addEventListener("input",()=>{
+    last=id;
     recalc();
-  }
-
-  function loadFromQueryString() {
-    const qs = new URLSearchParams(window.location.search);
-
-    const p  = qs.get("p");
-    const pi = qs.get("pi");
-    const s  = qs.get("s");
-    const se = qs.get("se");
-    const dp = qs.get("dp");
-    const de = qs.get("de");
-
-    const obj = {};
-    if (p  !== null && p  !== "") obj.purchaseEx = parseFloat(p);
-    if (pi !== null && pi !== "") obj.purchaseIn = parseFloat(pi);
-    if (s  !== null && s  !== "") obj.sellIn     = parseFloat(s);
-    if (se !== null && se !== "") obj.sellEx     = parseFloat(se);
-    if (dp !== null && dp !== "") obj.discPct    = parseFloat(dp);
-    if (de !== null && de !== "") obj.discEur    = parseFloat(de);
-
-    if (Object.keys(obj).length) setPrices(obj);
-  }
-
-  function saveToLocal() {
-    const data = {
-      purchaseEx: raw("purchaseEx"),
-      purchaseIn: raw("purchaseIn"),
-      sellIn: raw("sellIn"),
-      sellEx: raw("sellEx"),
-      discPct: raw("discPct"),
-      discEur: raw("discEur")
-    };
-    localStorage.setItem("margins_tool_state_v1", JSON.stringify(data));
-  }
-
-  function loadFromLocal() {
-    try {
-      const s = localStorage.getItem("margins_tool_state_v1");
-      if (!s) return false;
-      const data = JSON.parse(s);
-
-      const any = ["purchaseEx","purchaseIn","sellIn","sellEx","discPct","discEur"]
-        .some(k => (data[k] ?? "").toString().trim() !== "");
-      if (!any) return false;
-
-      const obj = {
-        purchaseEx: data.purchaseEx !== "" ? parseFloat(data.purchaseEx) : null,
-        purchaseIn: data.purchaseIn !== "" ? parseFloat(data.purchaseIn) : null,
-        sellIn:     data.sellIn     !== "" ? parseFloat(data.sellIn)     : null,
-        sellEx:     data.sellEx     !== "" ? parseFloat(data.sellEx)     : null,
-        discPct:    data.discPct    !== "" ? parseFloat(data.discPct)    : null,
-        discEur:    data.discEur    !== "" ? parseFloat(data.discEur)    : null
-      };
-
-      setPrices(obj);
-      return true;
-    } catch {
-      return false;
-    }
-  }
-
-  function attachAutosave() {
-    ["purchaseEx","purchaseIn","sellIn","sellEx","discPct","discEur","mPct","mEur"].forEach(id => {
-      el(id).addEventListener("input", () => {
-        clearTimeout(window.__saveT);
-        window.__saveT = setTimeout(saveToLocal, 150);
-      });
-    });
-  }
-
-  window.addEventListener("DOMContentLoaded", () => {
-    ["purchaseEx","purchaseIn","sellIn","sellEx","discPct","discEur","mPct","mEur"].forEach(bind);
-
-    const loadedLocal = loadFromLocal();
-    loadFromQueryString();
-    attachAutosave();
-
-    if (!loadedLocal && !window.location.search) recalc();
-
-    window.setPrices = setPrices;
   });
+});
 </script>
+
+</body>
+</html>
