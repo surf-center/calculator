@@ -86,6 +86,32 @@
     input[type="number"]::-webkit-inner-spin-button{ -webkit-appearance:none; margin:0; }
     input[type="number"]{ -moz-appearance:textfield; appearance:textfield; }
 
+    .price-compare{
+      display:none;
+      margin-top:4px;
+      padding:10px 12px;
+      border-radius:12px;
+      background:#f7f9ff;
+      border:1px solid #dce6ff;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+    }
+    .price-compare.show{display:flex}
+    .price-old{
+      color:#8b8b8b;
+      font-weight:800;
+      text-decoration:line-through;
+      font-size:15px;
+      white-space:nowrap;
+    }
+    .price-new{
+      color:#007bff;
+      font-weight:900;
+      font-size:20px;
+      white-space:nowrap;
+    }
+
     .summary{
       margin-top:12px;
       padding:14px;
@@ -105,13 +131,15 @@
       opacity:.95;
       font-weight:900;
       margin-bottom:8px;
+      letter-spacing:.02em;
     }
     .biginput{display:flex;align-items:baseline;gap:6px}
-    .bigprefix{font-size:18px;font-weight:900}
+    .bigprefix{font-size:18px;font-weight:900;opacity:.95;line-height:1}
     .biginput input{
       border:none;outline:none;background:transparent;color:#fff;
-      font-size:26px;font-weight:900;width:100%;
+      font-size:26px;font-weight:900;width:100%;padding:0;line-height:1.05;
     }
+    .biginput input::placeholder{color:rgba(255,255,255,.75)}
   </style>
 </head>
 
@@ -121,145 +149,413 @@
       <img src="logo.png" alt="Logo">
     </div>
 
+    <!-- Purchase -->
     <div class="section">
       <div class="section-title">Purchase</div>
       <div class="row2">
         <div class="input">
           <div class="prefix">€</div>
-          <input type="number" id="purchaseEx" />
+          <input type="number" id="purchaseEx" min="0" inputmode="decimal" />
           <div class="suffix">Excl.</div>
         </div>
         <div class="input">
           <div class="prefix">€</div>
-          <input type="number" id="purchaseIn" />
+          <input type="number" id="purchaseIn" min="0" inputmode="decimal" />
           <div class="suffix">Incl.</div>
         </div>
       </div>
     </div>
 
+    <!-- Selling -->
     <div class="section">
       <div class="section-title">Selling</div>
       <div class="row2">
         <div class="input">
           <div class="prefix">€</div>
-          <input type="number" id="sellIn" />
+          <input type="number" id="sellIn" min="0" inputmode="decimal" />
           <div class="suffix">Incl.</div>
         </div>
         <div class="input">
           <div class="prefix">€</div>
-          <input type="number" id="sellEx" />
+          <input type="number" id="sellEx" min="0" inputmode="decimal" />
           <div class="suffix">Excl.</div>
         </div>
       </div>
+
+      <div class="price-compare" id="priceCompare">
+        <div class="price-old" id="priceOld">€ 0</div>
+        <div class="price-new" id="priceNew">€ 0</div>
+      </div>
     </div>
 
+    <!-- Discount -->
     <div class="section">
       <div class="section-title">Discount</div>
       <div class="row2">
         <div class="input">
           <div class="prefix">%</div>
-          <input type="number" id="discPct" />
+          <input type="number" id="discPct" min="0" max="99" inputmode="decimal" />
         </div>
         <div class="input">
           <div class="prefix">€</div>
-          <input type="number" id="discEur" />
+          <input type="number" id="discEur" min="0" inputmode="decimal" />
         </div>
       </div>
     </div>
 
+    <!-- Margin -->
     <div class="summary">
       <div class="summary-grid">
         <div class="pill">
-          <div class="k">Margin %</div>
+          <div class="k">Margin</div>
           <div class="biginput">
             <span class="bigprefix">%</span>
-            <input type="number" id="mPct" />
+            <input type="number" id="mPct" min="0" max="99" inputmode="decimal" />
           </div>
         </div>
         <div class="pill">
-          <div class="k">Margin €</div>
+          <div class="k">Margin</div>
           <div class="biginput">
             <span class="bigprefix">€</span>
-            <input type="number" id="mEur" />
+            <input type="number" id="mEur" min="0" inputmode="decimal" />
           </div>
         </div>
       </div>
     </div>
   </div>
 
-<script>
-const VAT = 1.21;
-const el = id => document.getElementById(id);
+  <script>
+    const VAT = 1.21;
+    const el = (id) => document.getElementById(id);
 
-const num = id => {
-  const v = parseFloat(el(id).value);
-  return Number.isFinite(v) ? v : null;
-};
+    const raw = (id) => el(id).value;
+    const hasVal = (id) => raw(id).trim() !== "";
+    const num = (id) => {
+      const v = parseFloat(el(id).value);
+      return Number.isFinite(v) ? v : null;
+    };
 
-const set = (id, v) => el(id).value = v === null ? "" : Math.floor(v);
+    const floorOrEmpty = (v) => (v === null || v === "" || Number.isNaN(v)) ? "" : Math.floor(v);
+    const setVal = (id, v) => { el(id).value = floorOrEmpty(v); };
 
-let last = null;
+    const ceilOrEmpty = (v) => (v === null || v === "" || Number.isNaN(v)) ? "" : Math.ceil(v);
+    const setPrefillPurchase = (id, v) => { el(id).value = ceilOrEmpty(v); };
+    const setPrefillOther = (id, v) => { el(id).value = floorOrEmpty(v); };
 
-function sync(a,b,m){
-  const A=num(a), B=num(b);
-  if(last===a && A!==null) set(b, A/m);
-  else if(last===b && B!==null) set(a, B*m);
-}
+    const clear = (ids) => ids.forEach(i => el(i).value = "");
+    const clamp = (n,a,b) => Math.min(Math.max(n,a),b);
 
-function discountSync(){
-  const sell = num("sellIn");
-  if(!sell) return;
+    let updating = false;
+    let lastEdited = null;
+    let marginLock = null; // { mode:"pct"|"eur", value:number } | null
 
-  if(last==="discPct"){
-    const p=num("discPct");
-    if(p!==null) set("discEur", sell*(p/100));
-  }
+    function euro(v){
+      const n = Math.max(v || 0, 0);
+      return "€ " + Math.floor(n);
+    }
 
-  if(last==="discEur"){
-    const e=num("discEur");
-    if(e!==null) set("discPct", (e/sell)*100);
-  }
-}
+    function syncPair(aId, bId, mult){
+      if (lastEdited === aId && raw(aId).trim() === "") { clear([bId]); return; }
+      if (lastEdited === bId && raw(bId).trim() === "") { clear([aId]); return; }
 
-function effectiveSell(){
-  const sell=num("sellIn");
-  if(!sell) return null;
+      const a = num(aId);
+      const b = num(bId);
 
-  const p=num("discPct");
-  const e=num("discEur");
+      if (lastEdited === bId && b !== null) setVal(aId, b * mult);
+      else if (lastEdited === aId && a !== null) setVal(bId, a / mult);
+      else {
+        if (a === null && b !== null) setVal(aId, b * mult);
+        if (b === null && a !== null) setVal(bId, a / mult);
+      }
+    }
 
-  if(p!==null) return sell*(1-p/100);
-  if(e!==null) return sell-e;
+    function captureMarginLock(){
+      if (lastEdited === "mPct"){
+        if (!hasVal("mPct")) { marginLock = null; return; }
+        const p = num("mPct");
+        if (p === null) return;
+        marginLock = { mode:"pct", value: clamp(p,0,99) };
+      }
 
-  return sell;
-}
+      if (lastEdited === "mEur"){
+        if (!hasVal("mEur")) { marginLock = null; return; }
+        const e = num("mEur");
+        if (e === null) return;
+        marginLock = { mode:"eur", value: Math.max(e,0) };
+      }
+    }
 
-function margin(){
-  const buy=num("purchaseEx");
-  const sell=effectiveSell();
-  if(!buy||!sell) return;
+    function unlockMarginIfNeeded(){
+      if (["purchaseEx","purchaseIn","sellIn","sellEx","discPct","discEur"].includes(lastEdited)) {
+        marginLock = null;
+      }
+    }
 
-  const net=sell/VAT;
-  const profit=net-buy;
-  set("mEur", profit);
-  set("mPct", (profit/net)*100);
-}
+    function applyMarginIfPossible(){
+      const purchaseEx = num("purchaseEx");
+      if (!purchaseEx || purchaseEx <= 0) return;
+      if (!marginLock) return;
 
-function recalc(){
-  sync("purchaseIn","purchaseEx",VAT);
-  sync("sellIn","sellEx",VAT);
-  discountSync();
-  margin();
-}
+      clear(["discPct","discEur"]);
 
-["purchaseEx","purchaseIn","sellIn","sellEx","discPct","discEur"]
-.forEach(id=>{
-  el(id).addEventListener("input",()=>{
-    last=id;
-    recalc();
-  });
-});
-</script>
+      if (marginLock.mode === "pct"){
+        const p = clamp(marginLock.value,0,99);
+        const net = purchaseEx / (1 - (p/100));
+        const profit = net - purchaseEx;
 
+        setVal("sellEx", net);
+        setVal("sellIn", net * VAT);
+        setVal("mEur", profit);
+        setVal("mPct", p);
+      } else {
+        const profit = Math.max(marginLock.value,0);
+        const net = purchaseEx + profit;
+        const pct = net > 0 ? (profit / net) * 100 : 0;
+
+        setVal("sellEx", net);
+        setVal("sellIn", net * VAT);
+        setVal("mPct", clamp(pct,0,99));
+        setVal("mEur", profit);
+      }
+    }
+
+    function syncDiscountFields(){
+      const sellIn = num("sellIn");
+
+      if (["discPct","discEur"].includes(lastEdited) && !hasVal(lastEdited)){
+        clear(["discPct","discEur"]);
+        return;
+      }
+
+      if (!sellIn || sellIn <= 0) {
+        if (["discPct","discEur"].includes(lastEdited)) clear(["discPct","discEur"]);
+        return;
+      }
+
+      if (lastEdited === "discPct"){
+        const pct = num("discPct");
+        if (pct === null) return;
+
+        const p = clamp(pct, 0, 99);
+        const eur = sellIn * (p / 100);
+
+        setVal("discPct", p);
+        setVal("discEur", eur);
+      }
+
+      if (lastEdited === "discEur"){
+        const eur = num("discEur");
+        if (eur === null) return;
+
+        const e = Math.max(eur, 0);
+        const pct = sellIn > 0 ? (e / sellIn) * 100 : 0;
+
+        setVal("discEur", e);
+        setVal("discPct", clamp(pct, 0, 99));
+      }
+    }
+
+    function getDiscountedSellIncl(){
+      const sellIn = num("sellIn");
+      if (sellIn === null) return null;
+
+      if (hasVal("discPct")) {
+        const p = num("discPct");
+        if (p !== null) return Math.max(sellIn * (1 - clamp(p,0,99)/100), 0);
+      }
+
+      if (hasVal("discEur")) {
+        const e = num("discEur");
+        if (e !== null) return Math.max(sellIn - Math.max(e,0), 0);
+      }
+
+      return sellIn;
+    }
+
+    function updatePriceCompare(){
+      const wrap = el("priceCompare");
+      const oldEl = el("priceOld");
+      const newEl = el("priceNew");
+
+      const sellIn = num("sellIn");
+      const discounted = getDiscountedSellIncl();
+      const discountOn = hasVal("discPct") || hasVal("discEur");
+
+      if (!discountOn || sellIn === null || discounted === null || Math.floor(sellIn) === Math.floor(discounted)) {
+        wrap.classList.remove("show");
+        oldEl.textContent = "";
+        newEl.textContent = "";
+        return;
+      }
+
+      wrap.classList.add("show");
+      oldEl.textContent = euro(sellIn);
+      newEl.textContent = euro(discounted);
+    }
+
+    function updateMarginFromCurrent(){
+      if (lastEdited === "mPct" || lastEdited === "mEur") return;
+
+      const purchaseEx = num("purchaseEx");
+      const discountedSellIncl = getDiscountedSellIncl();
+
+      if (!purchaseEx || !discountedSellIncl || purchaseEx <= 0) {
+        clear(["mPct","mEur"]);
+        return;
+      }
+
+      const net = discountedSellIncl / VAT;
+      if (!(net > 0)) {
+        clear(["mPct","mEur"]);
+        return;
+      }
+
+      const profit = net - purchaseEx;
+      const pct = (profit / net) * 100;
+
+      setVal("mPct", clamp(pct,0,99));
+      setVal("mEur", profit);
+    }
+
+    function recalc(){
+      if (updating) return;
+      updating = true;
+
+      syncPair("purchaseIn","purchaseEx", VAT);
+      syncPair("sellIn","sellEx", VAT);
+
+      unlockMarginIfNeeded();
+      captureMarginLock();
+
+      if (["mPct","mEur"].includes(lastEdited)) {
+        applyMarginIfPossible();
+        syncPair("sellIn","sellEx", VAT);
+      }
+
+      syncDiscountFields();
+      updatePriceCompare();
+      updateMarginFromCurrent();
+
+      updating = false;
+    }
+
+    function bind(id){
+      const input = el(id);
+      if (!input) return;
+
+      input.addEventListener("input", () => {
+        lastEdited = id;
+        recalc();
+      });
+
+      input.addEventListener("focus", () => {
+        setTimeout(() => { try { input.select(); } catch(e){} }, 0);
+      });
+    }
+
+    function setPrices({ purchaseEx=null, purchaseIn=null, sellIn=null, sellEx=null, discPct=null, discEur=null } = {}) {
+      updating = true;
+
+      if (purchaseEx !== null) setPrefillPurchase("purchaseEx", purchaseEx);
+      if (purchaseIn !== null) setPrefillPurchase("purchaseIn", purchaseIn);
+
+      if (sellIn !== null) setPrefillOther("sellIn", sellIn);
+      if (sellEx !== null) setPrefillOther("sellEx", sellEx);
+
+      if (discPct !== null) el("discPct").value = floorOrEmpty(discPct);
+      if (discEur !== null) el("discEur").value = floorOrEmpty(discEur);
+
+      marginLock = null;
+
+      lastEdited = null;
+      syncPair("purchaseIn","purchaseEx", VAT);
+      syncPair("sellIn","sellEx", VAT);
+
+      updating = false;
+
+      lastEdited = "sellIn";
+      recalc();
+    }
+
+    function loadFromQueryString() {
+      const qs = new URLSearchParams(window.location.search);
+
+      const p  = qs.get("p");
+      const pi = qs.get("pi");
+      const s  = qs.get("s");
+      const se = qs.get("se");
+      const dp = qs.get("dp");
+      const de = qs.get("de");
+
+      const obj = {};
+      if (p  !== null && p  !== "") obj.purchaseEx = parseFloat(p);
+      if (pi !== null && pi !== "") obj.purchaseIn = parseFloat(pi);
+      if (s  !== null && s  !== "") obj.sellIn     = parseFloat(s);
+      if (se !== null && se !== "") obj.sellEx     = parseFloat(se);
+      if (dp !== null && dp !== "") obj.discPct    = parseFloat(dp);
+      if (de !== null && de !== "") obj.discEur    = parseFloat(de);
+
+      if (Object.keys(obj).length) setPrices(obj);
+    }
+
+    function saveToLocal() {
+      const data = {
+        purchaseEx: raw("purchaseEx"),
+        purchaseIn: raw("purchaseIn"),
+        sellIn: raw("sellIn"),
+        sellEx: raw("sellEx"),
+        discPct: raw("discPct"),
+        discEur: raw("discEur")
+      };
+      localStorage.setItem("margins_tool_state_v1", JSON.stringify(data));
+    }
+
+    function loadFromLocal() {
+      try {
+        const s = localStorage.getItem("margins_tool_state_v1");
+        if (!s) return false;
+        const data = JSON.parse(s);
+
+        const any = ["purchaseEx","purchaseIn","sellIn","sellEx","discPct","discEur"]
+          .some(k => (data[k] ?? "").toString().trim() !== "");
+        if (!any) return false;
+
+        const obj = {
+          purchaseEx: data.purchaseEx !== "" ? parseFloat(data.purchaseEx) : null,
+          purchaseIn: data.purchaseIn !== "" ? parseFloat(data.purchaseIn) : null,
+          sellIn:     data.sellIn     !== "" ? parseFloat(data.sellIn)     : null,
+          sellEx:     data.sellEx     !== "" ? parseFloat(data.sellEx)     : null,
+          discPct:    data.discPct    !== "" ? parseFloat(data.discPct)    : null,
+          discEur:    data.discEur    !== "" ? parseFloat(data.discEur)    : null
+        };
+
+        setPrices(obj);
+        return true;
+      } catch {
+        return false;
+      }
+    }
+
+    function attachAutosave() {
+      ["purchaseEx","purchaseIn","sellIn","sellEx","discPct","discEur","mPct","mEur"].forEach(id => {
+        el(id).addEventListener("input", () => {
+          clearTimeout(window.__saveT);
+          window.__saveT = setTimeout(saveToLocal, 150);
+        });
+      });
+    }
+
+    window.addEventListener("DOMContentLoaded", () => {
+      ["purchaseEx","purchaseIn","sellIn","sellEx","discPct","discEur","mPct","mEur"].forEach(bind);
+
+      const loadedLocal = loadFromLocal();
+      loadFromQueryString();
+      attachAutosave();
+
+      if (!loadedLocal && !window.location.search) recalc();
+
+      window.setPrices = setPrices;
+    });
+  </script>
 </body>
 </html>
