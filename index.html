@@ -68,7 +68,7 @@
       border-radius:12px;
       overflow:hidden;
       background:#fff;
-      transition:border-color .18s ease, box-shadow .18s ease, opacity .18s ease, background .18s ease, transform .18s ease;
+      transition:border-color .18s ease, box-shadow .18s ease, opacity .18s ease, background .18s ease;
     }
 
     .input.required{
@@ -79,10 +79,6 @@
     .input.dimmed{
       opacity:.45;
       background:#fafafa;
-    }
-
-    .input.hidden-soft{
-      opacity:.18;
     }
 
     .prefix,.suffix{
@@ -128,20 +124,12 @@
 
     .sale-result{
       display:none;
-      align-items:center;
-      justify-content:space-between;
-      gap:12px;
+      justify-content:flex-end;
       margin-top:4px;
       padding:4px 2px 0;
     }
 
     .sale-result.show{display:flex}
-
-    .sale-result-label{
-      font-size:13px;
-      font-weight:800;
-      color:#666;
-    }
 
     .sale-result-values{
       display:flex;
@@ -224,6 +212,12 @@
       color:rgba(255,255,255,.75);
     }
 
+    .toolbar{
+      display:flex;
+      align-items:center;
+      gap:10px;
+    }
+
     .mode-switch{
       display:grid;
       grid-template-columns:1fr 1fr;
@@ -232,6 +226,7 @@
       border-radius:999px;
       padding:4px;
       gap:4px;
+      flex:1;
     }
 
     .mode-btn{
@@ -254,34 +249,35 @@
       box-shadow:0 4px 12px rgba(0,123,255,.18);
     }
 
-    .mode-hint{
-      font-size:12px;
-      color:#6f6f6f;
-      font-weight:700;
-      margin-top:2px;
-      padding-left:2px;
-    }
-
-    .actions{
-      display:flex;
-      justify-content:flex-end;
-      margin-top:4px;
-    }
-
-    .reset-btn{
-      appearance:none;
+    .icon-btn{
+      width:42px;
+      height:42px;
       border:none;
-      background:transparent;
-      color:#7c7c7c;
-      font-family:"Poppins",sans-serif;
-      font-size:12px;
-      font-weight:800;
+      border-radius:999px;
+      background:#f4f4f4;
+      color:#666;
+      display:flex;
+      align-items:center;
+      justify-content:center;
       cursor:pointer;
-      padding:4px 2px;
+      flex:0 0 42px;
+      transition:all .18s ease;
+      border:1px solid #e3e3e3;
     }
 
-    .reset-btn:active{
-      transform:translateY(1px);
+    .icon-btn:hover{
+      background:#ededed;
+      color:#111;
+    }
+
+    .icon-btn:active{
+      transform:scale(.96);
+    }
+
+    .icon-btn svg{
+      width:18px;
+      height:18px;
+      display:block;
     }
   </style>
 </head>
@@ -292,7 +288,7 @@
       <img src="logo.png" alt="Logo">
     </div>
 
-    <!-- Purchase -->
+    <!-- Main block -->
     <div class="section">
       <div class="section-title">Purchase</div>
       <div class="row2">
@@ -309,7 +305,6 @@
       </div>
     </div>
 
-    <!-- Selling -->
     <div class="section">
       <div class="section-title">Selling</div>
       <div class="row2">
@@ -326,7 +321,6 @@
       </div>
 
       <div class="sale-result" id="saleResult">
-        <span class="sale-result-label" id="saleResultLabel">Final price</span>
         <div class="sale-result-values">
           <span class="sale-old" id="priceOld"></span>
           <span class="sale-new" id="priceNew"></span>
@@ -334,7 +328,6 @@
       </div>
     </div>
 
-    <!-- Discount -->
     <div class="section">
       <div class="section-title">Discount</div>
       <div class="row2">
@@ -349,7 +342,6 @@
       </div>
     </div>
 
-    <!-- Margin -->
     <div class="summary">
       <div class="summary-grid">
         <div class="pill">
@@ -369,23 +361,30 @@
       </div>
     </div>
 
-    <!-- Tax Mode -->
+    <!-- Separate second block -->
     <div class="section">
-      <div class="section-title">Tax Mode</div>
-      <div class="mode-switch" id="taxModeSwitch">
-        <button type="button" class="mode-btn active" id="modeVat">VAT</button>
-        <button type="button" class="mode-btn" id="modeMargin">Margin</button>
-      </div>
-      <div class="mode-hint" id="modeHint"></div>
-      <div class="actions">
-        <button type="button" class="reset-btn" id="resetBtn">Reset</button>
+      <div class="toolbar">
+        <div class="mode-switch" id="taxModeSwitch">
+          <button type="button" class="mode-btn active" id="modeVat">VAT</button>
+          <button type="button" class="mode-btn" id="modeMargin">Margin</button>
+        </div>
+
+        <button type="button" class="icon-btn" id="resetBtn" aria-label="Reset" title="Reset">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M3 6h18"></path>
+            <path d="M8 6V4h8v2"></path>
+            <path d="M19 6l-1 14H6L5 6"></path>
+            <path d="M10 10v6"></path>
+            <path d="M14 10v6"></path>
+          </svg>
+        </button>
       </div>
     </div>
   </div>
 
   <script>
     const VAT = 1.21;
-    const STORAGE_KEY = "margins_tool_state_v2";
+    const STORAGE_KEY = "margins_tool_state_v3";
     const el = (id) => document.getElementById(id);
 
     const raw = (id) => el(id).value;
@@ -469,7 +468,7 @@
       const sellInWrap = el("sellInWrap");
 
       [purchaseExWrap, purchaseInWrap, sellExWrap, sellInWrap].forEach(node => {
-        node.classList.remove("required", "dimmed", "hidden-soft");
+        node.classList.remove("required", "dimmed");
       });
 
       if (taxMode === "margin"){
@@ -477,11 +476,9 @@
         sellExWrap.classList.add("required");
         purchaseInWrap.classList.add("dimmed");
         sellInWrap.classList.add("dimmed");
-        el("modeHint").textContent = "Enter purchase excl. and selling excl.";
       } else {
         purchaseExWrap.classList.add("required");
         sellInWrap.classList.add("required");
-        el("modeHint").textContent = "Enter purchase excl. and selling incl.";
       }
     }
 
@@ -598,15 +595,12 @@
 
     function updateSaleResult(){
       const wrap = el("saleResult");
-      const label = el("saleResultLabel");
       const oldEl = el("priceOld");
       const newEl = el("priceNew");
 
       const baseSell = getBaseSellValue();
       const discounted = getDiscountedBaseSell();
       const discountOn = hasVal("discPct") || hasVal("discEur");
-
-      label.textContent = taxMode === "margin" ? "Final price excl." : "Final price incl.";
 
       if (!discountOn || baseSell === null || discounted === null || Math.floor(baseSell) === Math.floor(discounted)) {
         wrap.classList.remove("show");
