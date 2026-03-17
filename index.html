@@ -45,10 +45,11 @@
       font-size:11px;
       font-weight:800;
       color:#111;
-      opacity:.55;
+      opacity:1;
       letter-spacing:.03em;
       text-transform:uppercase;
       margin-left:2px;
+      font-family:"Poppins",sans-serif;
     }
 
     .row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
@@ -68,6 +69,7 @@
       background:#f4f4f4;
       padding:10px 10px;
       white-space:nowrap;
+      font-family:"Poppins",sans-serif;
     }
     .prefix{border-right:1px solid #e2e2e2}
     .suffix{border-left:1px solid #e2e2e2}
@@ -82,6 +84,7 @@
       font-weight:900;
       color:#111;
       background:#fff;
+      font-family:"Poppins",sans-serif;
     }
     input[type="number"]::-webkit-outer-spin-button,
     input[type="number"]::-webkit-inner-spin-button{ -webkit-appearance:none; margin:0; }
@@ -104,6 +107,7 @@
       font-weight:900;
       font-size:15px;
       white-space:nowrap;
+      font-family:"Poppins",sans-serif;
     }
     .price-stack{
       display:flex;
@@ -119,6 +123,7 @@
       font-size:14px;
       white-space:nowrap;
       line-height:1.1;
+      font-family:"Poppins",sans-serif;
     }
     .price-new{
       color:#007bff;
@@ -126,6 +131,7 @@
       font-size:20px;
       white-space:nowrap;
       line-height:1.1;
+      font-family:"Poppins",sans-serif;
     }
 
     .summary{
@@ -144,10 +150,12 @@
     }
     .pill .k{
       font-size:12px;
-      opacity:.95;
+      opacity:1;
       font-weight:900;
       margin-bottom:8px;
       letter-spacing:.02em;
+      color:#111;
+      font-family:"Poppins",sans-serif;
     }
     .biginput{
       display:flex;
@@ -159,6 +167,7 @@
       font-weight:900;
       opacity:.95;
       line-height:1;
+      font-family:"Poppins",sans-serif;
     }
     .biginput input{
       border:none;
@@ -170,6 +179,7 @@
       width:100%;
       padding:0;
       line-height:1.05;
+      font-family:"Poppins",sans-serif;
     }
     .biginput input::placeholder{color:rgba(255,255,255,.75)}
   </style>
@@ -181,7 +191,6 @@
       <img src="logo.png" alt="Logo">
     </div>
 
-    <!-- Purchase -->
     <div class="section">
       <div class="section-title">Purchase</div>
       <div class="row2">
@@ -198,7 +207,6 @@
       </div>
     </div>
 
-    <!-- Selling -->
     <div class="section">
       <div class="section-title">Selling</div>
       <div class="row2">
@@ -215,7 +223,7 @@
       </div>
 
       <div class="price-compare" id="priceCompare">
-        <div class="price-label">New price:</div>
+        <div class="price-label">NEW PRICE:</div>
         <div class="price-stack">
           <div class="price-old" id="priceOld">€ 0</div>
           <div class="price-new" id="priceNew">€ 0</div>
@@ -223,7 +231,6 @@
       </div>
     </div>
 
-    <!-- Discount -->
     <div class="section">
       <div class="section-title">Discount</div>
       <div class="row2">
@@ -238,7 +245,6 @@
       </div>
     </div>
 
-    <!-- Margin -->
     <div class="summary">
       <div class="summary-grid">
         <div class="pill">
