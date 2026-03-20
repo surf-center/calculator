@@ -74,7 +74,8 @@
       border-radius:14px;
       background:#fff;
       overflow:hidden;
-      min-height:54px;
+      min-height:84px;
+      position:relative;
       transition:border-color .18s ease, box-shadow .18s ease, opacity .18s ease;
     }
 
@@ -89,22 +90,45 @@
 
     .field-top{
       display:flex;
-      align-items:center;
-      min-height:54px;
+      align-items:flex-start;
+      justify-content:space-between;
       width:100%;
       background:#fff;
+      padding:10px 12px 30px;
+      gap:8px;
+      min-height:84px;
     }
 
-    .affix{
+    .value-wrap{
+      display:flex;
+      flex-direction:column;
+      align-items:flex-start;
+      justify-content:center;
+      flex:1;
+      min-width:0;
+      gap:4px;
+    }
+
+    .field-note{
       font-size:10px;
       font-weight:900;
       color:#111;
-      opacity:.65;
-      white-space:nowrap;
-      padding:0 6px;
-      flex:0 0 auto;
-      background:transparent;
+      opacity:.55;
       line-height:1;
+      text-transform:uppercase;
+      letter-spacing:.03em;
+    }
+
+    .affix{
+      font-size:12px;
+      font-weight:900;
+      color:#111;
+      opacity:.7;
+      min-width:18px;
+      line-height:1;
+      padding-top:8px;
+      text-align:center;
+      flex:0 0 18px;
     }
 
     .field input[type="number"],
@@ -113,8 +137,8 @@
       min-width:0;
       border:none;
       outline:none;
-      padding:8px 2px;
-      font-size:17px;
+      padding:0;
+      font-size:24px;
       font-weight:900;
       color:#111;
       background:#fff;
@@ -131,16 +155,27 @@
     input[type="number"]{ -moz-appearance:textfield; appearance:textfield; }
 
     .price-meta{
-      display:none;
+      position:absolute;
+      right:10px;
+      bottom:8px;
+      display:flex;
       align-items:flex-end;
       justify-content:flex-end;
       gap:6px;
-      padding:0 8px 8px;
+      padding:0;
       font-variant-numeric:tabular-nums;
-      min-height:20px;
+      min-height:16px;
+      visibility:hidden;
+      opacity:0;
+      transition:opacity .18s ease;
+      pointer-events:none;
+      max-width:calc(100% - 20px);
     }
 
-    .price-meta.show{display:flex}
+    .price-meta.show{
+      visibility:visible;
+      opacity:1;
+    }
 
     .meta-current,
     .meta-discounted{
@@ -153,7 +188,7 @@
 
     .meta-current{
       color:#111;
-      font-size:13px;
+      font-size:11px;
       font-weight:800;
       text-decoration:line-through;
       text-decoration-thickness:1.5px;
@@ -162,7 +197,7 @@
 
     .meta-discounted{
       color:#007bff;
-      font-size:17px;
+      font-size:13px;
       font-weight:900;
     }
 
@@ -181,8 +216,8 @@
 
     .discount-grid{
       display:grid;
-      grid-template-columns:1fr 1fr;
-      gap:10px;
+      grid-template-columns:1fr;
+      gap:12px;
     }
 
     .discount-col{
@@ -199,6 +234,8 @@
       background:#fff;
       min-height:48px;
       overflow:hidden;
+      padding:0 10px;
+      gap:8px;
     }
 
     .input input{
@@ -206,7 +243,7 @@
       min-width:0;
       border:none;
       outline:none;
-      padding:8px 2px;
+      padding:8px 0;
       font-size:17px;
       font-weight:900;
       color:#111;
@@ -338,8 +375,10 @@
         <div class="field main" id="purchaseExWrap">
           <div class="field-top">
             <div class="affix">€</div>
-            <input type="number" id="purchaseEx" min="0" inputmode="decimal" placeholder="0" />
-            <div class="affix">Excl.</div>
+            <div class="value-wrap">
+              <input type="number" id="purchaseEx" min="0" inputmode="decimal" placeholder="0" />
+              <div class="field-note">Excl.</div>
+            </div>
           </div>
           <div class="price-meta" id="purchaseExMeta">
             <span class="meta-current"><span class="money-symbol">€</span><span class="money-value"></span></span>
@@ -350,8 +389,10 @@
         <div class="field" id="purchaseInWrap">
           <div class="field-top">
             <div class="affix">€</div>
-            <input type="number" id="purchaseIn" min="0" inputmode="decimal" placeholder="0" />
-            <div class="affix">Incl.</div>
+            <div class="value-wrap">
+              <input type="number" id="purchaseIn" min="0" inputmode="decimal" placeholder="0" />
+              <div class="field-note">Incl.</div>
+            </div>
           </div>
           <div class="price-meta" id="purchaseInMeta">
             <span class="meta-current"><span class="money-symbol">€</span><span class="money-value"></span></span>
@@ -364,25 +405,29 @@
     <div class="section">
       <div class="section-title">Selling</div>
       <div class="row-2" id="sellGrid">
-        <div class="field" id="sellExWrap">
+        <div class="field main" id="sellInWrap">
           <div class="field-top">
             <div class="affix">€</div>
-            <input type="number" id="sellEx" min="0" inputmode="decimal" placeholder="0" />
-            <div class="affix">Excl.</div>
+            <div class="value-wrap">
+              <input type="number" id="sellIn" min="0" inputmode="decimal" placeholder="0" />
+              <div class="field-note">Incl.</div>
+            </div>
           </div>
-          <div class="price-meta" id="sellExMeta">
+          <div class="price-meta" id="sellInMeta">
             <span class="meta-current"><span class="money-symbol">€</span><span class="money-value"></span></span>
             <span class="meta-discounted"><span class="money-symbol">€</span><span class="money-value"></span></span>
           </div>
         </div>
 
-        <div class="field main" id="sellInWrap">
+        <div class="field" id="sellExWrap">
           <div class="field-top">
             <div class="affix">€</div>
-            <input type="number" id="sellIn" min="0" inputmode="decimal" placeholder="0" />
-            <div class="affix">Incl.</div>
+            <div class="value-wrap">
+              <input type="number" id="sellEx" min="0" inputmode="decimal" placeholder="0" />
+              <div class="field-note">Excl.</div>
+            </div>
           </div>
-          <div class="price-meta" id="sellInMeta">
+          <div class="price-meta" id="sellExMeta">
             <span class="meta-current"><span class="money-symbol">€</span><span class="money-value"></span></span>
             <span class="meta-discounted"><span class="money-symbol">€</span><span class="money-value"></span></span>
           </div>
