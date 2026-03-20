@@ -55,12 +55,7 @@
       margin-left:2px;
     }
 
-    .row-2{
-      display:grid;
-      grid-template-columns:1fr 1fr;
-      gap:10px;
-    }
-
+    .row-2,
     .price-stack{
       display:grid;
       grid-template-columns:1fr 1fr;
@@ -84,9 +79,7 @@
       box-shadow:0 0 0 3px rgba(0,123,255,.08);
     }
 
-    .field.hidden{
-      display:none !important;
-    }
+    .field.hidden{display:none !important}
 
     .field-top{
       display:flex;
@@ -158,9 +151,10 @@
     .price-meta{
       position:absolute;
       right:10px;
-      bottom:7px;
+      top:50%;
+      transform:translateY(-50%);
       display:flex;
-      align-items:flex-end;
+      align-items:center;
       justify-content:flex-end;
       gap:6px;
       padding:0;
@@ -170,7 +164,7 @@
       opacity:0;
       transition:opacity .18s ease;
       pointer-events:none;
-      max-width:calc(100% - 20px);
+      max-width:44%;
     }
 
     .price-meta.show{
@@ -180,8 +174,20 @@
 
     .meta-current,
     .meta-discounted{
+      display:flex;
+      align-items:flex-end;
+      gap:2px;
+      line-height:1;
+      white-space:nowrap;
+    }
+
+    .meta-current{
+      display:none;
+    }
+
+    .meta-discounted{
       color:#007bff;
-      font-size:18px;
+      font-size:19px;
       font-weight:900;
     }
 
@@ -190,8 +196,7 @@
       font-size:11px;
       font-weight:900;
       line-height:1;
-      opacity:.95;
-      color:inherit;
+      opacity:1;
     }
 
     .money-value{font-size:1em;line-height:1}
@@ -214,13 +219,14 @@
       grid-template-columns:64px 1fr 1fr;
       gap:8px;
       align-items:center;
+      min-height:42px;
     }
 
     .discount-label{
       font-size:10px;
       font-weight:900;
       color:#111;
-      opacity:.55;
+      opacity:1;
       text-transform:uppercase;
       letter-spacing:.03em;
       padding-left:2px;
@@ -230,18 +236,12 @@
       display:flex;
       align-items:center;
       border:1px solid #d8d8d8;
-      border-radius:12px;
+      border-radius:999px;
       background:#fff;
       min-height:42px;
       overflow:hidden;
       padding:0 10px;
-      gap:6px;
-    }
-
-    .input .affix{
-      padding-top:0;
-      min-width:auto;
-      flex:0 0 auto;
+      gap:8px;
     }
 
     .input input{
@@ -292,7 +292,7 @@
     .biginput{
       display:flex;
       align-items:baseline;
-      gap:4px;
+      gap:6px;
     }
 
     .biginput input{
