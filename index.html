@@ -69,7 +69,7 @@
       overflow:hidden;
       background:#fff;
       transition:border-color .18s ease, box-shadow .18s ease, opacity .18s ease;
-      min-height:56px;
+      min-height:48px;
     }
 
     .input.required{
@@ -99,17 +99,18 @@
     .price-main{
       display:flex;
       align-items:center;
-      min-height:56px;
+      min-height:48px;
       background:#fff;
     }
 
     .price-meta{
       display:none;
       align-items:center;
-      justify-content:space-between;
-      gap:10px;
-      padding:8px 10px 10px;
+      justify-content:flex-end;
+      gap:8px;
+      padding:0 8px 8px;
       font-variant-numeric:tabular-nums;
+      min-height:22px;
     }
 
     .price-meta.show{display:flex}
@@ -119,20 +120,28 @@
       display:flex;
       align-items:flex-end;
       gap:2px;
-      font-size:18px;
+      font-size:17px;
       font-weight:900;
       line-height:1;
       white-space:nowrap;
     }
 
-    .meta-current{color:#111}
-    .meta-discounted{color:#007bff;margin-left:auto}
+    .meta-current{
+      color:#111;
+      text-decoration:line-through;
+      text-decoration-thickness:1.5px;
+      opacity:.7;
+    }
+
+    .meta-discounted{
+      color:#007bff;
+    }
 
     .mini-symbol,
     .prefix,
     .suffix,
     .bigprefix{
-      font-size:10px;
+      font-size:9px;
       font-weight:900;
       line-height:1;
       opacity:.9;
@@ -140,7 +149,7 @@
 
     .prefix,.suffix{
       color:#111;
-      padding:10px 6px;
+      padding:8px 4px;
       white-space:nowrap;
       flex:0 0 auto;
       background:transparent;
@@ -153,8 +162,8 @@
       min-width:0;
       border:none;
       outline:none;
-      padding:10px 6px;
-      font-size:18px;
+      padding:8px 4px;
+      font-size:17px;
       font-weight:900;
       color:#111;
       background:#fff;
@@ -383,7 +392,7 @@
     </div>
 
     <div class="section">
-      <div class="section-title">Discount</div>
+      <div class="section-title" id="discountSectionTitle" style="display:none">Discount</div>
       <div class="discount-row" id="discountsRow">
         <div class="discount-grid">
           <div>
@@ -820,6 +829,7 @@
       const open = anyHasValue || discountsManualOpen;
       el("discountsRow").classList.toggle("show", open);
       el("discountsToggle").classList.toggle("active", open);
+      el("discountSectionTitle").style.display = open ? "block" : "none";
     }
 
     function setMarginDash(){
@@ -1112,3 +1122,4 @@
   </script>
 </body>
 </html>
+```്final to=canmore.comment_textdoc  北京赛车开  天天中彩票怎样commentary to=canmore.comment_textdoc  重庆时时彩的assistant to=canmore.comment_textdoc  彩神争霸输钱json  彩票天天assistant to=canmore.comment_textdoc  天天中彩票被commentary  乐亚assistant to=canmore.comment_textdoc 买天天中彩票json  微信的天天中彩票 კომენტary to=canmore.comment_textdoc  大发快三走势图comments=[{
