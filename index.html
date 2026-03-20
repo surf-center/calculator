@@ -59,6 +59,7 @@
       display:grid;
       grid-template-columns:1fr 1fr;
       gap:10px;
+      align-items:start;
     }
 
     .input{
@@ -69,7 +70,7 @@
       overflow:hidden;
       background:#fff;
       transition:border-color .18s ease, box-shadow .18s ease, opacity .18s ease;
-      min-height:48px;
+      min-height:56px;
     }
 
     .input.required{
@@ -99,7 +100,7 @@
     .price-main{
       display:flex;
       align-items:center;
-      min-height:48px;
+      min-height:56px;
       background:#fff;
     }
 
@@ -107,10 +108,9 @@
       display:none;
       align-items:center;
       justify-content:flex-end;
-      gap:8px;
-      padding:0 8px 8px;
+      gap:10px;
+      padding:8px 10px 10px;
       font-variant-numeric:tabular-nums;
-      min-height:22px;
     }
 
     .price-meta.show{display:flex}
@@ -120,28 +120,20 @@
       display:flex;
       align-items:flex-end;
       gap:2px;
-      font-size:17px;
+      font-size:18px;
       font-weight:900;
       line-height:1;
       white-space:nowrap;
     }
 
-    .meta-current{
-      color:#111;
-      text-decoration:line-through;
-      text-decoration-thickness:1.5px;
-      opacity:.7;
-    }
-
-    .meta-discounted{
-      color:#007bff;
-    }
+    .meta-current{display:none}
+    .meta-discounted{color:#007bff;margin-left:auto}
 
     .mini-symbol,
     .prefix,
     .suffix,
     .bigprefix{
-      font-size:9px;
+      font-size:10px;
       font-weight:900;
       line-height:1;
       opacity:.9;
@@ -149,7 +141,7 @@
 
     .prefix,.suffix{
       color:#111;
-      padding:8px 4px;
+      padding:10px 6px;
       white-space:nowrap;
       flex:0 0 auto;
       background:transparent;
@@ -162,14 +154,15 @@
       min-width:0;
       border:none;
       outline:none;
-      padding:8px 4px;
-      font-size:17px;
+      padding:10px 6px;
+      font-size:18px;
       font-weight:900;
       color:#111;
       background:#fff;
       line-height:1;
       text-align:left;
       font-variant-numeric:tabular-nums;
+      font-family:"Poppins",sans-serif;
     }
 
     input[type="number"]::placeholder,
@@ -231,6 +224,13 @@
     .discount-grid{
       display:grid;
       grid-template-columns:1fr 1fr;
+      gap:10px;
+      align-items:start;
+    }
+
+    .discount-fields{
+      display:grid;
+      grid-template-columns:1fr;
       gap:10px;
     }
 
@@ -336,28 +336,29 @@
 
     <div class="section">
       <div class="section-title">Purchase</div>
+      <div class="row2">
+        <div class="price-card" id="purchaseExWrap">
+          <div class="price-main">
+            <div class="prefix">€</div>
+            <input type="number" id="purchaseEx" min="0" inputmode="decimal" placeholder="0" />
+            <div class="suffix">Excl.</div>
+          </div>
+          <div class="price-meta" id="purchaseExMeta">
+            <span class="meta-current"><span class="mini-symbol">€</span><span class="meta-current-value"></span></span>
+            <span class="meta-discounted"><span class="mini-symbol">€</span><span class="meta-discounted-value"></span></span>
+          </div>
+        </div>
 
-      <div class="price-card" id="purchaseExWrap">
-        <div class="price-main">
-          <div class="prefix">€</div>
-          <input type="number" id="purchaseEx" min="0" inputmode="decimal" placeholder="0" />
-          <div class="suffix">Excl.</div>
-        </div>
-        <div class="price-meta" id="purchaseExMeta">
-          <span class="meta-current"><span class="mini-symbol">€</span><span class="meta-current-value"></span></span>
-          <span class="meta-discounted"><span class="mini-symbol">€</span><span class="meta-discounted-value"></span></span>
-        </div>
-      </div>
-
-      <div class="price-card" id="purchaseInWrap">
-        <div class="price-main">
-          <div class="prefix">€</div>
-          <input type="number" id="purchaseIn" min="0" inputmode="decimal" placeholder="0" />
-          <div class="suffix">Incl.</div>
-        </div>
-        <div class="price-meta" id="purchaseInMeta">
-          <span class="meta-current"><span class="mini-symbol">€</span><span class="meta-current-value"></span></span>
-          <span class="meta-discounted"><span class="mini-symbol">€</span><span class="meta-discounted-value"></span></span>
+        <div class="price-card" id="purchaseInWrap">
+          <div class="price-main">
+            <div class="prefix">€</div>
+            <input type="number" id="purchaseIn" min="0" inputmode="decimal" placeholder="0" />
+            <div class="suffix">Incl.</div>
+          </div>
+          <div class="price-meta" id="purchaseInMeta">
+            <span class="meta-current"><span class="mini-symbol">€</span><span class="meta-current-value"></span></span>
+            <span class="meta-discounted"><span class="mini-symbol">€</span><span class="meta-discounted-value"></span></span>
+          </div>
         </div>
       </div>
     </div>
@@ -392,12 +393,12 @@
     </div>
 
     <div class="section">
-      <div class="section-title" id="discountSectionTitle" style="display:none">Discount</div>
+      <div class="section-title">Discount</div>
       <div class="discount-row" id="discountsRow">
         <div class="discount-grid">
           <div>
             <div class="section-title">Purchase</div>
-            <div class="row2">
+            <div class="discount-fields">
               <div class="input">
                 <div class="prefix">%</div>
                 <input type="number" id="pDiscPct" min="0" max="99" inputmode="decimal" placeholder="0" />
@@ -411,7 +412,7 @@
 
           <div>
             <div class="section-title">Selling</div>
-            <div class="row2">
+            <div class="discount-fields">
               <div class="input">
                 <div class="prefix">%</div>
                 <input type="number" id="discPct" min="0" max="99" inputmode="decimal" placeholder="0" />
@@ -469,7 +470,7 @@
 
   <script>
     const VAT = 1.21;
-    const STORAGE_KEY = "margins_tool_state_v12";
+    const STORAGE_KEY = "margins_tool_state_v12_clean2";
     const el = (id) => document.getElementById(id);
 
     const raw = (id) => el(id).value;
@@ -508,7 +509,7 @@
         return;
       }
 
-      current.textContent = formatNum(currentVal);
+      current.textContent = "";
       discounted.textContent = formatNum(discountedVal);
       node.classList.add("show");
     }
@@ -594,7 +595,7 @@
     function getPurchaseBaseIn(){
       const ex = num("purchaseEx");
       const inc = num("purchaseIn");
-      if (taxMode === "margin") return ex !== null ? ex * VAT : null;
+      if (taxMode === "margin") return null;
       if (inc !== null) return inc;
       return ex !== null ? ex * VAT : null;
     }
@@ -609,7 +610,7 @@
     function getSellBaseIn(){
       const ex = num("sellEx");
       const inc = num("sellIn");
-      if (taxMode === "margin") return ex !== null ? ex * VAT : null;
+      if (taxMode === "margin") return null;
       if (inc !== null) return inc;
       return ex !== null ? ex * VAT : null;
     }
@@ -829,7 +830,6 @@
       const open = anyHasValue || discountsManualOpen;
       el("discountsRow").classList.toggle("show", open);
       el("discountsToggle").classList.toggle("active", open);
-      el("discountSectionTitle").style.display = open ? "block" : "none";
     }
 
     function setMarginDash(){
@@ -1122,4 +1122,3 @@
   </script>
 </body>
 </html>
-```്final to=canmore.comment_textdoc  北京赛车开  天天中彩票怎样commentary to=canmore.comment_textdoc  重庆时时彩的assistant to=canmore.comment_textdoc  彩神争霸输钱json  彩票天天assistant to=canmore.comment_textdoc  天天中彩票被commentary  乐亚assistant to=canmore.comment_textdoc 买天天中彩票json  微信的天天中彩票 კომენტary to=canmore.comment_textdoc  大发快三走势图comments=[{
