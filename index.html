@@ -49,7 +49,6 @@
       font-size:12px;
       font-weight:800;
       color:#111;
-      opacity:1;
       letter-spacing:.03em;
       text-transform:uppercase;
       margin-left:2px;
@@ -106,7 +105,6 @@
       font-size:10px;
       font-weight:900;
       color:#111;
-      opacity:1;
       line-height:1;
       text-transform:uppercase;
       letter-spacing:.03em;
@@ -117,7 +115,6 @@
       font-size:12px;
       font-weight:900;
       color:#111;
-      opacity:1;
       min-width:10px;
       line-height:1;
       padding-top:4px;
@@ -193,7 +190,6 @@
       font-size:12px;
       font-weight:900;
       line-height:1;
-      opacity:1;
       color:inherit;
     }
 
@@ -224,7 +220,6 @@
       font-size:10px;
       font-weight:900;
       color:#111;
-      opacity:1;
       text-transform:uppercase;
       letter-spacing:.03em;
       padding-left:2px;
@@ -548,7 +543,7 @@
 
   <script>
     const VAT = 1.21;
-    const STORAGE_KEY = "margins_tool_state_v15";
+    const STORAGE_KEY = "margins_tool_state_v16";
     const el = (id) => document.getElementById(id);
 
     const raw = (id) => el(id).value;
@@ -632,7 +627,6 @@
     function updateDiscountModeUI(scope){
       const isPurchase = scope === "purchase";
       const unit = isPurchase ? pDiscUnit : discUnit;
-
       const pctBtn = el(isPurchase ? "pDiscModePct" : "discModePct");
       const eurBtn = el(isPurchase ? "pDiscModeEur" : "discModeEur");
 
@@ -673,21 +667,21 @@
     function getPurchaseBaseIn(){ const ex=num("purchaseEx"); const inc=num("purchaseIn"); if (taxMode==="margin") return null; if (inc!==null) return inc; return ex!==null ? ex*VAT : null; }
     function getSellBaseEx(){ const ex=num("sellEx"); const inc=num("sellIn"); if (ex!==null) return ex; return inc!==null ? inc/VAT : null; }
     function getSellBaseIn(){ const ex=num("sellEx"); const inc=num("sellIn"); if (taxMode==="margin") return null; if (inc!==null) return inc; return ex!==null ? ex*VAT : null; }
-    function getBasePurchaseValue(){ return taxMode === "margin" ? getPurchaseBaseEx() : getPurchaseBaseIn(); }
+
+    function getBasePurchaseValue(){ return getPurchaseBaseEx(); }
     function getBaseSellValue(){ return taxMode === "margin" ? getSellBaseEx() : getSellBaseIn(); }
 
     function getDiscountedPurchaseEx(){
       const baseEx = getPurchaseBaseEx(); if (baseEx===null) return null;
       if (hasVal("pDiscPct")) { const p=num("pDiscPct"); if (p!==null) return Math.max(baseEx*(1-clamp(p,0,99)/100),0); }
-      if (hasVal("pDiscEur")) { const e=num("pDiscEur"); if (e!==null) return Math.max(baseEx-(taxMode==="margin"?Math.max(e,0):Math.max(e,0)/VAT),0); }
+      if (hasVal("pDiscEur")) { const e=num("pDiscEur"); if (e!==null) return Math.max(baseEx-Math.max(e,0),0); }
       return baseEx;
     }
 
     function getDiscountedPurchaseIn(){
-      const baseIn = getPurchaseBaseIn(); if (baseIn===null) return null;
-      if (hasVal("pDiscPct")) { const p=num("pDiscPct"); if (p!==null) return Math.max(baseIn*(1-clamp(p,0,99)/100),0); }
-      if (hasVal("pDiscEur")) { const e=num("pDiscEur"); if (e!==null) return Math.max(baseIn-Math.max(e,0),0); }
-      return baseIn;
+      const discountedEx = getDiscountedPurchaseEx();
+      if (discountedEx===null || taxMode==="margin") return null;
+      return discountedEx * VAT;
     }
 
     function getDiscountedSellEx(){
@@ -794,12 +788,17 @@
 
     function getCurrentPurchaseDisplayValue(){
       if (!hasVal("pDiscValue")) return null;
-      const basePurchase = getBasePurchaseValue();
-      const current = num("pDiscValue");
-      if (current === null || !basePurchase || basePurchase <= 0) return current;
 
-      if (pDiscUnit === "pct") return basePurchase * (clamp(current,0,99) / 100);
-      return (current / basePurchase) * 100;
+      const basePurchaseEx = getPurchaseBaseEx();
+      const current = num("pDiscValue");
+
+      if (current === null || !basePurchaseEx || basePurchaseEx <= 0) return current;
+
+      if (pDiscUnit === "pct") {
+        return basePurchaseEx * (clamp(current,0,99) / 100);
+      }
+
+      return (current / basePurchaseEx) * 100;
     }
 
     function getCurrentSellingDisplayValue(){
