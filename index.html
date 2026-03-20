@@ -74,7 +74,7 @@
       border-radius:14px;
       background:#fff;
       overflow:hidden;
-      min-height:84px;
+      min-height:68px;
       position:relative;
       transition:border-color .18s ease, box-shadow .18s ease, opacity .18s ease;
     }
@@ -94,9 +94,9 @@
       justify-content:space-between;
       width:100%;
       background:#fff;
-      padding:10px 12px 30px;
-      gap:8px;
-      min-height:84px;
+      padding:7px 12px 18px;
+      gap:4px;
+      min-height:68px;
     }
 
     .value-wrap{
@@ -106,29 +106,30 @@
       justify-content:center;
       flex:1;
       min-width:0;
-      gap:4px;
+      gap:0;
     }
 
     .field-note{
       font-size:10px;
       font-weight:900;
       color:#111;
-      opacity:.55;
+      opacity:1;
       line-height:1;
       text-transform:uppercase;
       letter-spacing:.03em;
+      margin-top:-1px;
     }
 
     .affix{
       font-size:12px;
       font-weight:900;
       color:#111;
-      opacity:.7;
-      min-width:18px;
+      opacity:1;
+      min-width:12px;
       line-height:1;
-      padding-top:8px;
+      padding-top:6px;
       text-align:center;
-      flex:0 0 18px;
+      flex:0 0 12px;
     }
 
     .field input[type="number"],
@@ -157,14 +158,14 @@
     .price-meta{
       position:absolute;
       right:10px;
-      bottom:8px;
+      bottom:7px;
       display:flex;
       align-items:flex-end;
       justify-content:flex-end;
       gap:6px;
       padding:0;
       font-variant-numeric:tabular-nums;
-      min-height:16px;
+      min-height:18px;
       visibility:hidden;
       opacity:0;
       transition:opacity .18s ease;
@@ -179,34 +180,18 @@
 
     .meta-current,
     .meta-discounted{
-      display:flex;
-      align-items:flex-end;
-      gap:2px;
-      line-height:1;
-      white-space:nowrap;
-    }
-
-    .meta-current{
-      color:#111;
-      font-size:11px;
-      font-weight:800;
-      text-decoration:line-through;
-      text-decoration-thickness:1.5px;
-      opacity:.68;
-    }
-
-    .meta-discounted{
       color:#007bff;
-      font-size:13px;
+      font-size:18px;
       font-weight:900;
     }
 
     .money-symbol,
     .bigprefix{
-      font-size:10px;
+      font-size:11px;
       font-weight:900;
       line-height:1;
-      opacity:.9;
+      opacity:.95;
+      color:inherit;
     }
 
     .money-value{font-size:1em;line-height:1}
@@ -214,28 +199,49 @@
     .discount-shell{display:none}
     .discount-shell.show{display:block}
 
-    .discount-grid{
+    .discount-bar{
       display:grid;
       grid-template-columns:1fr;
-      gap:12px;
+      gap:8px;
+      padding:8px;
+      border:1px solid #d8d8d8;
+      border-radius:14px;
+      background:#fafafa;
     }
 
-    .discount-col{
-      display:flex;
-      flex-direction:column;
+    .discount-row{
+      display:grid;
+      grid-template-columns:64px 1fr 1fr;
       gap:8px;
+      align-items:center;
+    }
+
+    .discount-label{
+      font-size:10px;
+      font-weight:900;
+      color:#111;
+      opacity:.55;
+      text-transform:uppercase;
+      letter-spacing:.03em;
+      padding-left:2px;
     }
 
     .input{
       display:flex;
       align-items:center;
       border:1px solid #d8d8d8;
-      border-radius:14px;
+      border-radius:12px;
       background:#fff;
-      min-height:48px;
+      min-height:42px;
       overflow:hidden;
       padding:0 10px;
-      gap:8px;
+      gap:6px;
+    }
+
+    .input .affix{
+      padding-top:0;
+      min-width:auto;
+      flex:0 0 auto;
     }
 
     .input input{
@@ -244,7 +250,7 @@
       border:none;
       outline:none;
       padding:8px 0;
-      font-size:17px;
+      font-size:16px;
       font-weight:900;
       color:#111;
       background:#fff;
@@ -286,7 +292,7 @@
     .biginput{
       display:flex;
       align-items:baseline;
-      gap:6px;
+      gap:4px;
     }
 
     .biginput input{
@@ -402,6 +408,34 @@
       </div>
     </div>
 
+    <div class="section discount-shell" id="discountShell">
+      <div class="discount-bar">
+        <div class="discount-row">
+          <div class="discount-label">Purchase</div>
+          <div class="input">
+            <div class="affix">%</div>
+            <input type="number" id="pDiscPct" min="0" max="99" inputmode="decimal" placeholder="0" />
+          </div>
+          <div class="input">
+            <div class="affix">€</div>
+            <input type="number" id="pDiscEur" min="0" inputmode="decimal" placeholder="0" />
+          </div>
+        </div>
+
+        <div class="discount-row">
+          <div class="discount-label">Selling</div>
+          <div class="input">
+            <div class="affix">%</div>
+            <input type="number" id="discPct" min="0" max="99" inputmode="decimal" placeholder="0" />
+          </div>
+          <div class="input">
+            <div class="affix">€</div>
+            <input type="number" id="discEur" min="0" inputmode="decimal" placeholder="0" />
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div class="section">
       <div class="section-title">Selling</div>
       <div class="row-2" id="sellGrid">
@@ -430,37 +464,6 @@
           <div class="price-meta" id="sellExMeta">
             <span class="meta-current"><span class="money-symbol">€</span><span class="money-value"></span></span>
             <span class="meta-discounted"><span class="money-symbol">€</span><span class="money-value"></span></span>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="section discount-shell" id="discountShell">
-      <div class="section-title">Discount</div>
-      <div id="discountRow">
-        <div class="discount-grid">
-          <div class="discount-col">
-            <div class="section-title">Purchase</div>
-            <div class="input">
-              <div class="affix">%</div>
-              <input type="number" id="pDiscPct" min="0" max="99" inputmode="decimal" placeholder="0" />
-            </div>
-            <div class="input">
-              <div class="affix">€</div>
-              <input type="number" id="pDiscEur" min="0" inputmode="decimal" placeholder="0" />
-            </div>
-          </div>
-
-          <div class="discount-col">
-            <div class="section-title">Selling</div>
-            <div class="input">
-              <div class="affix">%</div>
-              <input type="number" id="discPct" min="0" max="99" inputmode="decimal" placeholder="0" />
-            </div>
-            <div class="input">
-              <div class="affix">€</div>
-              <input type="number" id="discEur" min="0" inputmode="decimal" placeholder="0" />
-            </div>
           </div>
         </div>
       </div>
