@@ -55,63 +55,89 @@
       margin-left:2px;
     }
 
-    .row2{
+    .row-2{
       display:grid;
       grid-template-columns:1fr 1fr;
       gap:10px;
     }
 
-    .input{
-      display:flex;
-      align-items:center;
-      border:1px solid #dcdcdc;
-      border-radius:14px;
-      overflow:hidden;
-      background:#fff;
-      transition:border-color .18s ease, box-shadow .18s ease, opacity .18s ease;
-      min-height:48px;
+    .price-stack{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:10px;
     }
 
-    .input.required{
-      border:2px solid #007bff;
-      box-shadow:0 0 0 3px rgba(0,123,255,.08);
-    }
-
-    .input.is-hidden{display:none !important}
-
-    .price-card{
+    .field{
       display:flex;
       flex-direction:column;
-      border:1px solid #dcdcdc;
+      border:1px solid #d8d8d8;
       border-radius:14px;
       background:#fff;
       overflow:hidden;
+      min-height:54px;
       transition:border-color .18s ease, box-shadow .18s ease, opacity .18s ease;
     }
 
-    .price-card.required{
+    .field.main{
       border:2px solid #007bff;
       box-shadow:0 0 0 3px rgba(0,123,255,.08);
     }
 
-    .price-card.is-hidden{display:none !important}
+    .field.hidden{
+      display:none !important;
+    }
 
-    .price-main{
+    .field-top{
       display:flex;
       align-items:center;
-      min-height:48px;
+      min-height:54px;
+      width:100%;
       background:#fff;
     }
+
+    .affix{
+      font-size:10px;
+      font-weight:900;
+      color:#111;
+      opacity:.65;
+      white-space:nowrap;
+      padding:0 6px;
+      flex:0 0 auto;
+      background:transparent;
+      line-height:1;
+    }
+
+    .field input[type="number"],
+    .field input[type="text"]{
+      width:100%;
+      min-width:0;
+      border:none;
+      outline:none;
+      padding:8px 2px;
+      font-size:17px;
+      font-weight:900;
+      color:#111;
+      background:#fff;
+      line-height:1;
+      text-align:left;
+      font-variant-numeric:tabular-nums;
+      font-family:"Poppins",sans-serif;
+    }
+
+    .field input::placeholder{color:#b4b4b4}
+
+    input[type="number"]::-webkit-outer-spin-button,
+    input[type="number"]::-webkit-inner-spin-button{ -webkit-appearance:none; margin:0; }
+    input[type="number"]{ -moz-appearance:textfield; appearance:textfield; }
 
     .price-meta{
       display:none;
-      flex-direction:column;
-      align-items:flex-start;
-      justify-content:center;
-      gap:2px;
-      padding:4px 8px 8px;
+      align-items:flex-end;
+      justify-content:flex-end;
+      gap:6px;
+      padding:0 8px 8px;
       font-variant-numeric:tabular-nums;
-      min-height:30px;
+      min-height:20px;
     }
 
     .price-meta.show{display:flex}
@@ -131,7 +157,7 @@
       font-weight:800;
       text-decoration:line-through;
       text-decoration-thickness:1.5px;
-      opacity:.7;
+      opacity:.68;
     }
 
     .meta-discounted{
@@ -140,96 +166,18 @@
       font-weight:900;
     }
 
-    .mini-symbol,
-    .prefix,
-    .suffix,
+    .money-symbol,
     .bigprefix{
-      font-size:9px;
+      font-size:10px;
       font-weight:900;
       line-height:1;
       opacity:.9;
     }
 
-    .prefix,.suffix{
-      color:#111;
-      padding:8px 4px;
-      white-space:nowrap;
-      flex:0 0 auto;
-      background:transparent;
-      border:none;
-    }
+    .money-value{font-size:1em;line-height:1}
 
-    input[type="number"],
-    input[type="text"]{
-      width:100%;
-      min-width:0;
-      border:none;
-      outline:none;
-      padding:8px 4px;
-      font-size:17px;
-      font-weight:900;
-      color:#111;
-      background:#fff;
-      line-height:1;
-      text-align:left;
-      font-variant-numeric:tabular-nums;
-    }
-
-    input[type="number"]::placeholder,
-    input[type="text"]::placeholder{color:#b4b4b4}
-
-    input[type="number"]::-webkit-outer-spin-button,
-    input[type="number"]::-webkit-inner-spin-button{
-      -webkit-appearance:none;
-      margin:0;
-    }
-
-    input[type="number"]{
-      -moz-appearance:textfield;
-      appearance:textfield;
-    }
-
-    .discount-toggle,
-    .icon-btn{
-      width:42px;
-      height:42px;
-      border:none;
-      border-radius:999px;
-      background:#f4f4f4;
-      color:#666;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      cursor:pointer;
-      flex:0 0 42px;
-      transition:all .18s ease;
-      border:1px solid #e3e3e3;
-      font-family:"Poppins",sans-serif;
-    }
-
-    .discount-toggle{
-      font-size:16px;
-      font-weight:900;
-    }
-
-    .discount-toggle:hover,
-    .icon-btn:hover{
-      background:#ededed;
-      color:#111;
-    }
-
-    .discount-toggle:active,
-    .icon-btn:active{transform:scale(.96)}
-
-    .discount-toggle.active,
-    .discount-toggle.has-value{
-      background:#eef5ff;
-      color:#007bff;
-      border-color:#d7e7ff;
-    }
-
-    .discount-row{display:none}
-    .discount-row.show{display:block}
+    .discount-shell{display:none}
+    .discount-shell.show{display:block}
 
     .discount-grid{
       display:grid;
@@ -243,8 +191,30 @@
       gap:8px;
     }
 
-    .discount-col .input{
+    .input{
+      display:flex;
+      align-items:center;
+      border:1px solid #d8d8d8;
+      border-radius:14px;
+      background:#fff;
       min-height:48px;
+      overflow:hidden;
+    }
+
+    .input input{
+      width:100%;
+      min-width:0;
+      border:none;
+      outline:none;
+      padding:8px 2px;
+      font-size:17px;
+      font-weight:900;
+      color:#111;
+      background:#fff;
+      line-height:1;
+      text-align:left;
+      font-variant-numeric:tabular-nums;
+      font-family:"Poppins",sans-serif;
     }
 
     .summary{
@@ -293,6 +263,7 @@
       padding:0;
       line-height:1.05;
       text-align:left;
+      font-family:"Poppins",sans-serif;
     }
 
     .biginput input::placeholder{color:rgba(255,255,255,.75)}
@@ -302,6 +273,29 @@
       align-items:center;
       gap:10px;
     }
+
+    .discount-toggle,
+    .icon-btn{
+      width:42px;
+      height:42px;
+      border:none;
+      border-radius:999px;
+      background:#f4f4f4;
+      color:#666;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      cursor:pointer;
+      flex:0 0 42px;
+      transition:all .18s ease;
+      border:1px solid #e3e3e3;
+      font-family:"Poppins",sans-serif;
+    }
+
+    .discount-toggle{ font-size:16px; font-weight:900; }
+    .discount-toggle:hover,.icon-btn:hover{ background:#ededed; color:#111; }
+    .discount-toggle:active,.icon-btn:active{ transform:scale(.96) }
+    .discount-toggle.active,.discount-toggle.has-value{ background:#eef5ff; color:#007bff; border-color:#d7e7ff; }
 
     .mode-switch{
       display:grid;
@@ -328,17 +322,8 @@
       transition:all .18s ease;
     }
 
-    .mode-btn.active{
-      background:#007bff;
-      color:#fff;
-      box-shadow:0 4px 12px rgba(0,123,255,.18);
-    }
-
-    .icon-btn svg{
-      width:18px;
-      height:18px;
-      display:block;
-    }
+    .mode-btn.active{ background:#007bff; color:#fff; box-shadow:0 4px 12px rgba(0,123,255,.18); }
+    .icon-btn svg{ width:18px; height:18px; display:block; }
   </style>
 </head>
 <body>
@@ -349,73 +334,74 @@
 
     <div class="section">
       <div class="section-title">Purchase</div>
+      <div class="price-stack" id="purchaseGrid">
+        <div class="field main" id="purchaseExWrap">
+          <div class="field-top">
+            <div class="affix">€</div>
+            <input type="number" id="purchaseEx" min="0" inputmode="decimal" placeholder="0" />
+            <div class="affix">Excl.</div>
+          </div>
+          <div class="price-meta" id="purchaseExMeta">
+            <span class="meta-current"><span class="money-symbol">€</span><span class="money-value"></span></span>
+            <span class="meta-discounted"><span class="money-symbol">€</span><span class="money-value"></span></span>
+          </div>
+        </div>
 
-      <div class="price-card" id="purchaseExWrap">
-        <div class="price-main">
-          <div class="prefix">€</div>
-          <input type="number" id="purchaseEx" min="0" inputmode="decimal" placeholder="0" />
-          <div class="suffix">Excl.</div>
-        </div>
-        <div class="price-meta" id="purchaseExMeta">
-          <span class="meta-current"><span class="mini-symbol">€</span><span class="meta-current-value"></span></span>
-          <span class="meta-discounted"><span class="mini-symbol">€</span><span class="meta-discounted-value"></span></span>
-        </div>
-      </div>
-
-      <div class="price-card" id="purchaseInWrap">
-        <div class="price-main">
-          <div class="prefix">€</div>
-          <input type="number" id="purchaseIn" min="0" inputmode="decimal" placeholder="0" />
-          <div class="suffix">Incl.</div>
-        </div>
-        <div class="price-meta" id="purchaseInMeta">
-          <span class="meta-current"><span class="mini-symbol">€</span><span class="meta-current-value"></span></span>
-          <span class="meta-discounted"><span class="mini-symbol">€</span><span class="meta-discounted-value"></span></span>
+        <div class="field" id="purchaseInWrap">
+          <div class="field-top">
+            <div class="affix">€</div>
+            <input type="number" id="purchaseIn" min="0" inputmode="decimal" placeholder="0" />
+            <div class="affix">Incl.</div>
+          </div>
+          <div class="price-meta" id="purchaseInMeta">
+            <span class="meta-current"><span class="money-symbol">€</span><span class="money-value"></span></span>
+            <span class="meta-discounted"><span class="money-symbol">€</span><span class="money-value"></span></span>
+          </div>
         </div>
       </div>
     </div>
 
     <div class="section">
       <div class="section-title">Selling</div>
-      <div class="row2" id="sellGrid">
-        <div class="price-card" id="sellExWrap">
-          <div class="price-main">
-            <div class="prefix">€</div>
+      <div class="row-2" id="sellGrid">
+        <div class="field" id="sellExWrap">
+          <div class="field-top">
+            <div class="affix">€</div>
             <input type="number" id="sellEx" min="0" inputmode="decimal" placeholder="0" />
-            <div class="suffix">Excl.</div>
+            <div class="affix">Excl.</div>
           </div>
           <div class="price-meta" id="sellExMeta">
-            <span class="meta-current"><span class="mini-symbol">€</span><span class="meta-current-value"></span></span>
-            <span class="meta-discounted"><span class="mini-symbol">€</span><span class="meta-discounted-value"></span></span>
+            <span class="meta-current"><span class="money-symbol">€</span><span class="money-value"></span></span>
+            <span class="meta-discounted"><span class="money-symbol">€</span><span class="money-value"></span></span>
           </div>
         </div>
 
-        <div class="price-card" id="sellInWrap">
-          <div class="price-main">
-            <div class="prefix">€</div>
+        <div class="field main" id="sellInWrap">
+          <div class="field-top">
+            <div class="affix">€</div>
             <input type="number" id="sellIn" min="0" inputmode="decimal" placeholder="0" />
-            <div class="suffix">Incl.</div>
+            <div class="affix">Incl.</div>
           </div>
           <div class="price-meta" id="sellInMeta">
-            <span class="meta-current"><span class="mini-symbol">€</span><span class="meta-current-value"></span></span>
-            <span class="meta-discounted"><span class="mini-symbol">€</span><span class="meta-discounted-value"></span></span>
+            <span class="meta-current"><span class="money-symbol">€</span><span class="money-value"></span></span>
+            <span class="meta-discounted"><span class="money-symbol">€</span><span class="money-value"></span></span>
           </div>
         </div>
       </div>
     </div>
 
-    <div class="section">
-      <div class="section-title" id="discountSectionTitle" style="display:none">Discount</div>
-      <div class="discount-row" id="discountsRow">
+    <div class="section discount-shell" id="discountShell">
+      <div class="section-title">Discount</div>
+      <div id="discountRow">
         <div class="discount-grid">
           <div class="discount-col">
             <div class="section-title">Purchase</div>
             <div class="input">
-              <div class="prefix">%</div>
+              <div class="affix">%</div>
               <input type="number" id="pDiscPct" min="0" max="99" inputmode="decimal" placeholder="0" />
             </div>
             <div class="input">
-              <div class="prefix">€</div>
+              <div class="affix">€</div>
               <input type="number" id="pDiscEur" min="0" inputmode="decimal" placeholder="0" />
             </div>
           </div>
@@ -423,18 +409,16 @@
           <div class="discount-col">
             <div class="section-title">Selling</div>
             <div class="input">
-              <div class="prefix">%</div>
+              <div class="affix">%</div>
               <input type="number" id="discPct" min="0" max="99" inputmode="decimal" placeholder="0" />
             </div>
             <div class="input">
-              <div class="prefix">€</div>
+              <div class="affix">€</div>
               <input type="number" id="discEur" min="0" inputmode="decimal" placeholder="0" />
             </div>
           </div>
         </div>
       </div>
-    </div>
-
     </div>
 
     <div class="summary">
@@ -458,9 +442,9 @@
 
     <div class="section">
       <div class="toolbar">
-        <button type="button" class="discount-toggle" id="discountsToggle" aria-label="Discount" title="Discount">%</button>
+        <button type="button" class="discount-toggle" id="discountToggle" aria-label="Discount" title="Discount">%</button>
 
-        <div class="mode-switch" id="taxModeSwitch">
+        <div class="mode-switch">
           <button type="button" class="mode-btn active" id="modeVat">Sales</button>
           <button type="button" class="mode-btn" id="modeMargin">Margin</button>
         </div>
@@ -480,7 +464,7 @@
 
   <script>
     const VAT = 1.21;
-    const STORAGE_KEY = "margins_tool_state_v12";
+    const STORAGE_KEY = "margins_tool_state_v13";
     const el = (id) => document.getElementById(id);
 
     const raw = (id) => el(id).value;
@@ -501,16 +485,14 @@
     let lastEdited = null;
     let marginLock = null;
     let taxMode = "vat";
-    let discountsManualOpen = false;
+    let discountManualOpen = false;
 
-    function formatNum(v){
-      return String(Math.floor(Math.max(v || 0, 0)));
-    }
+    function formatNum(v){ return String(Math.floor(Math.max(v || 0, 0))); }
 
     function setMeta(id, currentVal, discountedVal){
       const node = el(id);
-      const current = node.querySelector(".meta-current-value");
-      const discounted = node.querySelector(".meta-discounted-value");
+      const current = node.querySelector(".meta-current .money-value");
+      const discounted = node.querySelector(".meta-discounted .money-value");
 
       if (currentVal === null || discountedVal === null || Math.floor(currentVal) === Math.floor(discountedVal)) {
         current.textContent = "";
@@ -526,13 +508,9 @@
 
     function syncPair(aId, bId, mult){
       if (taxMode === "margin") return;
-
       if (lastEdited === aId && raw(aId).trim() === "") { clear([bId]); return; }
       if (lastEdited === bId && raw(bId).trim() === "") { clear([aId]); return; }
-
-      const a = num(aId);
-      const b = num(bId);
-
+      const a = num(aId); const b = num(bId);
       if (lastEdited === bId && b !== null) setVal(aId, b * mult);
       else if (lastEdited === aId && a !== null) setVal(bId, a / mult);
       else {
@@ -542,31 +520,20 @@
     }
 
     function captureMarginLock(){
-      if (lastEdited === "mPct"){
-        if (!hasVal("mPct") || raw("mPct").trim() === "-") {
-          marginLock = null;
-          return;
-        }
-        const p = num("mPct");
-        if (p === null) return;
-        marginLock = { mode:"pct", value: clamp(p, 0, 99) };
+      if (lastEdited === "mPct") {
+        if (!hasVal("mPct") || raw("mPct").trim() === "-") { marginLock = null; return; }
+        const p = num("mPct"); if (p === null) return;
+        marginLock = { mode:"pct", value: clamp(p,0,99) };
       }
-
-      if (lastEdited === "mEur"){
-        if (!hasVal("mEur") || raw("mEur").trim() === "-") {
-          marginLock = null;
-          return;
-        }
-        const e = num("mEur");
-        if (e === null) return;
-        marginLock = { mode:"eur", value: Math.max(e, 0) };
+      if (lastEdited === "mEur") {
+        if (!hasVal("mEur") || raw("mEur").trim() === "-") { marginLock = null; return; }
+        const e = num("mEur"); if (e === null) return;
+        marginLock = { mode:"eur", value: Math.max(e,0) };
       }
     }
 
     function unlockMarginIfNeeded(){
-      if (["purchaseEx","purchaseIn","sellIn","sellEx","discPct","discEur","pDiscPct","pDiscEur"].includes(lastEdited)) {
-        marginLock = null;
-      }
+      if (["purchaseEx","purchaseIn","sellIn","sellEx","discPct","discEur","pDiscPct","pDiscEur"].includes(lastEdited)) marginLock = null;
     }
 
     function updateModeVisuals(){
@@ -583,148 +550,69 @@
       const purchaseGrid = el("purchaseGrid");
 
       [purchaseExWrap, purchaseInWrap, sellExWrap, sellInWrap].forEach(node => {
-        node.classList.remove("required", "is-hidden");
+        node.classList.remove("main", "hidden");
       });
 
-      if (taxMode === "margin"){
-        purchaseExWrap.classList.add("required");
-        sellExWrap.classList.add("required");
-        purchaseInWrap.classList.add("is-hidden");
-        sellInWrap.classList.add("is-hidden");
+      if (taxMode === "margin") {
+        purchaseExWrap.classList.add("main");
+        sellExWrap.classList.add("main");
+        purchaseInWrap.classList.add("hidden");
+        sellInWrap.classList.add("hidden");
         sellGrid.style.gridTemplateColumns = "1fr";
         purchaseGrid.style.gridTemplateColumns = "1fr";
       } else {
-        purchaseExWrap.classList.add("required");
-        sellInWrap.classList.add("required");
+        purchaseExWrap.classList.add("main");
+        sellInWrap.classList.add("main");
         sellGrid.style.gridTemplateColumns = "1fr 1fr";
         purchaseGrid.style.gridTemplateColumns = "1fr 1fr";
       }
     }
 
-    function getPurchaseBaseEx(){
-      const ex = num("purchaseEx");
-      const inc = num("purchaseIn");
-      if (ex !== null) return ex;
-      return inc !== null ? inc / VAT : null;
-    }
-
-    function getPurchaseBaseIn(){
-      const ex = num("purchaseEx");
-      const inc = num("purchaseIn");
-      if (taxMode === "margin") return ex !== null ? ex * VAT : null;
-      if (inc !== null) return inc;
-      return ex !== null ? ex * VAT : null;
-    }
-
-    function getSellBaseEx(){
-      const ex = num("sellEx");
-      const inc = num("sellIn");
-      if (ex !== null) return ex;
-      return inc !== null ? inc / VAT : null;
-    }
-
-    function getSellBaseIn(){
-      const ex = num("sellEx");
-      const inc = num("sellIn");
-      if (taxMode === "margin") return ex !== null ? ex * VAT : null;
-      if (inc !== null) return inc;
-      return ex !== null ? ex * VAT : null;
-    }
-
-    function getBasePurchaseValue(){
-      return taxMode === "margin" ? getPurchaseBaseEx() : getPurchaseBaseIn();
-    }
-
-    function getBaseSellValue(){
-      return taxMode === "margin" ? getSellBaseEx() : getSellBaseIn();
-    }
+    function getPurchaseBaseEx(){ const ex=num("purchaseEx"); const inc=num("purchaseIn"); if (ex!==null) return ex; return inc!==null ? inc/VAT : null; }
+    function getPurchaseBaseIn(){ const ex=num("purchaseEx"); const inc=num("purchaseIn"); if (taxMode==="margin") return null; if (inc!==null) return inc; return ex!==null ? ex*VAT : null; }
+    function getSellBaseEx(){ const ex=num("sellEx"); const inc=num("sellIn"); if (ex!==null) return ex; return inc!==null ? inc/VAT : null; }
+    function getSellBaseIn(){ const ex=num("sellEx"); const inc=num("sellIn"); if (taxMode==="margin") return null; if (inc!==null) return inc; return ex!==null ? ex*VAT : null; }
+    function getBasePurchaseValue(){ return taxMode === "margin" ? getPurchaseBaseEx() : getPurchaseBaseIn(); }
+    function getBaseSellValue(){ return taxMode === "margin" ? getSellBaseEx() : getSellBaseIn(); }
 
     function getDiscountedPurchaseEx(){
-      const baseEx = getPurchaseBaseEx();
-      if (baseEx === null) return null;
-
-      if (hasVal("pDiscPct")) {
-        const p = num("pDiscPct");
-        if (p !== null) return Math.max(baseEx * (1 - clamp(p, 0, 99) / 100), 0);
-      }
-
-      if (hasVal("pDiscEur")) {
-        const e = num("pDiscEur");
-        if (e !== null) return Math.max(baseEx - (taxMode === "margin" ? Math.max(e, 0) : Math.max(e, 0) / VAT), 0);
-      }
-
+      const baseEx = getPurchaseBaseEx(); if (baseEx===null) return null;
+      if (hasVal("pDiscPct")) { const p=num("pDiscPct"); if (p!==null) return Math.max(baseEx*(1-clamp(p,0,99)/100),0); }
+      if (hasVal("pDiscEur")) { const e=num("pDiscEur"); if (e!==null) return Math.max(baseEx-(taxMode==="margin"?Math.max(e,0):Math.max(e,0)/VAT),0); }
       return baseEx;
     }
-
     function getDiscountedPurchaseIn(){
-      const baseIn = getPurchaseBaseIn();
-      if (baseIn === null) return null;
-
-      if (hasVal("pDiscPct")) {
-        const p = num("pDiscPct");
-        if (p !== null) return Math.max(baseIn * (1 - clamp(p, 0, 99) / 100), 0);
-      }
-
-      if (hasVal("pDiscEur")) {
-        const e = num("pDiscEur");
-        if (e !== null) return Math.max(baseIn - Math.max(e, 0), 0);
-      }
-
+      const baseIn = getPurchaseBaseIn(); if (baseIn===null) return null;
+      if (hasVal("pDiscPct")) { const p=num("pDiscPct"); if (p!==null) return Math.max(baseIn*(1-clamp(p,0,99)/100),0); }
+      if (hasVal("pDiscEur")) { const e=num("pDiscEur"); if (e!==null) return Math.max(baseIn-Math.max(e,0),0); }
       return baseIn;
     }
-
     function getDiscountedSellEx(){
-      const baseEx = getSellBaseEx();
-      if (baseEx === null) return null;
-
-      if (hasVal("discPct")) {
-        const p = num("discPct");
-        if (p !== null) return Math.max(baseEx * (1 - clamp(p, 0, 99) / 100), 0);
-      }
-
-      if (hasVal("discEur")) {
-        const e = num("discEur");
-        if (e !== null) return Math.max(baseEx - (taxMode === "margin" ? Math.max(e, 0) : Math.max(e, 0) / VAT), 0);
-      }
-
+      const baseEx = getSellBaseEx(); if (baseEx===null) return null;
+      if (hasVal("discPct")) { const p=num("discPct"); if (p!==null) return Math.max(baseEx*(1-clamp(p,0,99)/100),0); }
+      if (hasVal("discEur")) { const e=num("discEur"); if (e!==null) return Math.max(baseEx-(taxMode==="margin"?Math.max(e,0):Math.max(e,0)/VAT),0); }
       return baseEx;
     }
-
     function getDiscountedSellIn(){
-      const baseIn = getSellBaseIn();
-      if (baseIn === null) return null;
-
-      if (hasVal("discPct")) {
-        const p = num("discPct");
-        if (p !== null) return Math.max(baseIn * (1 - clamp(p, 0, 99) / 100), 0);
-      }
-
-      if (hasVal("discEur")) {
-        const e = num("discEur");
-        if (e !== null) return Math.max(baseIn - Math.max(e, 0), 0);
-      }
-
+      const baseIn = getSellBaseIn(); if (baseIn===null) return null;
+      if (hasVal("discPct")) { const p=num("discPct"); if (p!==null) return Math.max(baseIn*(1-clamp(p,0,99)/100),0); }
+      if (hasVal("discEur")) { const e=num("discEur"); if (e!==null) return Math.max(baseIn-Math.max(e,0),0); }
       return baseIn;
     }
 
     function setTaxMode(mode){
       const nextMode = mode === "margin" ? "margin" : "vat";
       if (taxMode === nextMode) return;
-
       taxMode = nextMode;
       updateModeVisuals();
-
       if (taxMode === "margin") {
-        clear(["purchaseIn", "sellIn"]);
+        clear(["purchaseIn","sellIn"]);
       } else {
-        const purchaseEx = num("purchaseEx");
-        const sellEx = num("sellEx");
-
-        if (purchaseEx !== null) setVal("purchaseIn", purchaseEx * VAT);
-        if (sellEx !== null) setVal("sellIn", sellEx * VAT);
+        const purchaseEx=num("purchaseEx"), sellEx=num("sellEx");
+        if (purchaseEx!==null) setVal("purchaseIn", purchaseEx*VAT);
+        if (sellEx!==null) setVal("sellIn", sellEx*VAT);
       }
-
-      clear(["discPct", "discEur", "pDiscPct", "pDiscEur"]);
+      clear(["discPct","discEur","pDiscPct","pDiscEur"]);
       updateRequiredFields();
       saveToLocal();
       recalc();
@@ -732,73 +620,33 @@
 
     function syncPurchaseDiscountFields(){
       const basePurchase = getBasePurchaseValue();
-
-      if (["pDiscPct","pDiscEur"].includes(lastEdited) && !hasVal(lastEdited)){
-        clear(["pDiscPct","pDiscEur"]);
-        return;
+      if (["pDiscPct","pDiscEur"].includes(lastEdited) && !hasVal(lastEdited)) { clear(["pDiscPct","pDiscEur"]); return; }
+      if (!basePurchase || basePurchase <= 0) { if (["pDiscPct","pDiscEur"].includes(lastEdited)) clear(["pDiscPct","pDiscEur"]); return; }
+      if (lastEdited === "pDiscPct") {
+        const pct=num("pDiscPct"); if (pct===null) return;
+        const p=clamp(pct,0,99), eur=basePurchase*(p/100);
+        setVal("pDiscPct",p); setVal("pDiscEur",eur);
       }
-
-      if (!basePurchase || basePurchase <= 0) {
-        if (["pDiscPct","pDiscEur"].includes(lastEdited)) clear(["pDiscPct","pDiscEur"]);
-        return;
-      }
-
-      if (lastEdited === "pDiscPct"){
-        const pct = num("pDiscPct");
-        if (pct === null) return;
-
-        const p = clamp(pct, 0, 99);
-        const eur = basePurchase * (p / 100);
-
-        setVal("pDiscPct", p);
-        setVal("pDiscEur", eur);
-      }
-
-      if (lastEdited === "pDiscEur"){
-        const eur = num("pDiscEur");
-        if (eur === null) return;
-
-        const e = Math.max(eur, 0);
-        const pct = basePurchase > 0 ? (e / basePurchase) * 100 : 0;
-
-        setVal("pDiscEur", e);
-        setVal("pDiscPct", clamp(pct, 0, 99));
+      if (lastEdited === "pDiscEur") {
+        const eur=num("pDiscEur"); if (eur===null) return;
+        const e=Math.max(eur,0), pct=basePurchase>0?(e/basePurchase)*100:0;
+        setVal("pDiscEur",e); setVal("pDiscPct",clamp(pct,0,99));
       }
     }
 
     function syncDiscountFields(){
       const baseSell = getBaseSellValue();
-
-      if (["discPct","discEur"].includes(lastEdited) && !hasVal(lastEdited)){
-        clear(["discPct","discEur"]);
-        return;
+      if (["discPct","discEur"].includes(lastEdited) && !hasVal(lastEdited)) { clear(["discPct","discEur"]); return; }
+      if (!baseSell || baseSell <= 0) { if (["discPct","discEur"].includes(lastEdited)) clear(["discPct","discEur"]); return; }
+      if (lastEdited === "discPct") {
+        const pct=num("discPct"); if (pct===null) return;
+        const p=clamp(pct,0,99), eur=baseSell*(p/100);
+        setVal("discPct",p); setVal("discEur",eur);
       }
-
-      if (!baseSell || baseSell <= 0) {
-        if (["discPct","discEur"].includes(lastEdited)) clear(["discPct","discEur"]);
-        return;
-      }
-
-      if (lastEdited === "discPct"){
-        const pct = num("discPct");
-        if (pct === null) return;
-
-        const p = clamp(pct, 0, 99);
-        const eur = baseSell * (p / 100);
-
-        setVal("discPct", p);
-        setVal("discEur", eur);
-      }
-
-      if (lastEdited === "discEur"){
-        const eur = num("discEur");
-        if (eur === null) return;
-
-        const e = Math.max(eur, 0);
-        const pct = baseSell > 0 ? (e / baseSell) * 100 : 0;
-
-        setVal("discEur", e);
-        setVal("discPct", clamp(pct, 0, 99));
+      if (lastEdited === "discEur") {
+        const eur=num("discEur"); if (eur===null) return;
+        const e=Math.max(eur,0), pct=baseSell>0?(e/baseSell)*100:0;
+        setVal("discEur",e); setVal("discPct",clamp(pct,0,99));
       }
     }
 
@@ -808,13 +656,7 @@
       const discountedEx = getDiscountedPurchaseEx();
       const discountedIn = getDiscountedPurchaseIn();
       const discountOn = hasVal("pDiscPct") || hasVal("pDiscEur");
-
-      if (!discountOn) {
-        setMeta("purchaseExMeta", null, null);
-        setMeta("purchaseInMeta", null, null);
-        return;
-      }
-
+      if (!discountOn) { setMeta("purchaseExMeta", null, null); setMeta("purchaseInMeta", null, null); return; }
       setMeta("purchaseExMeta", originalEx, discountedEx);
       setMeta("purchaseInMeta", originalIn, discountedIn);
     }
@@ -825,13 +667,7 @@
       const discountedEx = getDiscountedSellEx();
       const discountedIn = getDiscountedSellIn();
       const discountOn = hasVal("discPct") || hasVal("discEur");
-
-      if (!discountOn) {
-        setMeta("sellExMeta", null, null);
-        setMeta("sellInMeta", null, null);
-        return;
-      }
-
+      if (!discountOn) { setMeta("sellExMeta", null, null); setMeta("sellInMeta", null, null); return; }
       setMeta("sellExMeta", originalEx, discountedEx);
       setMeta("sellInMeta", originalIn, discountedIn);
     }
@@ -840,151 +676,81 @@
       const purchaseHasValue = hasVal("pDiscPct") || hasVal("pDiscEur");
       const sellHasValue = hasVal("discPct") || hasVal("discEur");
       const anyHasValue = purchaseHasValue || sellHasValue;
-
       el("discountToggle").classList.toggle("has-value", anyHasValue);
-
       const open = anyHasValue || discountManualOpen;
       el("discountShell").classList.toggle("show", open);
-      el("discountRow").classList.toggle("show", open);
       el("discountToggle").classList.toggle("active", open);
     }
 
-    function setMarginDash(){
-      setText("mPct", "-");
-      setText("mEur", "-");
-    }
+    function setMarginDash(){ setText("mPct","-"); setText("mEur","-"); }
 
     function applyMarginIfPossible(){
       const purchaseEx = getDiscountedPurchaseEx();
-      if (!purchaseEx || purchaseEx <= 0) return;
-      if (!marginLock) return;
-
+      if (!purchaseEx || purchaseEx <= 0 || !marginLock) return;
       clear(["discPct","discEur"]);
-
-      if (marginLock.mode === "pct"){
-        const p = clamp(marginLock.value, 0, 99);
-        const net = purchaseEx / (1 - (p / 100));
-        const profit = net - purchaseEx;
-
-        setVal("sellEx", net);
-        if (taxMode === "vat") setVal("sellIn", net * VAT);
-
-        setText("mEur", Math.floor(profit));
-        setText("mPct", Math.floor(p));
+      if (marginLock.mode === "pct") {
+        const p=clamp(marginLock.value,0,99), net=purchaseEx/(1-(p/100)), profit=net-purchaseEx;
+        setVal("sellEx",net); if (taxMode==="vat") setVal("sellIn",net*VAT);
+        setText("mEur",Math.floor(profit)); setText("mPct",Math.floor(p));
       } else {
-        const profit = Math.max(marginLock.value, 0);
-        const net = purchaseEx + profit;
-        const pct = net > 0 ? (profit / net) * 100 : 0;
-
-        setVal("sellEx", net);
-        if (taxMode === "vat") setVal("sellIn", net * VAT);
-
-        setText("mPct", Math.floor(clamp(pct, 0, 99)));
-        setText("mEur", Math.floor(profit));
+        const profit=Math.max(marginLock.value,0), net=purchaseEx+profit, pct=net>0?(profit/net)*100:0;
+        setVal("sellEx",net); if (taxMode==="vat") setVal("sellIn",net*VAT);
+        setText("mPct",Math.floor(clamp(pct,0,99))); setText("mEur",Math.floor(profit));
       }
     }
 
     function updateMarginFromCurrent(){
       if (lastEdited === "mPct" || lastEdited === "mEur") return;
-
-      const purchaseEx = getDiscountedPurchaseEx();
-      const sellEx = getDiscountedSellEx();
-
-      if (!purchaseEx || !sellEx || purchaseEx <= 0) {
-        clear(["mPct","mEur"]);
-        return;
-      }
-
-      const net = sellEx;
-      if (!(net > 0)) {
-        clear(["mPct","mEur"]);
-        return;
-      }
-
-      const profit = net - purchaseEx;
-      const pct = (profit / net) * 100;
-
-      if (profit <= 0 || pct <= 0) {
-        setMarginDash();
-        return;
-      }
-
-      setText("mPct", String(Math.floor(clamp(pct, 0, 99))));
+      const purchaseEx=getDiscountedPurchaseEx(), discountedSellEx=getDiscountedSellEx();
+      if (!purchaseEx || !discountedSellEx || purchaseEx<=0) { clear(["mPct","mEur"]); return; }
+      const net=discountedSellEx; if (!(net>0)) { clear(["mPct","mEur"]); return; }
+      const profit=net-purchaseEx, pct=(profit/net)*100;
+      if (profit<=0 || pct<=0) { setMarginDash(); return; }
+      setText("mPct", String(Math.floor(clamp(pct,0,99))));
       setText("mEur", String(Math.floor(profit)));
     }
 
     function recalc(){
       if (updating) return;
       updating = true;
-
-      syncPair("purchaseIn", "purchaseEx", VAT);
-      syncPair("sellIn", "sellEx", VAT);
-
+      syncPair("purchaseIn","purchaseEx",VAT);
+      syncPair("sellIn","sellEx",VAT);
       unlockMarginIfNeeded();
       captureMarginLock();
-
       if (["mPct","mEur"].includes(lastEdited)) {
         applyMarginIfPossible();
-        syncPair("sellIn", "sellEx", VAT);
+        syncPair("sellIn","sellEx",VAT);
       }
-
       syncPurchaseDiscountFields();
       syncDiscountFields();
       updatePurchaseMeta();
       updateSellMeta();
       updateDiscountPanels();
       updateMarginFromCurrent();
-
       updating = false;
     }
 
     function bind(id){
-      const input = el(id);
-      if (!input) return;
-
-      input.addEventListener("input", () => {
-        lastEdited = id;
-        recalc();
-        queueSave();
-      });
-
-      input.addEventListener("focus", () => {
-        setTimeout(() => {
-          try { input.select(); } catch(e){}
-        }, 0);
-      });
+      const input = el(id); if (!input) return;
+      input.addEventListener("input", ()=>{ lastEdited=id; recalc(); queueSave(); });
+      input.addEventListener("focus", ()=>{ setTimeout(()=>{ try{input.select();}catch(e){} },0); });
     }
 
-    function setPrices({
-      purchaseEx=null,
-      purchaseIn=null,
-      pDiscPct=null,
-      pDiscEur=null,
-      sellIn=null,
-      sellEx=null,
-      discPct=null,
-      discEur=null
-    } = {}) {
+    function setPrices({ purchaseEx=null, purchaseIn=null, pDiscPct=null, pDiscEur=null, sellIn=null, sellEx=null, discPct=null, discEur=null } = {}){
       updating = true;
-
       if (purchaseEx !== null) el("purchaseEx").value = ceilOrEmpty(purchaseEx);
       if (purchaseIn !== null) el("purchaseIn").value = ceilOrEmpty(purchaseIn);
       if (pDiscPct !== null) el("pDiscPct").value = floorOrEmpty(pDiscPct);
       if (pDiscEur !== null) el("pDiscEur").value = floorOrEmpty(pDiscEur);
-
       if (sellIn !== null) el("sellIn").value = floorOrEmpty(sellIn);
       if (sellEx !== null) el("sellEx").value = floorOrEmpty(sellEx);
       if (discPct !== null) el("discPct").value = floorOrEmpty(discPct);
       if (discEur !== null) el("discEur").value = floorOrEmpty(discEur);
-
-      marginLock = null;
-      lastEdited = null;
-
+      marginLock = null; lastEdited = null;
       if (taxMode === "vat") {
-        syncPair("purchaseIn", "purchaseEx", VAT);
-        syncPair("sellIn", "sellEx", VAT);
+        syncPair("purchaseIn","purchaseEx",VAT);
+        syncPair("sellIn","sellEx",VAT);
       }
-
       updating = false;
       lastEdited = taxMode === "margin" ? "sellEx" : "sellIn";
       recalc();
@@ -992,80 +758,40 @@
 
     function loadFromQueryString(){
       const qs = new URLSearchParams(window.location.search);
-
-      const p = qs.get("p");
-      const pi = qs.get("pi");
-      const pdp = qs.get("pdp");
-      const pde = qs.get("pde");
-      const s = qs.get("s");
-      const se = qs.get("se");
-      const dp = qs.get("dp");
-      const de = qs.get("de");
-      const tm = qs.get("tm");
-
-      if (tm === "vat" || tm === "margin") {
-        taxMode = tm;
-      }
-
-      updateModeVisuals();
-      updateRequiredFields();
-
+      const p=qs.get("p"), pi=qs.get("pi"), pdp=qs.get("pdp"), pde=qs.get("pde"), s=qs.get("s"), se=qs.get("se"), dp=qs.get("dp"), de=qs.get("de"), tm=qs.get("tm");
+      if (tm === "vat" || tm === "margin") taxMode = tm;
+      updateModeVisuals(); updateRequiredFields();
       const obj = {};
-      if (p !== null && p !== "") obj.purchaseEx = parseFloat(p);
-      if (pi !== null && pi !== "") obj.purchaseIn = parseFloat(pi);
-      if (pdp !== null && pdp !== "") obj.pDiscPct = parseFloat(pdp);
-      if (pde !== null && pde !== "") obj.pDiscEur = parseFloat(pde);
-      if (s !== null && s !== "") obj.sellIn = parseFloat(s);
-      if (se !== null && se !== "") obj.sellEx = parseFloat(se);
-      if (dp !== null && dp !== "") obj.discPct = parseFloat(dp);
-      if (de !== null && de !== "") obj.discEur = parseFloat(de);
-
+      if (p) obj.purchaseEx=parseFloat(p);
+      if (pi) obj.purchaseIn=parseFloat(pi);
+      if (pdp) obj.pDiscPct=parseFloat(pdp);
+      if (pde) obj.pDiscEur=parseFloat(pde);
+      if (s) obj.sellIn=parseFloat(s);
+      if (se) obj.sellEx=parseFloat(se);
+      if (dp) obj.discPct=parseFloat(dp);
+      if (de) obj.discEur=parseFloat(de);
       if (Object.keys(obj).length) setPrices(obj);
     }
 
     function saveToLocal(){
       const data = {
-        purchaseEx: raw("purchaseEx"),
-        purchaseIn: raw("purchaseIn"),
-        pDiscPct: raw("pDiscPct"),
-        pDiscEur: raw("pDiscEur"),
-        sellIn: raw("sellIn"),
-        sellEx: raw("sellEx"),
-        discPct: raw("discPct"),
-        discEur: raw("discEur"),
-        taxMode,
-        discountsManualOpen
+        purchaseEx: raw("purchaseEx"), purchaseIn: raw("purchaseIn"), pDiscPct: raw("pDiscPct"), pDiscEur: raw("pDiscEur"),
+        sellIn: raw("sellIn"), sellEx: raw("sellEx"), discPct: raw("discPct"), discEur: raw("discEur"), taxMode, discountManualOpen
       };
       localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
     }
-
-    function queueSave(){
-      clearTimeout(window.__saveT);
-      window.__saveT = setTimeout(saveToLocal, 120);
-    }
+    function queueSave(){ clearTimeout(window.__saveT); window.__saveT = setTimeout(saveToLocal, 120); }
 
     function loadFromLocal(){
       try {
-        const s = localStorage.getItem(STORAGE_KEY);
-        if (!s) return false;
-
+        const s = localStorage.getItem(STORAGE_KEY); if (!s) return false;
         const data = JSON.parse(s);
-
-        if (data.taxMode === "vat" || data.taxMode === "margin") {
-          taxMode = data.taxMode;
-        }
-
-        discountsManualOpen = !!data.discountsManualOpen;
-
-        updateModeVisuals();
-        updateRequiredFields();
-
-        const any = ["purchaseEx","purchaseIn","pDiscPct","pDiscEur","sellIn","sellEx","discPct","discEur"]
-          .some(k => (data[k] ?? "").toString().trim() !== "");
-
+        if (data.taxMode === "vat" || data.taxMode === "margin") taxMode = data.taxMode;
+        discountManualOpen = !!data.discountManualOpen;
+        updateModeVisuals(); updateRequiredFields();
+        const any=["purchaseEx","purchaseIn","pDiscPct","pDiscEur","sellIn","sellEx","discPct","discEur"].some(k => (data[k] ?? "").toString().trim() !== "");
         if (!any) return false;
-
-        const obj = {
+        setPrices({
           purchaseEx: data.purchaseEx !== "" ? parseFloat(data.purchaseEx) : null,
           purchaseIn: data.purchaseIn !== "" ? parseFloat(data.purchaseIn) : null,
           pDiscPct: data.pDiscPct !== "" ? parseFloat(data.pDiscPct) : null,
@@ -1074,47 +800,28 @@
           sellEx: data.sellEx !== "" ? parseFloat(data.sellEx) : null,
           discPct: data.discPct !== "" ? parseFloat(data.discPct) : null,
           discEur: data.discEur !== "" ? parseFloat(data.discEur) : null
-        };
-
-        setPrices(obj);
+        });
         return true;
-      } catch {
-        return false;
-      }
+      } catch { return false; }
     }
 
     function resetAll(){
       updating = true;
-      [
-        "purchaseEx","purchaseIn","pDiscPct","pDiscEur",
-        "sellIn","sellEx","discPct","discEur","mPct","mEur"
-      ].forEach(id => el(id).value = "");
-      marginLock = null;
-      lastEdited = null;
-      discountsManualOpen = false;
-      updating = false;
+      ["purchaseEx","purchaseIn","pDiscPct","pDiscEur","sellIn","sellEx","discPct","discEur","mPct","mEur"].forEach(id => el(id).value = "");
+      marginLock = null; lastEdited = null; discountManualOpen = false; updating = false;
       localStorage.removeItem(STORAGE_KEY);
-
-      setMeta("purchaseExMeta", null, null);
-      setMeta("purchaseInMeta", null, null);
-      setMeta("sellExMeta", null, null);
-      setMeta("sellInMeta", null, null);
-
-      updateRequiredFields();
-      recalc();
+      setMeta("purchaseExMeta", null, null); setMeta("purchaseInMeta", null, null); setMeta("sellExMeta", null, null); setMeta("sellInMeta", null, null);
+      updateRequiredFields(); recalc();
     }
 
-    window.addEventListener("DOMContentLoaded", () => {
+    window.addEventListener("DOMContentLoaded", ()=>{
       ["purchaseEx","purchaseIn","pDiscPct","pDiscEur","sellIn","sellEx","discPct","discEur","mPct","mEur"].forEach(bind);
-
-      el("modeVat").addEventListener("click", () => setTaxMode("vat"));
-      el("modeMargin").addEventListener("click", () => setTaxMode("margin"));
+      el("modeVat").addEventListener("click", ()=>setTaxMode("vat"));
+      el("modeMargin").addEventListener("click", ()=>setTaxMode("margin"));
       el("resetBtn").addEventListener("click", resetAll);
-
-      el("discountsToggle").addEventListener("click", () => {
-        const willOpen = !el("discountsRow").classList.contains("show");
-        discountsManualOpen = willOpen;
-
+      el("discountToggle").addEventListener("click", ()=>{
+        const willOpen = !el("discountShell").classList.contains("show");
+        discountManualOpen = willOpen;
         if (!willOpen) {
           clear(["pDiscPct","pDiscEur","discPct","discEur"]);
           lastEdited = "pDiscPct";
@@ -1122,18 +829,12 @@
         } else {
           updateDiscountPanels();
         }
-
         queueSave();
       });
-
-      updateModeVisuals();
-      updateRequiredFields();
-
+      updateModeVisuals(); updateRequiredFields();
       const loadedLocal = loadFromLocal();
       loadFromQueryString();
-
       if (!loadedLocal && !window.location.search) recalc();
-
       window.setPrices = setPrices;
     });
   </script>
