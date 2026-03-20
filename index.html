@@ -62,6 +62,13 @@
       gap:10px;
     }
 
+    .row-discount{
+      display:grid;
+      grid-template-columns:42px 1fr 1fr;
+      gap:10px;
+      align-items:start;
+    }
+
     .input{
       display:flex;
       align-items:center;
@@ -162,53 +169,56 @@
       line-height:1;
     }
 
-    
-
-    .fold-trigger{
-      width:100%;
+    .discount-toggle-wrap{
       display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:12px;
-      border:none;
-      background:transparent;
-      padding:0;
-      cursor:pointer;
+      justify-content:flex-start;
+      align-items:flex-start;
     }
 
-    .fold-trigger .section-title{
-      margin-left:0;
-    }
-
-    .fold-icon{
+    .discount-toggle{
       width:42px;
       height:42px;
+      border:none;
       border-radius:999px;
+      background:#f4f4f4;
+      color:#666;
       display:flex;
       align-items:center;
       justify-content:center;
-      background:#f4f4f4;
+      cursor:pointer;
+      transition:all .18s ease;
       border:1px solid #e3e3e3;
-      color:#666;
-      font-size:15px;
+      font-family:"Poppins",sans-serif;
+      font-size:16px;
       font-weight:900;
-      transition:transform .18s ease, background .18s ease, color .18s ease;
-      flex:0 0 42px;
+      line-height:1;
     }
 
-    .fold-section.open .fold-icon{
+    .discount-toggle:hover{
+      background:#ededed;
+      color:#111;
+    }
+
+    .discount-toggle:active{
+      transform:scale(.96);
+    }
+
+    .fold-section.open .discount-toggle,
+    .discount-toggle.has-value{
       background:#eef5ff;
       color:#007bff;
       border-color:#d7e7ff;
     }
 
-    .fold-body{
+    .discount-body{
       display:none;
       flex-direction:column;
       gap:8px;
+      min-width:0;
+      grid-column:2 / 4;
     }
 
-    .fold-section.open .fold-body{
+    .fold-section.open .discount-body{
       display:flex;
     }
 
@@ -363,31 +373,33 @@
     </div>
 
     <div class="section fold-section" id="purchaseDiscountSection">
-      <button type="button" class="fold-trigger" id="purchaseDiscountToggle" aria-expanded="false">
-        <div class="section-title">Purchase Discount</div>
-        <div class="fold-icon">%</div>
-      </button>
-
-      <div class="fold-body" id="purchaseDiscountBody">
-        <div class="row2">
-          <div class="input">
-            <div class="prefix">%</div>
-            <input type="number" id="pDiscPct" min="0" max="99" inputmode="decimal" placeholder="0" />
-          </div>
-          <div class="input">
-            <div class="prefix">€</div>
-            <input type="number" id="pDiscEur" min="0" inputmode="decimal" placeholder="0" />
-          </div>
+      <div class="section-title">Purchase Discount</div>
+      <div class="row-discount">
+        <div class="discount-toggle-wrap">
+          <button type="button" class="discount-toggle" id="purchaseDiscountToggle" aria-expanded="false" aria-label="Toggle purchase discount" title="Purchase discount">%</button>
         </div>
 
-        <div class="purchase-result" id="purchaseResult">
-          <div class="purchase-result-values">
-            <span class="purchase-old" id="purchaseOldEx"></span>
-            <span class="purchase-new" id="purchaseNewEx"></span>
+        <div class="discount-body" id="purchaseDiscountBody">
+          <div class="row2">
+            <div class="input">
+              <div class="prefix">%</div>
+              <input type="number" id="pDiscPct" min="0" max="99" inputmode="decimal" placeholder="0" />
+            </div>
+            <div class="input">
+              <div class="prefix">€</div>
+              <input type="number" id="pDiscEur" min="0" inputmode="decimal" placeholder="0" />
+            </div>
           </div>
-          <div class="purchase-result-values">
-            <span class="purchase-old" id="purchaseOldIn"></span>
-            <span class="purchase-new" id="purchaseNewIn"></span>
+
+          <div class="purchase-result" id="purchaseResult">
+            <div class="purchase-result-values">
+              <span class="purchase-old" id="purchaseOldEx"></span>
+              <span class="purchase-new" id="purchaseNewEx"></span>
+            </div>
+            <div class="purchase-result-values">
+              <span class="purchase-old" id="purchaseOldIn"></span>
+              <span class="purchase-new" id="purchaseNewIn"></span>
+            </div>
           </div>
         </div>
       </div>
@@ -407,35 +419,36 @@
           <div class="suffix">Excl.</div>
         </div>
       </div>
-
-      </div>
+    </div>
 
     <div class="section fold-section" id="sellDiscountSection">
-      <button type="button" class="fold-trigger" id="sellDiscountToggle" aria-expanded="false">
-        <div class="section-title">Discount</div>
-        <div class="fold-icon">%</div>
-      </button>
-
-      <div class="fold-body" id="sellDiscountBody">
-        <div class="row2">
-          <div class="input">
-            <div class="prefix">%</div>
-            <input type="number" id="discPct" min="0" max="99" inputmode="decimal" placeholder="0" />
-          </div>
-          <div class="input">
-            <div class="prefix">€</div>
-            <input type="number" id="discEur" min="0" inputmode="decimal" placeholder="0" />
-          </div>
+      <div class="section-title">Discount</div>
+      <div class="row-discount">
+        <div class="discount-toggle-wrap">
+          <button type="button" class="discount-toggle" id="sellDiscountToggle" aria-expanded="false" aria-label="Toggle discount" title="Discount">%</button>
         </div>
 
-        <div class="sale-result" id="saleResult">
-          <div class="sale-result-values">
-            <span class="sale-old" id="priceOldEx"></span>
-            <span class="sale-new" id="priceNewEx"></span>
+        <div class="discount-body" id="sellDiscountBody">
+          <div class="row2">
+            <div class="input">
+              <div class="prefix">%</div>
+              <input type="number" id="discPct" min="0" max="99" inputmode="decimal" placeholder="0" />
+            </div>
+            <div class="input">
+              <div class="prefix">€</div>
+              <input type="number" id="discEur" min="0" inputmode="decimal" placeholder="0" />
+            </div>
           </div>
-          <div class="sale-result-values">
-            <span class="sale-old" id="priceOldIn"></span>
-            <span class="sale-new" id="priceNewIn"></span>
+
+          <div class="sale-result" id="saleResult">
+            <div class="sale-result-values">
+              <span class="sale-old" id="priceOldEx"></span>
+              <span class="sale-new" id="priceNewEx"></span>
+            </div>
+            <div class="sale-result-values">
+              <span class="sale-old" id="priceOldIn"></span>
+              <span class="sale-new" id="priceNewIn"></span>
+            </div>
           </div>
         </div>
       </div>
@@ -482,7 +495,7 @@
 
   <script>
     const VAT = 1.21;
-    const STORAGE_KEY = "margins_tool_state_v4";
+    const STORAGE_KEY = "margins_tool_state_v5";
     const el = (id) => document.getElementById(id);
 
     const raw = (id) => el(id).value;
@@ -580,6 +593,112 @@
       }
     }
 
+    function getPurchaseBaseEx(){
+      const ex = num("purchaseEx");
+      const inc = num("purchaseIn");
+      if (ex !== null) return ex;
+      return inc !== null ? inc / VAT : null;
+    }
+
+    function getPurchaseBaseIn(){
+      const ex = num("purchaseEx");
+      const inc = num("purchaseIn");
+      if (taxMode === "margin") return ex !== null ? ex * VAT : null;
+      if (inc !== null) return inc;
+      return ex !== null ? ex * VAT : null;
+    }
+
+    function getSellBaseEx(){
+      const ex = num("sellEx");
+      const inc = num("sellIn");
+      if (ex !== null) return ex;
+      return inc !== null ? inc / VAT : null;
+    }
+
+    function getSellBaseIn(){
+      const ex = num("sellEx");
+      const inc = num("sellIn");
+      if (taxMode === "margin") return ex !== null ? ex * VAT : null;
+      if (inc !== null) return inc;
+      return ex !== null ? ex * VAT : null;
+    }
+
+    function getBasePurchaseValue(){
+      return taxMode === "margin" ? getPurchaseBaseEx() : getPurchaseBaseIn();
+    }
+
+    function getBaseSellValue(){
+      return taxMode === "margin" ? getSellBaseEx() : getSellBaseIn();
+    }
+
+    function getDiscountedPurchaseEx(){
+      const baseEx = getPurchaseBaseEx();
+      if (baseEx === null) return null;
+
+      if (hasVal("pDiscPct")) {
+        const p = num("pDiscPct");
+        if (p !== null) return Math.max(baseEx * (1 - clamp(p, 0, 99) / 100), 0);
+      }
+
+      if (hasVal("pDiscEur")) {
+        const e = num("pDiscEur");
+        if (e !== null) return Math.max(baseEx - (taxMode === "margin" ? Math.max(e, 0) : Math.max(e, 0) / VAT), 0);
+      }
+
+      return baseEx;
+    }
+
+    function getDiscountedPurchaseIn(){
+      const baseIn = getPurchaseBaseIn();
+      if (baseIn === null) return null;
+
+      if (hasVal("pDiscPct")) {
+        const p = num("pDiscPct");
+        if (p !== null) return Math.max(baseIn * (1 - clamp(p, 0, 99) / 100), 0);
+      }
+
+      if (hasVal("pDiscEur")) {
+        const e = num("pDiscEur");
+        if (e !== null) return Math.max(baseIn - Math.max(e, 0), 0);
+      }
+
+      return baseIn;
+    }
+
+    function getDiscountedSellEx(){
+      const baseEx = getSellBaseEx();
+      if (baseEx === null) return null;
+
+      if (hasVal("discPct")) {
+        const p = num("discPct");
+        if (p !== null) return Math.max(baseEx * (1 - clamp(p, 0, 99) / 100), 0);
+      }
+
+      if (hasVal("discEur")) {
+        const e = num("discEur");
+        if (e !== null) return Math.max(baseEx - (taxMode === "margin" ? Math.max(e, 0) : Math.max(e, 0) / VAT), 0);
+      }
+
+      return baseEx;
+    }
+
+    function getDiscountedSellIn(){
+      const baseIn = getSellBaseIn();
+      if (baseIn === null) return null;
+
+      if (hasVal("discPct")) {
+        const p = num("discPct");
+        if (p !== null) return Math.max(baseIn * (1 - clamp(p, 0, 99) / 100), 0);
+      }
+
+      if (hasVal("discEur")) {
+        const e = num("discEur");
+        if (e !== null) return Math.max(baseIn - Math.max(e, 0), 0);
+      }
+
+      return baseIn;
+    }
+
     function setTaxMode(mode){
       const nextMode = mode === "margin" ? "margin" : "vat";
       if (taxMode === nextMode) return;
@@ -603,88 +722,6 @@
       recalc();
     }
 
-    function getBasePurchaseValue(){
-      if (taxMode === "margin") return num("purchaseEx");
-      return num("purchaseIn");
-    }
-
-    function getCurrentSellEx(){
-      const baseEx = getOriginalPurchaseEx();
-      if (baseEx === null) return null;
-
-      if (hasVal("pDiscPct")) {
-        const p = num("pDiscPct");
-        if (p !== null) return Math.max(baseEx * (1 - clamp(p, 0, 99) / 100), 0);
-      }
-
-      if (hasVal("pDiscEur")) {
-        const e = num("pDiscEur");
-        if (e !== null) {
-          const eurEx = taxMode === "margin" ? Math.max(e, 0) : Math.max(e, 0) / VAT;
-          return Math.max(baseEx - eurEx, 0);
-        }
-      }
-
-      return baseEx;
-    }
-
-    function getDiscountedPurchaseIn(){
-      const baseIn = getOriginalPurchaseIn();
-      if (baseIn === null) return null;
-
-      if (hasVal("pDiscPct")) {
-        const p = num("pDiscPct");
-        if (p !== null) return Math.max(baseIn * (1 - clamp(p, 0, 99) / 100), 0);
-      }
-
-      if (hasVal("pDiscEur")) {
-        const e = num("pDiscEur");
-        if (e !== null) return Math.max(baseIn - Math.max(e, 0), 0);
-      }
-
-      return baseIn;
-    }
-
-    function getBaseSellValue(){
-      if (taxMode === "margin") return num("sellEx");
-      return num("sellIn");
-    }
-
-    function getCurrentSellEx(){
-      const ex = num("sellEx");
-      const inc = num("sellIn");
-      if (ex !== null) return ex;
-      return inc !== null ? inc / VAT : null;
-    }
-
-    function getCurrentSellIn(){
-      const ex = num("sellEx");
-      const inc = num("sellIn");
-      if (inc !== null) return inc;
-      return ex !== null ? ex * VAT : null;
-    }
-
-    function getBaseSellValue(){
-      if (taxMode === "margin") return num("sellEx");
-      return num("sellIn");
-    }
-
-    function getRawSellEx(){
-      const ex = num("sellEx");
-      const inc = num("sellIn");
-      if (taxMode === "margin") return ex;
-      if (ex !== null) return ex;
-      return inc !== null ? inc / VAT : null;
-    }
-
-    function getRawSellIn(){
-      const ex = num("sellEx");
-      const inc = num("sellIn");
-      if (taxMode === "margin") return ex !== null ? ex * VAT : null;
-      if (inc !== null) return inc;
-      return ex !== null ? ex * VAT : null;
-    }
-
     function syncPurchaseDiscountFields(){
       const basePurchase = getBasePurchaseValue();
 
@@ -705,7 +742,21 @@
         const p = clamp(pct, 0, 99);
         const eur = basePurchase * (p / 100);
 
-        setVal("pDiscPct
+        setVal("pDiscPct", p);
+        setVal("pDiscEur", eur);
+      }
+
+      if (lastEdited === "pDiscEur"){
+        const eur = num("pDiscEur");
+        if (eur === null) return;
+
+        const e = Math.max(eur, 0);
+        const pct = basePurchase > 0 ? (e / basePurchase) * 100 : 0;
+
+        setVal("pDiscEur", e);
+        setVal("pDiscPct", clamp(pct, 0, 99));
+      }
+    }
 
     function syncDiscountFields(){
       const baseSell = getBaseSellValue();
@@ -743,23 +794,6 @@
       }
     }
 
-    function getDiscountedBaseSell(){
-      const baseSell = getBaseSellValue();
-      if (baseSell === null) return null;
-
-      if (hasVal("discPct")) {
-        const p = num("discPct");
-        if (p !== null) return Math.max(baseSell * (1 - clamp(p, 0, 99) / 100), 0);
-      }
-
-      if (hasVal("discEur")) {
-        const e = num("discEur");
-        if (e !== null) return Math.max(baseSell - Math.max(e, 0), 0);
-      }
-
-      return baseSell;
-    }
-
     function updatePurchaseResult(){
       const wrap = el("purchaseResult");
       const oldExEl = el("purchaseOldEx");
@@ -767,38 +801,13 @@
       const oldInEl = el("purchaseOldIn");
       const newInEl = el("purchaseNewIn");
 
+      const oldEx = getPurchaseBaseEx();
+      const oldIn = getPurchaseBaseIn();
+      const newEx = getDiscountedPurchaseEx();
+      const newIn = getDiscountedPurchaseIn();
       const discountOn = hasVal("pDiscPct") || hasVal("pDiscEur");
-      const currentEx = getCurrentPurchaseEx();
-      const currentIn = getCurrentPurchaseIn();
 
-      if (!discountOn || currentEx === null || currentIn === null) {
-        wrap.classList.remove("show");
-        oldExEl.textContent = "";
-        newExEl.textContent = "";
-        oldInEl.textContent = "";
-        newInEl.textContent = "";
-        return;
-      }
-
-      let oldEx = currentEx;
-      let oldIn = currentIn;
-
-      if (hasVal("pDiscPct")) {
-        const p = clamp(num("pDiscPct") || 0, 0, 99);
-        oldEx = currentEx / (1 - p / 100);
-        oldIn = currentIn / (1 - p / 100);
-      } else if (hasVal("pDiscEur")) {
-        const e = Math.max(num("pDiscEur") || 0, 0);
-        if (taxMode === "margin") {
-          oldEx = currentEx + e;
-          oldIn = currentIn + (e * VAT);
-        } else {
-          oldIn = currentIn + e;
-          oldEx = currentEx + (e / VAT);
-        }
-      }
-
-      if (Math.floor(oldEx) === Math.floor(currentEx) && Math.floor(oldIn) === Math.floor(currentIn)) {
+      if (!discountOn || oldEx === null || oldIn === null || newEx === null || newIn === null || (Math.floor(oldEx) === Math.floor(newEx) && Math.floor(oldIn) === Math.floor(newIn))) {
         wrap.classList.remove("show");
         oldExEl.textContent = "";
         newExEl.textContent = "";
@@ -809,9 +818,9 @@
 
       wrap.classList.add("show");
       oldExEl.textContent = `${euro(oldEx)} excl.`;
-      newExEl.textContent = `${euro(currentEx)} excl.`;
+      newExEl.textContent = `${euro(newEx)} excl.`;
       oldInEl.textContent = `${euro(oldIn)} incl.`;
-      newInEl.textContent = `${euro(currentIn)} incl.`;
+      newInEl.textContent = `${euro(newIn)} incl.`;
     }
 
     function updateSaleResult(){
@@ -821,38 +830,13 @@
       const oldInEl = el("priceOldIn");
       const newInEl = el("priceNewIn");
 
+      const oldEx = getSellBaseEx();
+      const oldIn = getSellBaseIn();
+      const newEx = getDiscountedSellEx();
+      const newIn = getDiscountedSellIn();
       const discountOn = hasVal("discPct") || hasVal("discEur");
-      const currentEx = getCurrentSellEx();
-      const currentIn = getCurrentSellIn();
 
-      if (!discountOn || currentEx === null || currentIn === null) {
-        wrap.classList.remove("show");
-        oldExEl.textContent = "";
-        newExEl.textContent = "";
-        oldInEl.textContent = "";
-        newInEl.textContent = "";
-        return;
-      }
-
-      let oldEx = currentEx;
-      let oldIn = currentIn;
-
-      if (hasVal("discPct")) {
-        const p = clamp(num("discPct") || 0, 0, 99);
-        oldEx = currentEx / (1 - p / 100);
-        oldIn = currentIn / (1 - p / 100);
-      } else if (hasVal("discEur")) {
-        const e = Math.max(num("discEur") || 0, 0);
-        if (taxMode === "margin") {
-          oldEx = currentEx + e;
-          oldIn = currentIn + (e * VAT);
-        } else {
-          oldIn = currentIn + e;
-          oldEx = currentEx + (e / VAT);
-        }
-      }
-
-      if (Math.floor(oldEx) === Math.floor(currentEx) && Math.floor(oldIn) === Math.floor(currentIn)) {
+      if (!discountOn || oldEx === null || oldIn === null || newEx === null || newIn === null || (Math.floor(oldEx) === Math.floor(newEx) && Math.floor(oldIn) === Math.floor(newIn))) {
         wrap.classList.remove("show");
         oldExEl.textContent = "";
         newExEl.textContent = "";
@@ -863,9 +847,9 @@
 
       wrap.classList.add("show");
       oldExEl.textContent = `${euro(oldEx)} excl.`;
-      newExEl.textContent = `${euro(currentEx)} excl.`;
+      newExEl.textContent = `${euro(newEx)} excl.`;
       oldInEl.textContent = `${euro(oldIn)} incl.`;
-      newInEl.textContent = `${euro(currentIn)} incl.`;
+      newInEl.textContent = `${euro(newIn)} incl.`;
     }
 
     function setDiscountPanelState(sectionId, toggleId, isOpen){
@@ -876,15 +860,29 @@
     }
 
     function updateDiscountPanels(){
-      const purchaseOpen = hasVal("pDiscPct") || hasVal("pDiscEur");
-      const sellOpen = hasVal("discPct") || hasVal("discEur");
-      setDiscountPanelState("purchaseDiscountSection", "purchaseDiscountToggle", purchaseOpen);
-      setDiscountPanelState("sellDiscountSection", "sellDiscountToggle", sellOpen);
+      const purchaseHasValue = hasVal("pDiscPct") || hasVal("pDiscEur");
+      const sellHasValue = hasVal("discPct") || hasVal("discEur");
+
+      el("purchaseDiscountToggle").classList.toggle("has-value", purchaseHasValue);
+      el("sellDiscountToggle").classList.toggle("has-value", sellHasValue);
+
+      setDiscountPanelState("purchaseDiscountSection", "purchaseDiscountToggle", purchaseHasValue || el("purchaseDiscountSection").classList.contains("open"));
+      setDiscountPanelState("sellDiscountSection", "sellDiscountToggle", sellHasValue || el("sellDiscountSection").classList.contains("open"));
+
+      if (!purchaseHasValue && !el("purchaseDiscountSection").dataset.manualOpen) {
+        setDiscountPanelState("purchaseDiscountSection", "purchaseDiscountToggle", false);
+      }
+      if (!sellHasValue && !el("sellDiscountSection").dataset.manualOpen) {
+        setDiscountPanelState("sellDiscountSection", "sellDiscountToggle", false);
+      }
     }
 
     function toggleDiscountPanel(sectionId, toggleId){
-      const isOpen = !el(sectionId).classList.contains("open");
-      setDiscountPanelState(sectionId, toggleId, isOpen);
+      const section = el(sectionId);
+      const willOpen = !section.classList.contains("open");
+      if (willOpen) section.dataset.manualOpen = "1";
+      else delete section.dataset.manualOpen;
+      setDiscountPanelState(sectionId, toggleId, willOpen);
     }
 
     function setMarginDash(){
@@ -893,7 +891,7 @@
     }
 
     function applyMarginIfPossible(){
-      const purchaseEx = num("purchaseEx");
+      const purchaseEx = getDiscountedPurchaseEx();
       if (!purchaseEx || purchaseEx <= 0) return;
       if (!marginLock) return;
 
@@ -925,8 +923,8 @@
     function updateMarginFromCurrent(){
       if (lastEdited === "mPct" || lastEdited === "mEur") return;
 
-      const purchaseEx = num("purchaseEx");
-      const discountedSell = getDiscountedBaseSell();
+      const purchaseEx = getDiscountedPurchaseEx();
+      const discountedSell = getDiscountedSellIn();
 
       if (!purchaseEx || !discountedSell || purchaseEx <= 0) {
         clear(["mPct","mEur"]);
@@ -936,7 +934,7 @@
       let net = null;
 
       if (taxMode === "margin") {
-        net = discountedSell;
+        net = getDiscountedSellEx();
       } else {
         net = discountedSell / VAT;
       }
@@ -963,12 +961,6 @@
       updating = true;
 
       syncPair("purchaseIn", "purchaseEx", VAT);
-      syncPurchaseDiscountFields();
-      if (["pDiscPct","pDiscEur"].includes(lastEdited)) {
-        applyPurchaseDiscount();
-        syncPair("purchaseIn", "purchaseEx", VAT);
-      }
-
       syncPair("sellIn", "sellEx", VAT);
 
       unlockMarginIfNeeded();
@@ -979,6 +971,7 @@
         syncPair("sellIn", "sellEx", VAT);
       }
 
+      syncPurchaseDiscountFields();
       syncDiscountFields();
       updatePurchaseResult();
       updateSaleResult();
@@ -1138,6 +1131,8 @@
       ].forEach(id => el(id).value = "");
       marginLock = null;
       lastEdited = null;
+      delete el("purchaseDiscountSection").dataset.manualOpen;
+      delete el("sellDiscountSection").dataset.manualOpen;
       updating = false;
       localStorage.removeItem(STORAGE_KEY);
       updatePurchaseResult();
@@ -1168,4 +1163,3 @@
   </script>
 </body>
 </html>
-
