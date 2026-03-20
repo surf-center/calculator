@@ -57,7 +57,7 @@
 
     .row-main{
       display:grid;
-      grid-template-columns:1fr 1fr 42px;
+      grid-template-columns:1fr 1fr;
       gap:10px;
       align-items:start;
     }
@@ -65,10 +65,21 @@
     .discount-row{
       display:none;
       margin-top:2px;
-      padding-right:52px;
     }
 
     .discount-row.show{display:block}
+
+    .discount-block{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:10px;
+    }
+
+    .discount-panel{
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+    }
 
     .discount-fields{
       display:grid;
@@ -113,29 +124,60 @@
     .price-after{
       display:none;
       margin:4px 8px 8px 8px;
-      padding:6px 8px;
-      font-size:14px;
-      font-weight:900;
-      color:#007bff;
-      line-height:1.1;
-      text-align:left;
+      padding:8px 10px;
       width:auto;
-      white-space:nowrap;
-      font-variant-numeric:tabular-nums;
+      justify-content:space-between;
+      align-items:center;
       background:#fff;
       border:1px solid #e6edf8;
-      border-radius:10px;
+      border-radius:12px;
       box-shadow:0 2px 6px rgba(0,0,0,.04);
+      font-variant-numeric:tabular-nums;
+      gap:10px;
     }
 
-    .price-after.show{display:block}
+    .price-after.show{display:flex}
+
+    .price-new-black,
+    .price-new-blue{
+      display:flex;
+      align-items:flex-end;
+      gap:2px;
+      font-size:18px;
+      font-weight:900;
+      line-height:1;
+      white-space:nowrap;
+      min-width:0;
+      font-variant-numeric:tabular-nums;
+    }
+
+    .price-new-black{color:#111}
+    .price-new-blue{
+      color:#007bff;
+      margin-left:auto;
+    }
+
+    .price-currency,
+    .prefix,
+    .suffix,
+    .bigprefix{
+      font-size:10px;
+      font-weight:900;
+      line-height:1;
+      opacity:.95;
+    }
+
+    .price-currency{opacity:.9}
+
+    .price-value{
+      font-size:1em;
+      line-height:1;
+    }
 
     .prefix,.suffix{
-      font-size:13px;
-      font-weight:900;
       color:#111;
       background:#f4f4f4;
-      padding:10px 6px;
+      padding:10px 5px;
       white-space:nowrap;
       flex:0 0 auto;
     }
@@ -149,7 +191,7 @@
       min-width:0;
       border:none;
       outline:none;
-      padding:10px 6px;
+      padding:10px 5px;
       font-size:18px;
       font-weight:900;
       color:#111;
@@ -171,41 +213,6 @@
     input[type="number"]{
       -moz-appearance:textfield;
       appearance:textfield;
-    }
-
-    .discount-toggle{
-      width:42px;
-      height:42px;
-      border:none;
-      border-radius:999px;
-      background:#f4f4f4;
-      color:#666;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      cursor:pointer;
-      flex:0 0 42px;
-      transition:all .18s ease;
-      border:1px solid #e3e3e3;
-      font-family:"Poppins",sans-serif;
-      font-size:16px;
-      font-weight:900;
-    }
-
-    .discount-toggle:hover,
-    .icon-btn:hover{
-      background:#ededed;
-      color:#111;
-    }
-
-    .discount-toggle:active,
-    .icon-btn:active{transform:scale(.96)}
-
-    .discount-toggle.active,
-    .discount-toggle.has-value{
-      background:#eef5ff;
-      color:#007bff;
-      border-color:#d7e7ff;
     }
 
     .summary{
@@ -243,13 +250,6 @@
       gap:6px;
     }
 
-    .bigprefix{
-      font-size:18px;
-      font-weight:900;
-      opacity:.95;
-      line-height:1;
-    }
-
     .biginput input{
       border:none;
       outline:none;
@@ -260,6 +260,7 @@
       width:100%;
       padding:0;
       line-height:1.05;
+      text-align:left;
     }
 
     .biginput input::placeholder{color:rgba(255,255,255,.75)}
@@ -301,7 +302,8 @@
       box-shadow:0 4px 12px rgba(0,123,255,.18);
     }
 
-    .icon-btn{
+    .icon-btn,
+    .discount-toggle{
       width:42px;
       height:42px;
       border:none;
@@ -315,6 +317,28 @@
       flex:0 0 42px;
       transition:all .18s ease;
       border:1px solid #e3e3e3;
+      font-family:"Poppins",sans-serif;
+    }
+
+    .discount-toggle{
+      font-size:16px;
+      font-weight:900;
+    }
+
+    .discount-toggle:hover,
+    .icon-btn:hover{
+      background:#ededed;
+      color:#111;
+    }
+
+    .discount-toggle:active,
+    .icon-btn:active{transform:scale(.96)}
+
+    .discount-toggle.active,
+    .discount-toggle.has-value{
+      background:#eef5ff;
+      color:#007bff;
+      border-color:#d7e7ff;
     }
 
     .icon-btn svg{
@@ -339,7 +363,16 @@
             <input type="number" id="purchaseEx" min="0" inputmode="decimal" placeholder="0" />
             <div class="suffix">Excl.</div>
           </div>
-          <div class="price-after" id="purchaseExAfter"></div>
+          <div class="price-after" id="purchaseExAfter">
+            <span class="price-new-black">
+              <span class="price-currency">€</span>
+              <span class="price-value"></span>
+            </span>
+            <span class="price-new-blue">
+              <span class="price-currency">€</span>
+              <span class="price-value"></span>
+            </span>
+          </div>
         </div>
 
         <div class="input price-input" id="purchaseInWrap">
@@ -348,21 +381,15 @@
             <input type="number" id="purchaseIn" min="0" inputmode="decimal" placeholder="0" />
             <div class="suffix">Incl.</div>
           </div>
-          <div class="price-after" id="purchaseInAfter"></div>
-        </div>
-
-        <button type="button" class="discount-toggle" id="purchaseDiscountToggle" aria-label="Purchase discount" title="Purchase discount">%</button>
-      </div>
-
-      <div class="discount-row" id="purchaseDiscountRow">
-        <div class="discount-fields">
-          <div class="input">
-            <div class="prefix">%</div>
-            <input type="number" id="pDiscPct" min="0" max="99" inputmode="decimal" placeholder="0" />
-          </div>
-          <div class="input">
-            <div class="prefix">€</div>
-            <input type="number" id="pDiscEur" min="0" inputmode="decimal" placeholder="0" />
+          <div class="price-after" id="purchaseInAfter">
+            <span class="price-new-black">
+              <span class="price-currency">€</span>
+              <span class="price-value"></span>
+            </span>
+            <span class="price-new-blue">
+              <span class="price-currency">€</span>
+              <span class="price-value"></span>
+            </span>
           </div>
         </div>
       </div>
@@ -377,7 +404,16 @@
             <input type="number" id="sellIn" min="0" inputmode="decimal" placeholder="0" />
             <div class="suffix">Incl.</div>
           </div>
-          <div class="price-after" id="sellInAfter"></div>
+          <div class="price-after" id="sellInAfter">
+            <span class="price-new-black">
+              <span class="price-currency">€</span>
+              <span class="price-value"></span>
+            </span>
+            <span class="price-new-blue">
+              <span class="price-currency">€</span>
+              <span class="price-value"></span>
+            </span>
+          </div>
         </div>
 
         <div class="input price-input" id="sellExWrap">
@@ -386,21 +422,50 @@
             <input type="number" id="sellEx" min="0" inputmode="decimal" placeholder="0" />
             <div class="suffix">Excl.</div>
           </div>
-          <div class="price-after" id="sellExAfter"></div>
-        </div>
-
-        <button type="button" class="discount-toggle" id="sellDiscountToggle" aria-label="Selling discount" title="Selling discount">%</button>
-      </div>
-
-      <div class="discount-row" id="sellDiscountRow">
-        <div class="discount-fields">
-          <div class="input">
-            <div class="prefix">%</div>
-            <input type="number" id="discPct" min="0" max="99" inputmode="decimal" placeholder="0" />
+          <div class="price-after" id="sellExAfter">
+            <span class="price-new-black">
+              <span class="price-currency">€</span>
+              <span class="price-value"></span>
+            </span>
+            <span class="price-new-blue">
+              <span class="price-currency">€</span>
+              <span class="price-value"></span>
+            </span>
           </div>
-          <div class="input">
-            <div class="prefix">€</div>
-            <input type="number" id="discEur" min="0" inputmode="decimal" placeholder="0" />
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Discounts</div>
+      <div class="discount-row" id="discountsRow">
+        <div class="discount-block">
+          <div class="discount-panel">
+            <div class="section-title">Purchase</div>
+            <div class="discount-fields">
+              <div class="input">
+                <div class="prefix">%</div>
+                <input type="number" id="pDiscPct" min="0" max="99" inputmode="decimal" placeholder="0" />
+              </div>
+              <div class="input">
+                <div class="prefix">€</div>
+                <input type="number" id="pDiscEur" min="0" inputmode="decimal" placeholder="0" />
+              </div>
+            </div>
+          </div>
+
+          <div class="discount-panel">
+            <div class="section-title">Selling</div>
+            <div class="discount-fields">
+              <div class="input">
+                <div class="prefix">%</div>
+                <input type="number" id="discPct" min="0" max="99" inputmode="decimal" placeholder="0" />
+              </div>
+              <div class="input">
+                <div class="prefix">€</div>
+                <input type="number" id="discEur" min="0" inputmode="decimal" placeholder="0" />
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -427,8 +492,10 @@
 
     <div class="section">
       <div class="toolbar">
+        <button type="button" class="discount-toggle" id="discountsToggle" aria-label="Discounts" title="Discounts">%</button>
+
         <div class="mode-switch" id="taxModeSwitch">
-          <button type="button" class="mode-btn active" id="modeVat">VAT</button>
+          <button type="button" class="mode-btn active" id="modeVat">Sales</button>
           <button type="button" class="mode-btn" id="modeMargin">Margin</button>
         </div>
 
@@ -447,7 +514,7 @@
 
   <script>
     const VAT = 1.21;
-    const STORAGE_KEY = "margins_tool_state_v8";
+    const STORAGE_KEY = "margins_tool_state_v11";
     const el = (id) => document.getElementById(id);
 
     const raw = (id) => el(id).value;
@@ -468,18 +535,27 @@
     let lastEdited = null;
     let marginLock = null;
     let taxMode = "vat";
-    let purchaseDiscountManualOpen = false;
-    let sellDiscountManualOpen = false;
+    let discountsManualOpen = false;
 
-    function euro(v){
-      const n = Math.max(v || 0, 0);
-      return String(Math.floor(n));
+    function formatNum(v){
+      return String(Math.floor(Math.max(v || 0, 0)));
     }
 
-    function setAfterText(id, text){
+    function setAfterPair(id, leftVal, rightVal){
       const node = el(id);
-      node.textContent = text || "";
-      node.classList.toggle("show", !!text);
+      const left = node.querySelector(".price-new-black .price-value");
+      const right = node.querySelector(".price-new-blue .price-value");
+
+      if (leftVal === null || rightVal === null || Math.floor(leftVal) === Math.floor(rightVal)) {
+        left.textContent = "";
+        right.textContent = "";
+        node.classList.remove("show");
+        return;
+      }
+
+      left.textContent = formatNum(leftVal);
+      right.textContent = formatNum(rightVal);
+      node.classList.add("show");
     }
 
     function syncPair(aId, bId, mult){
@@ -761,14 +837,14 @@
       const newIn = getDiscountedPurchaseIn();
       const discountOn = hasVal("pDiscPct") || hasVal("pDiscEur");
 
-      if (!discountOn || oldEx === null || oldIn === null || newEx === null || newIn === null || (Math.floor(oldEx) === Math.floor(newEx) && Math.floor(oldIn) === Math.floor(newIn))) {
-        setAfterText("purchaseExAfter", "");
-        setAfterText("purchaseInAfter", "");
+      if (!discountOn || oldEx === null || oldIn === null || newEx === null || newIn === null) {
+        setAfterPair("purchaseExAfter", null, null);
+        setAfterPair("purchaseInAfter", null, null);
         return;
       }
 
-      setAfterText("purchaseExAfter", euro(newEx));
-      setAfterText("purchaseInAfter", euro(newIn));
+      setAfterPair("purchaseExAfter", oldEx, newEx);
+      setAfterPair("purchaseInAfter", oldIn, newIn);
     }
 
     function updateSellAfterText(){
@@ -778,31 +854,26 @@
       const newIn = getDiscountedSellIn();
       const discountOn = hasVal("discPct") || hasVal("discEur");
 
-      if (!discountOn || oldEx === null || oldIn === null || newEx === null || newIn === null || (Math.floor(oldEx) === Math.floor(newEx) && Math.floor(oldIn) === Math.floor(newIn))) {
-        setAfterText("sellExAfter", "");
-        setAfterText("sellInAfter", "");
+      if (!discountOn || oldEx === null || oldIn === null || newEx === null || newIn === null) {
+        setAfterPair("sellExAfter", null, null);
+        setAfterPair("sellInAfter", null, null);
         return;
       }
 
-      setAfterText("sellExAfter", euro(newEx));
-      setAfterText("sellInAfter", euro(newIn));
+      setAfterPair("sellExAfter", oldEx, newEx);
+      setAfterPair("sellInAfter", oldIn, newIn);
     }
 
     function updateDiscountPanels(){
       const purchaseHasValue = hasVal("pDiscPct") || hasVal("pDiscEur");
       const sellHasValue = hasVal("discPct") || hasVal("discEur");
+      const anyHasValue = purchaseHasValue || sellHasValue;
 
-      el("purchaseDiscountToggle").classList.toggle("has-value", purchaseHasValue);
-      el("sellDiscountToggle").classList.toggle("has-value", sellHasValue);
+      el("discountsToggle").classList.toggle("has-value", anyHasValue);
 
-      const purchaseOpen = purchaseHasValue || purchaseDiscountManualOpen;
-      const sellOpen = sellHasValue || sellDiscountManualOpen;
-
-      el("purchaseDiscountRow").classList.toggle("show", purchaseOpen);
-      el("sellDiscountRow").classList.toggle("show", sellOpen);
-
-      el("purchaseDiscountToggle").classList.toggle("active", purchaseOpen);
-      el("sellDiscountToggle").classList.toggle("active", sellOpen);
+      const open = anyHasValue || discountsManualOpen;
+      el("discountsRow").classList.toggle("show", open);
+      el("discountsToggle").classList.toggle("active", open);
     }
 
     function setMarginDash(){
@@ -997,8 +1068,7 @@
         discPct: raw("discPct"),
         discEur: raw("discEur"),
         taxMode,
-        purchaseDiscountManualOpen,
-        sellDiscountManualOpen
+        discountsManualOpen
       };
       localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
     }
@@ -1019,8 +1089,7 @@
           taxMode = data.taxMode;
         }
 
-        purchaseDiscountManualOpen = !!data.purchaseDiscountManualOpen;
-        sellDiscountManualOpen = !!data.sellDiscountManualOpen;
+        discountsManualOpen = !!data.discountsManualOpen;
 
         updateModeVisuals();
         updateRequiredFields();
@@ -1056,15 +1125,14 @@
       ].forEach(id => el(id).value = "");
       marginLock = null;
       lastEdited = null;
-      purchaseDiscountManualOpen = false;
-      sellDiscountManualOpen = false;
+      discountsManualOpen = false;
       updating = false;
       localStorage.removeItem(STORAGE_KEY);
 
-      setAfterText("purchaseExAfter", "");
-      setAfterText("purchaseInAfter", "");
-      setAfterText("sellExAfter", "");
-      setAfterText("sellInAfter", "");
+      setAfterPair("purchaseExAfter", null, null);
+      setAfterPair("purchaseInAfter", null, null);
+      setAfterPair("sellExAfter", null, null);
+      setAfterPair("sellInAfter", null, null);
 
       updateRequiredFields();
       recalc();
@@ -1077,29 +1145,18 @@
       el("modeMargin").addEventListener("click", () => setTaxMode("margin"));
       el("resetBtn").addEventListener("click", resetAll);
 
-      el("purchaseDiscountToggle").addEventListener("click", () => {
-        const willOpen = !el("purchaseDiscountRow").classList.contains("show");
-        purchaseDiscountManualOpen = willOpen;
+      el("discountsToggle").addEventListener("click", () => {
+        const willOpen = !el("discountsRow").classList.contains("show");
+        discountsManualOpen = willOpen;
+
         if (!willOpen) {
-          clear(["pDiscPct","pDiscEur"]);
+          clear(["pDiscPct","pDiscEur","discPct","discEur"]);
           lastEdited = "pDiscPct";
           recalc();
         } else {
           updateDiscountPanels();
         }
-        queueSave();
-      });
 
-      el("sellDiscountToggle").addEventListener("click", () => {
-        const willOpen = !el("sellDiscountRow").classList.contains("show");
-        sellDiscountManualOpen = willOpen;
-        if (!willOpen) {
-          clear(["discPct","discEur"]);
-          lastEdited = "discPct";
-          recalc();
-        } else {
-          updateDiscountPanels();
-        }
         queueSave();
       });
 
