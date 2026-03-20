@@ -407,18 +407,6 @@
         </div>
       </div>
     </div>
-
-    
-          <div class="input">
-            <div class="affix">%</div>
-            <input type="number" id="pDiscPct" min="0" max="99" inputmode="decimal" placeholder="0" />
-          </div>
-          <div class="input">
-            <div class="affix">€</div>
-            <input type="number" id="pDiscEur" min="0" inputmode="decimal" placeholder="0" />
-          </div>
-        </div>
-
         <div class="discount-row">
           <div class="discount-label">Selling</div>
           <div class="input">
@@ -489,6 +477,28 @@
           <div class="input">
             <div class="affix">€</div>
             <input type="number" id="discEur" min="0" inputmode="decimal" placeholder="0" />
+          </div>
+        </div>
+      </div>
+    </div>
+          </div>
+          <div class="price-meta" id="sellInMeta">
+            <span class="meta-current"><span class="money-symbol">€</span><span class="money-value"></span></span>
+            <span class="meta-discounted"><span class="money-symbol">€</span><span class="money-value"></span></span>
+          </div>
+        </div>
+
+        <div class="field" id="sellExWrap">
+          <div class="field-top">
+            <div class="affix">€</div>
+            <div class="value-wrap">
+              <input type="number" id="sellEx" min="0" inputmode="decimal" placeholder="0" />
+              <div class="field-note">Excl.</div>
+            </div>
+          </div>
+          <div class="price-meta" id="sellExMeta">
+            <span class="meta-current"><span class="money-symbol">€</span><span class="money-value"></span></span>
+            <span class="meta-discounted"><span class="money-symbol">€</span><span class="money-value"></span></span>
           </div>
         </div>
       </div>
