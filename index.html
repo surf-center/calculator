@@ -44,6 +44,7 @@
 
     .section{display:flex;flex-direction:column;gap:8px;padding:10px 0}
     .section + .section{border-top:1px solid #f1f1f1}
+    .section.fold-section{border-top:none}
 
     .section-title{
       font-size:11px;
@@ -180,25 +181,25 @@
     }
 
     .fold-icon{
-      width:24px;
-      height:24px;
+      width:42px;
+      height:42px;
       border-radius:999px;
       display:flex;
       align-items:center;
       justify-content:center;
       background:#f4f4f4;
       border:1px solid #e3e3e3;
-      color:#667085;
-      font-size:12px;
+      color:#666;
+      font-size:15px;
       font-weight:900;
       transition:transform .18s ease, background .18s ease, color .18s ease;
-      flex:0 0 24px;
+      flex:0 0 42px;
     }
 
     .fold-section.open .fold-icon{
-      transform:rotate(180deg);
       background:#eef5ff;
       color:#007bff;
+      border-color:#d7e7ff;
     }
 
     .fold-body{
@@ -364,7 +365,7 @@
     <div class="section fold-section" id="purchaseDiscountSection">
       <button type="button" class="fold-trigger" id="purchaseDiscountToggle" aria-expanded="false">
         <div class="section-title">Purchase Discount</div>
-        <div class="fold-icon">⌄</div>
+        <div class="fold-icon">%</div>
       </button>
 
       <div class="fold-body" id="purchaseDiscountBody">
@@ -412,7 +413,7 @@
     <div class="section fold-section" id="sellDiscountSection">
       <button type="button" class="fold-trigger" id="sellDiscountToggle" aria-expanded="false">
         <div class="section-title">Discount</div>
-        <div class="fold-icon">⌄</div>
+        <div class="fold-icon">%</div>
       </button>
 
       <div class="fold-body" id="sellDiscountBody">
@@ -607,18 +608,41 @@
       return num("purchaseIn");
     }
 
-    function getCurrentPurchaseEx(){
-      const ex = num("purchaseEx");
-      const inc = num("purchaseIn");
-      if (ex !== null) return ex;
-      return inc !== null ? inc / VAT : null;
+    function getCurrentSellEx(){
+      const baseEx = getOriginalPurchaseEx();
+      if (baseEx === null) return null;
+
+      if (hasVal("pDiscPct")) {
+        const p = num("pDiscPct");
+        if (p !== null) return Math.max(baseEx * (1 - clamp(p, 0, 99) / 100), 0);
+      }
+
+      if (hasVal("pDiscEur")) {
+        const e = num("pDiscEur");
+        if (e !== null) {
+          const eurEx = taxMode === "margin" ? Math.max(e, 0) : Math.max(e, 0) / VAT;
+          return Math.max(baseEx - eurEx, 0);
+        }
+      }
+
+      return baseEx;
     }
 
-    function getCurrentPurchaseIn(){
-      const ex = num("purchaseEx");
-      const inc = num("purchaseIn");
-      if (inc !== null) return inc;
-      return ex !== null ? ex * VAT : null;
+    function getDiscountedPurchaseIn(){
+      const baseIn = getOriginalPurchaseIn();
+      if (baseIn === null) return null;
+
+      if (hasVal("pDiscPct")) {
+        const p = num("pDiscPct");
+        if (p !== null) return Math.max(baseIn * (1 - clamp(p, 0, 99) / 100), 0);
+      }
+
+      if (hasVal("pDiscEur")) {
+        const e = num("pDiscEur");
+        if (e !== null) return Math.max(baseIn - Math.max(e, 0), 0);
+      }
+
+      return baseIn;
     }
 
     function getBaseSellValue(){
@@ -681,50 +705,7 @@
         const p = clamp(pct, 0, 99);
         const eur = basePurchase * (p / 100);
 
-        setVal("pDiscPct", p);
-        setVal("pDiscEur", eur);
-      }
-
-      if (lastEdited === "pDiscEur"){
-        const eur = num("pDiscEur");
-        if (eur === null) return;
-
-        const e = Math.max(eur, 0);
-        const pct = basePurchase > 0 ? (e / basePurchase) * 100 : 0;
-
-        setVal("pDiscEur", e);
-        setVal("pDiscPct", clamp(pct, 0, 99));
-      }
-    }
-
-    function getDiscountedBasePurchase(){
-      const basePurchase = getBasePurchaseValue();
-      if (basePurchase === null) return null;
-
-      if (hasVal("pDiscPct")) {
-        const p = num("pDiscPct");
-        if (p !== null) return Math.max(basePurchase * (1 - clamp(p, 0, 99) / 100), 0);
-      }
-
-      if (hasVal("pDiscEur")) {
-        const e = num("pDiscEur");
-        if (e !== null) return Math.max(basePurchase - Math.max(e, 0), 0);
-      }
-
-      return basePurchase;
-    }
-
-    function applyPurchaseDiscount(){
-      const discounted = getDiscountedBasePurchase();
-      if (discounted === null) return;
-
-      if (taxMode === "margin") {
-        setVal("purchaseEx", discounted);
-      } else {
-        setVal("purchaseIn", discounted);
-        setVal("purchaseEx", discounted / VAT);
-      }
-    }
+        setVal("pDiscPct
 
     function syncDiscountFields(){
       const baseSell = getBaseSellValue();
@@ -1187,3 +1168,4 @@
   </script>
 </body>
 </html>
+
