@@ -44,6 +44,7 @@
 
     .section{display:flex;flex-direction:column;gap:8px;padding:10px 0}
     .section + .section{border-top:1px solid #f1f1f1}
+    .section.fold-section{border-top:none}
 
     .section-title{
       font-size:11px;
@@ -57,25 +58,25 @@
 
     .row2{
       display:grid;
+      grid-template-columns:1fr 1fr auto;
+      gap:10px;
+      align-items:center;
+    }
+
+    .row2 .discount-toggle-wrap{
+      grid-column:3;
+    }
+
+    .row-discount{
+      display:grid;
       grid-template-columns:1fr 1fr 42px;
       gap:10px;
       align-items:start;
     }
 
-    .discount-row{
-      display:none;
-      margin-top:2px;
-      padding-left:0;
-    }
-
-    .discount-row.show{
-      display:block;
-    }
-
     .discount-fields{
-      display:grid;
-      grid-template-columns:1fr 1fr;
-      gap:10px;
+      grid-column:1 / 3;
+      grid-row:1;
     }
 
     .input{
@@ -86,8 +87,6 @@
       overflow:hidden;
       background:#fff;
       transition:border-color .18s ease, box-shadow .18s ease, opacity .18s ease, background .18s ease;
-      position:relative;
-      min-height:50px;
     }
 
     .input.required{
@@ -107,7 +106,6 @@
       background:#f4f4f4;
       padding:10px 10px;
       white-space:nowrap;
-      z-index:2;
     }
 
     .prefix{border-right:1px solid #e2e2e2}
@@ -124,11 +122,6 @@
       color:#111;
       background:#fff;
       line-height:1;
-      z-index:2;
-    }
-
-    input.has-inline{
-      padding-bottom:22px;
     }
 
     input[type="number"]::placeholder,
@@ -147,16 +140,109 @@
       appearance:textfield;
     }
 
+    .sale-result,
+    .purchase-result{
+      display:none;
+    }
+
+    .input.with-result{
+      position:relative;
+    }
+
     .inline-result{
       position:absolute;
-      right:10px;
-      bottom:5px;
-      font-size:11px;
+      right:8px;
+      bottom:4px;
+      font-size:12px;
       font-weight:800;
       color:#007bff;
-      line-height:1;
       pointer-events:none;
-      z-index:3;
+    }
+
+    .sale-result.show,
+    .purchase-result.show{display:flex}
+
+    .sale-result-values,
+    .purchase-result-values{
+      display:flex;
+      align-items:baseline;
+      gap:8px;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+      width:100%;
+    }
+
+    .sale-old,
+    .purchase-old{
+      font-size:14px;
+      font-weight:800;
+      color:#9a9a9a;
+      text-decoration:line-through;
+      line-height:1.1;
+    }
+
+    .sale-new,
+    .purchase-new{
+      font-size:22px;
+      font-weight:900;
+      color:#007bff;
+      line-height:1;
+    }
+
+    .discount-toggle-wrap{
+      display:flex;
+      justify-content:flex-end;
+      align-items:flex-start;
+      grid-column:3;
+      grid-row:1;
+    }
+
+    .discount-toggle{
+      width:42px;
+      height:42px;
+      border:none;
+      border-radius:999px;
+      background:#f4f4f4;
+      color:#666;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      cursor:pointer;
+      transition:all .18s ease;
+      border:1px solid #e3e3e3;
+      font-family:"Poppins",sans-serif;
+      font-size:16px;
+      font-weight:900;
+      line-height:1;
+    }
+
+    .discount-toggle:hover{
+      background:#ededed;
+      color:#111;
+    }
+
+    .discount-toggle:active{
+      transform:scale(.96);
+    }
+
+    .fold-section.open .discount-toggle,
+    .discount-toggle.has-value{
+      background:#eef5ff;
+      color:#007bff;
+      border-color:#d7e7ff;
+    }
+
+    .discount-body{
+      display:none;
+      flex-direction:column;
+      gap:8px;
+      min-width:0;
+      grid-column:1 / 4;
+      grid-row:2;
+    }
+
+    .fold-section.open .discount-body{
+      display:flex;
     }
 
     .summary{
@@ -254,8 +340,7 @@
       box-shadow:0 4px 12px rgba(0,123,255,.18);
     }
 
-    .icon-btn,
-    .discount-toggle{
+    .icon-btn{
       width:42px;
       height:42px;
       border:none;
@@ -269,27 +354,15 @@
       flex:0 0 42px;
       transition:all .18s ease;
       border:1px solid #e3e3e3;
-      font-family:"Poppins",sans-serif;
-      font-size:16px;
-      font-weight:900;
     }
 
-    .icon-btn:hover,
-    .discount-toggle:hover{
+    .icon-btn:hover{
       background:#ededed;
       color:#111;
     }
 
-    .icon-btn:active,
-    .discount-toggle:active{
+    .icon-btn:active{
       transform:scale(.96);
-    }
-
-    .discount-toggle.active,
-    .discount-toggle.has-value{
-      background:#eef5ff;
-      color:#007bff;
-      border-color:#d7e7ff;
     }
 
     .icon-btn svg{
@@ -308,25 +381,27 @@
 
     <div class="section">
       <div class="section-title">Purchase</div>
-
       <div class="row2">
-        <div class="input" id="purchaseExWrap">
+        <div class="input with-result" id="purchaseExWrap">
           <div class="prefix">€</div>
           <input type="number" id="purchaseEx" min="0" inputmode="decimal" placeholder="0" />
           <div class="suffix">Excl.</div>
         </div>
-
-        <div class="input" id="purchaseInWrap">
+        <div class="input with-result" id="purchaseInWrap">
           <div class="prefix">€</div>
           <input type="number" id="purchaseIn" min="0" inputmode="decimal" placeholder="0" />
           <div class="suffix">Incl.</div>
         </div>
-
-        <button type="button" class="discount-toggle" id="purchaseDiscountToggle" aria-label="Purchase discount" title="Purchase discount">%</button>
+        <div class="discount-toggle-wrap">
+          <button type="button" class="discount-toggle" id="purchaseDiscountToggle">%</button>
+        </div>
       </div>
+    </div>
 
-      <div class="discount-row" id="purchaseDiscountRow">
-        <div class="discount-fields">
+    <div class="section fold-section" id="purchaseDiscountSection">
+      <div class="section-title">Purchase Discount</div>
+      <div class="row-discount">
+        <div class="row2 discount-fields">
           <div class="input">
             <div class="prefix">%</div>
             <input type="number" id="pDiscPct" min="0" max="99" inputmode="decimal" placeholder="0" />
@@ -336,30 +411,46 @@
             <input type="number" id="pDiscEur" min="0" inputmode="decimal" placeholder="0" />
           </div>
         </div>
+
+        <div class="discount-toggle-wrap">
+          <button type="button" class="discount-toggle" id="purchaseDiscountToggle" aria-expanded="false" aria-label="Toggle purchase discount" title="Purchase discount">%</button>
+        </div>
+
+        <div class="discount-body" id="purchaseDiscountBody">
+          <div class="purchase-result" id="purchaseResult">
+            <div class="purchase-result-values">
+              <span class="purchase-old" id="purchaseOldEx"></span>
+              <span class="purchase-new" id="purchaseNewEx"></span>
+            </div>
+            <div class="purchase-result-values">
+              <span class="purchase-old" id="purchaseOldIn"></span>
+              <span class="purchase-new" id="purchaseNewIn"></span>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
     <div class="section">
       <div class="section-title">Selling</div>
-
       <div class="row2">
-        <div class="input" id="sellInWrap">
+        <div class="input with-result" id="sellInWrap">
           <div class="prefix">€</div>
           <input type="number" id="sellIn" min="0" inputmode="decimal" placeholder="0" />
           <div class="suffix">Incl.</div>
         </div>
-
-        <div class="input" id="sellExWrap">
+        <div class="input with-result" id="sellExWrap">
           <div class="prefix">€</div>
           <input type="number" id="sellEx" min="0" inputmode="decimal" placeholder="0" />
           <div class="suffix">Excl.</div>
         </div>
-
-        <button type="button" class="discount-toggle" id="sellDiscountToggle" aria-label="Selling discount" title="Selling discount">%</button>
       </div>
+    </div>
 
-      <div class="discount-row" id="sellDiscountRow">
-        <div class="discount-fields">
+    <div class="section fold-section" id="sellDiscountSection">
+      <div class="section-title">Discount</div>
+      <div class="row-discount">
+        <div class="row2 discount-fields">
           <div class="input">
             <div class="prefix">%</div>
             <input type="number" id="discPct" min="0" max="99" inputmode="decimal" placeholder="0" />
@@ -367,6 +458,23 @@
           <div class="input">
             <div class="prefix">€</div>
             <input type="number" id="discEur" min="0" inputmode="decimal" placeholder="0" />
+          </div>
+        </div>
+
+        <div class="discount-toggle-wrap">
+          <button type="button" class="discount-toggle" id="sellDiscountToggle" aria-expanded="false" aria-label="Toggle discount" title="Discount">%</button>
+        </div>
+
+        <div class="discount-body" id="sellDiscountBody">
+          <div class="sale-result" id="saleResult">
+            <div class="sale-result-values">
+              <span class="sale-old" id="priceOldEx"></span>
+              <span class="sale-new" id="priceNewEx"></span>
+            </div>
+            <div class="sale-result-values">
+              <span class="sale-old" id="priceOldIn"></span>
+              <span class="sale-new" id="priceNewIn"></span>
+            </div>
           </div>
         </div>
       </div>
@@ -413,7 +521,7 @@
 
   <script>
     const VAT = 1.21;
-    const STORAGE_KEY = "margins_tool_state_v7";
+    const STORAGE_KEY = "margins_tool_state_v6";
     const el = (id) => document.getElementById(id);
 
     const raw = (id) => el(id).value;
@@ -430,32 +538,25 @@
     const clear = (ids) => ids.forEach(i => el(i).value = "");
     const clamp = (n, a, b) => Math.min(Math.max(n, a), b);
 
+    function addInline(wrapper, text){
+      const span = document.createElement("div");
+      span.className = "inline-result";
+      span.textContent = text;
+      wrapper.appendChild(span);
+    }
+
+    function removeInline(wrapper){
+      wrapper.querySelectorAll(".inline-result").forEach(n => n.remove());
+    }
+
     let updating = false;
     let lastEdited = null;
     let marginLock = null;
     let taxMode = "vat";
-    let purchaseDiscountManualOpen = false;
-    let sellDiscountManualOpen = false;
 
     function euro(v){
       const n = Math.max(v || 0, 0);
       return "€ " + Math.floor(n);
-    }
-
-    function addInline(wrapperId, inputId, text){
-      const wrap = el(wrapperId);
-      removeInline(wrapperId, inputId);
-      const span = document.createElement("div");
-      span.className = "inline-result";
-      span.textContent = text;
-      wrap.appendChild(span);
-      el(inputId).classList.add("has-inline");
-    }
-
-    function removeInline(wrapperId, inputId){
-      const wrap = el(wrapperId);
-      wrap.querySelectorAll(".inline-result").forEach(n => n.remove());
-      el(inputId).classList.remove("has-inline");
     }
 
     function syncPair(aId, bId, mult){
@@ -730,38 +831,63 @@
       }
     }
 
-    function updatePurchaseInline(){
-      removeInline("purchaseExWrap", "purchaseEx");
-      removeInline("purchaseInWrap", "purchaseIn");
+    function updatePurchaseResult(){
+      const exEl = el("purchaseExWrap");
+      const inEl = el("purchaseInWrap");
 
       const oldEx = getPurchaseBaseEx();
       const newEx = getDiscountedPurchaseEx();
       const oldIn = getPurchaseBaseIn();
       const newIn = getDiscountedPurchaseIn();
-      const discountOn = hasVal("pDiscPct") || hasVal("pDiscEur");
 
-      if (!discountOn || oldEx === null || oldIn === null || newEx === null || newIn === null) return;
-      if (Math.floor(oldEx) === Math.floor(newEx) && Math.floor(oldIn) === Math.floor(newIn)) return;
+      removeInline(exEl);
+      removeInline(inEl);
 
-      addInline("purchaseExWrap", "purchaseEx", euro(newEx));
-      addInline("purchaseInWrap", "purchaseIn", euro(newIn));
+      if (!hasVal("pDiscPct") && !hasVal("pDiscEur")) return;
+      if (!oldEx || !newEx || Math.floor(oldEx) === Math.floor(newEx)) return;
+
+      addInline(exEl, euro(newEx));
+      addInline(inEl, euro(newIn));
     }
 
-    function updateSellInline(){
-      removeInline("sellExWrap", "sellEx");
-      removeInline("sellInWrap", "sellIn");
+      wrap.classList.add("show");
+      oldExEl.textContent = `${euro(oldEx)} excl.`;
+      newExEl.textContent = `${euro(newEx)} excl.`;
+      oldInEl.textContent = `${euro(oldIn)} incl.`;
+      newInEl.textContent = `${euro(newIn)} incl.`;
+    }
+
+    function updateSaleResult(){
+      const exEl = el("sellExWrap");
+      const inEl = el("sellInWrap");
 
       const oldEx = getSellBaseEx();
       const newEx = getDiscountedSellEx();
       const oldIn = getSellBaseIn();
       const newIn = getDiscountedSellIn();
-      const discountOn = hasVal("discPct") || hasVal("discEur");
 
-      if (!discountOn || oldEx === null || oldIn === null || newEx === null || newIn === null) return;
-      if (Math.floor(oldEx) === Math.floor(newEx) && Math.floor(oldIn) === Math.floor(newIn)) return;
+      removeInline(exEl);
+      removeInline(inEl);
 
-      addInline("sellExWrap", "sellEx", euro(newEx));
-      addInline("sellInWrap", "sellIn", euro(newIn));
+      if (!hasVal("discPct") && !hasVal("discEur")) return;
+      if (!oldEx || !newEx || Math.floor(oldEx) === Math.floor(newEx)) return;
+
+      addInline(exEl, euro(newEx));
+      addInline(inEl, euro(newIn));
+    }
+
+      wrap.classList.add("show");
+      oldExEl.textContent = `${euro(oldEx)} excl.`;
+      newExEl.textContent = `${euro(newEx)} excl.`;
+      oldInEl.textContent = `${euro(oldIn)} incl.`;
+      newInEl.textContent = `${euro(newIn)} incl.`;
+    }
+
+    function setDiscountPanelState(sectionId, toggleId, isOpen){
+      const section = el(sectionId);
+      const toggle = el(toggleId);
+      section.classList.toggle("open", isOpen);
+      toggle.setAttribute("aria-expanded", isOpen ? "true" : "false");
     }
 
     function updateDiscountPanels(){
@@ -771,14 +897,22 @@
       el("purchaseDiscountToggle").classList.toggle("has-value", purchaseHasValue);
       el("sellDiscountToggle").classList.toggle("has-value", sellHasValue);
 
-      const purchaseOpen = purchaseHasValue || purchaseDiscountManualOpen;
-      const sellOpen = sellHasValue || sellDiscountManualOpen;
+      const purchaseSection = el("purchaseDiscountSection");
+      const sellSection = el("sellDiscountSection");
 
-      el("purchaseDiscountRow").classList.toggle("show", purchaseOpen);
-      el("sellDiscountRow").classList.toggle("show", sellOpen);
+      const purchaseOpen = purchaseHasValue || purchaseSection.dataset.manualOpen === "1";
+      const sellOpen = sellHasValue || sellSection.dataset.manualOpen === "1";
 
-      el("purchaseDiscountToggle").classList.toggle("active", purchaseOpen);
-      el("sellDiscountToggle").classList.toggle("active", sellOpen);
+      setDiscountPanelState("purchaseDiscountSection", "purchaseDiscountToggle", purchaseOpen);
+      setDiscountPanelState("sellDiscountSection", "sellDiscountToggle", sellOpen);
+    }
+
+    function toggleDiscountPanel(sectionId, toggleId){
+      const section = el(sectionId);
+      const willOpen = !section.classList.contains("open");
+      if (willOpen) section.dataset.manualOpen = "1";
+      else delete section.dataset.manualOpen;
+      setDiscountPanelState(sectionId, toggleId, willOpen);
     }
 
     function setMarginDash(){
@@ -820,9 +954,9 @@
       if (lastEdited === "mPct" || lastEdited === "mEur") return;
 
       const purchaseEx = getDiscountedPurchaseEx();
-      const discountedSellIn = getDiscountedSellIn();
+      const discountedSell = getDiscountedSellIn();
 
-      if (!purchaseEx || !discountedSellIn || purchaseEx <= 0) {
+      if (!purchaseEx || !discountedSell || purchaseEx <= 0) {
         clear(["mPct","mEur"]);
         return;
       }
@@ -832,7 +966,7 @@
       if (taxMode === "margin") {
         net = getDiscountedSellEx();
       } else {
-        net = discountedSellIn / VAT;
+        net = discountedSell / VAT;
       }
 
       if (!(net > 0)) {
@@ -869,8 +1003,8 @@
 
       syncPurchaseDiscountFields();
       syncDiscountFields();
-      updatePurchaseInline();
-      updateSellInline();
+      updatePurchaseResult();
+      updateSaleResult();
       updateDiscountPanels();
       updateMarginFromCurrent();
 
@@ -972,9 +1106,7 @@
         sellEx: raw("sellEx"),
         discPct: raw("discPct"),
         discEur: raw("discEur"),
-        taxMode,
-        purchaseDiscountManualOpen,
-        sellDiscountManualOpen
+        taxMode
       };
       localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
     }
@@ -994,9 +1126,6 @@
         if (data.taxMode === "vat" || data.taxMode === "margin") {
           taxMode = data.taxMode;
         }
-
-        purchaseDiscountManualOpen = !!data.purchaseDiscountManualOpen;
-        sellDiscountManualOpen = !!data.sellDiscountManualOpen;
 
         updateModeVisuals();
         updateRequiredFields();
@@ -1032,16 +1161,12 @@
       ].forEach(id => el(id).value = "");
       marginLock = null;
       lastEdited = null;
-      purchaseDiscountManualOpen = false;
-      sellDiscountManualOpen = false;
+      delete el("purchaseDiscountSection").dataset.manualOpen;
+      delete el("sellDiscountSection").dataset.manualOpen;
       updating = false;
       localStorage.removeItem(STORAGE_KEY);
-
-      removeInline("purchaseExWrap", "purchaseEx");
-      removeInline("purchaseInWrap", "purchaseIn");
-      removeInline("sellExWrap", "sellEx");
-      removeInline("sellInWrap", "sellIn");
-
+      updatePurchaseResult();
+      updateSaleResult();
       updateRequiredFields();
       recalc();
     }
@@ -1052,18 +1177,8 @@
       el("modeVat").addEventListener("click", () => setTaxMode("vat"));
       el("modeMargin").addEventListener("click", () => setTaxMode("margin"));
       el("resetBtn").addEventListener("click", resetAll);
-
-      el("purchaseDiscountToggle").addEventListener("click", () => {
-        purchaseDiscountManualOpen = !purchaseDiscountManualOpen;
-        updateDiscountPanels();
-        queueSave();
-      });
-
-      el("sellDiscountToggle").addEventListener("click", () => {
-        sellDiscountManualOpen = !sellDiscountManualOpen;
-        updateDiscountPanels();
-        queueSave();
-      });
+      el("purchaseDiscountToggle").addEventListener("click", () => toggleDiscountPanel("purchaseDiscountSection", "purchaseDiscountToggle"));
+      el("sellDiscountToggle").addEventListener("click", () => toggleDiscountPanel("sellDiscountSection", "sellDiscountToggle"));
 
       updateModeVisuals();
       updateRequiredFields();
