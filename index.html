@@ -408,10 +408,7 @@
       </div>
     </div>
 
-    <div class="section discount-shell" id="discountShell">
-      <div class="discount-bar">
-        <div class="discount-row">
-          <div class="discount-label">Purchase</div>
+    
           <div class="input">
             <div class="affix">%</div>
             <input type="number" id="pDiscPct" min="0" max="99" inputmode="decimal" placeholder="0" />
@@ -469,17 +466,45 @@
       </div>
     </div>
 
+    <div class="section discount-shell" id="discountShell">
+      <div class="discount-bar">
+        <div class="discount-row">
+          <div class="discount-label">Purchase</div>
+          <div class="input">
+            <div class="affix">%</div>
+            <input type="number" id="pDiscPct" min="0" max="99" inputmode="decimal" placeholder="0" />
+          </div>
+          <div class="input">
+            <div class="affix">€</div>
+            <input type="number" id="pDiscEur" min="0" inputmode="decimal" placeholder="0" />
+          </div>
+        </div>
+
+        <div class="discount-row">
+          <div class="discount-label">Selling</div>
+          <div class="input">
+            <div class="affix">%</div>
+            <input type="number" id="discPct" min="0" max="99" inputmode="decimal" placeholder="0" />
+          </div>
+          <div class="input">
+            <div class="affix">€</div>
+            <input type="number" id="discEur" min="0" inputmode="decimal" placeholder="0" />
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div class="summary">
       <div class="summary-grid">
         <div class="pill">
-          <div class="k">Margin</div>
+          <div class="k">MARGIN</div>
           <div class="biginput">
             <span class="bigprefix">%</span>
             <input type="text" id="mPct" inputmode="decimal" />
           </div>
         </div>
         <div class="pill">
-          <div class="k">Margin</div>
+          <div class="k"></div>
           <div class="biginput">
             <span class="bigprefix">€</span>
             <input type="text" id="mEur" inputmode="decimal" />
