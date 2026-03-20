@@ -112,15 +112,16 @@
 
     .price-after{
       display:none;
-      padding:0 8px 10px 8px;
+      padding:0 6px 8px 6px;
       margin-left:0;
-      font-size:20px;
+      font-size:18px;
       font-weight:900;
       color:#007bff;
       line-height:1;
       text-align:center;
       width:100%;
       white-space:nowrap;
+      font-variant-numeric:tabular-nums;
     }
 
     .price-after.show{display:block}
@@ -130,7 +131,7 @@
       font-weight:900;
       color:#111;
       background:#f4f4f4;
-      padding:10px 8px;
+      padding:10px 6px;
       white-space:nowrap;
       flex:0 0 auto;
     }
@@ -141,16 +142,105 @@
     input[type="number"],
     input[type="text"]{
       width:100%;
-      min-width:0;
       border:none;
       outline:none;
-      padding:12px 8px;
+      padding:12px 12px;
       font-size:20px;
       font-weight:900;
       color:#111;
       background:#fff;
       line-height:1;
-      text-align:center;
+    }
+
+    input[type="number"]::placeholder,
+    input[type="text"]::placeholder{color:#b4b4b4}
+
+    input[type="number"]::-webkit-outer-spin-button,
+    input[type="number"]::-webkit-inner-spin-button{
+      -webkit-appearance:none;
+      margin:0;
+    }
+
+    input[type="number"]{
+      -moz-appearance:textfield;
+      appearance:textfield;
+    }
+
+    .discount-toggle{
+      width:42px;
+      height:42px;
+      border:none;
+      border-radius:999px;
+      background:#f4f4f4;
+      color:#666;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      cursor:pointer;
+      flex:0 0 42px;
+      transition:all .18s ease;
+      border:1px solid #e3e3e3;
+      font-family:"Poppins",sans-serif;
+      font-size:16px;
+      font-weight:900;
+    }
+
+    .discount-toggle:hover,
+    .icon-btn:hover{
+      background:#ededed;
+      color:#111;
+    }
+
+    .discount-toggle:active,
+    .icon-btn:active{transform:scale(.96)}
+
+    .discount-toggle.active,
+    .discount-toggle.has-value{
+      background:#eef5ff;
+      color:#007bff;
+      border-color:#d7e7ff;
+    }
+
+    .summary{
+      margin-top:12px;
+      padding:14px;
+      border-radius:14px;
+      background:#007bff;
+      color:#fff;
+    }
+
+    .summary-grid{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:10px;
+    }
+
+    .pill{
+      border-radius:14px;
+      padding:12px;
+      background:rgba(255,255,255,.14);
+      border:1px solid rgba(255,255,255,.22);
+    }
+
+    .pill .k{
+      font-size:12px;
+      opacity:.95;
+      font-weight:900;
+      margin-bottom:8px;
+      letter-spacing:.02em;
+    }
+
+    .biginput{
+      display:flex;
+      align-items:baseline;
+      gap:6px;
+    }
+
+    .bigprefix{
+      font-size:18px;
+      font-weight:900;
+      opacity:.95;
+      line-height:1;
     }
 
     .biginput input{
