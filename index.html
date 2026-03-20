@@ -59,7 +59,6 @@
       display:grid;
       grid-template-columns:1fr 1fr;
       gap:10px;
-      align-items:start;
     }
 
     .input{
@@ -70,7 +69,7 @@
       overflow:hidden;
       background:#fff;
       transition:border-color .18s ease, box-shadow .18s ease, opacity .18s ease;
-      min-height:56px;
+      min-height:48px;
     }
 
     .input.required{
@@ -100,17 +99,19 @@
     .price-main{
       display:flex;
       align-items:center;
-      min-height:56px;
+      min-height:48px;
       background:#fff;
     }
 
     .price-meta{
       display:none;
-      align-items:center;
-      justify-content:flex-end;
-      gap:10px;
-      padding:8px 10px 10px;
+      flex-direction:column;
+      align-items:flex-start;
+      justify-content:center;
+      gap:2px;
+      padding:4px 8px 8px;
       font-variant-numeric:tabular-nums;
+      min-height:30px;
     }
 
     .price-meta.show{display:flex}
@@ -120,20 +121,30 @@
       display:flex;
       align-items:flex-end;
       gap:2px;
-      font-size:18px;
-      font-weight:900;
       line-height:1;
       white-space:nowrap;
     }
 
-    .meta-current{display:none}
-    .meta-discounted{color:#007bff;margin-left:auto}
+    .meta-current{
+      color:#111;
+      font-size:13px;
+      font-weight:800;
+      text-decoration:line-through;
+      text-decoration-thickness:1.5px;
+      opacity:.7;
+    }
+
+    .meta-discounted{
+      color:#007bff;
+      font-size:17px;
+      font-weight:900;
+    }
 
     .mini-symbol,
     .prefix,
     .suffix,
     .bigprefix{
-      font-size:10px;
+      font-size:9px;
       font-weight:900;
       line-height:1;
       opacity:.9;
@@ -141,7 +152,7 @@
 
     .prefix,.suffix{
       color:#111;
-      padding:10px 6px;
+      padding:8px 4px;
       white-space:nowrap;
       flex:0 0 auto;
       background:transparent;
@@ -154,15 +165,14 @@
       min-width:0;
       border:none;
       outline:none;
-      padding:10px 6px;
-      font-size:18px;
+      padding:8px 4px;
+      font-size:17px;
       font-weight:900;
       color:#111;
       background:#fff;
       line-height:1;
       text-align:left;
       font-variant-numeric:tabular-nums;
-      font-family:"Poppins",sans-serif;
     }
 
     input[type="number"]::placeholder,
@@ -225,13 +235,16 @@
       display:grid;
       grid-template-columns:1fr 1fr;
       gap:10px;
-      align-items:start;
     }
 
-    .discount-fields{
-      display:grid;
-      grid-template-columns:1fr;
-      gap:10px;
+    .discount-col{
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+    }
+
+    .discount-col .input{
+      min-height:48px;
     }
 
     .summary{
@@ -336,36 +349,35 @@
 
     <div class="section">
       <div class="section-title">Purchase</div>
-      <div class="row2">
-        <div class="price-card" id="purchaseExWrap">
-          <div class="price-main">
-            <div class="prefix">€</div>
-            <input type="number" id="purchaseEx" min="0" inputmode="decimal" placeholder="0" />
-            <div class="suffix">Excl.</div>
-          </div>
-          <div class="price-meta" id="purchaseExMeta">
-            <span class="meta-current"><span class="mini-symbol">€</span><span class="meta-current-value"></span></span>
-            <span class="meta-discounted"><span class="mini-symbol">€</span><span class="meta-discounted-value"></span></span>
-          </div>
-        </div>
 
-        <div class="price-card" id="purchaseInWrap">
-          <div class="price-main">
-            <div class="prefix">€</div>
-            <input type="number" id="purchaseIn" min="0" inputmode="decimal" placeholder="0" />
-            <div class="suffix">Incl.</div>
-          </div>
-          <div class="price-meta" id="purchaseInMeta">
-            <span class="meta-current"><span class="mini-symbol">€</span><span class="meta-current-value"></span></span>
-            <span class="meta-discounted"><span class="mini-symbol">€</span><span class="meta-discounted-value"></span></span>
-          </div>
+      <div class="price-card" id="purchaseExWrap">
+        <div class="price-main">
+          <div class="prefix">€</div>
+          <input type="number" id="purchaseEx" min="0" inputmode="decimal" placeholder="0" />
+          <div class="suffix">Excl.</div>
+        </div>
+        <div class="price-meta" id="purchaseExMeta">
+          <span class="meta-current"><span class="mini-symbol">€</span><span class="meta-current-value"></span></span>
+          <span class="meta-discounted"><span class="mini-symbol">€</span><span class="meta-discounted-value"></span></span>
+        </div>
+      </div>
+
+      <div class="price-card" id="purchaseInWrap">
+        <div class="price-main">
+          <div class="prefix">€</div>
+          <input type="number" id="purchaseIn" min="0" inputmode="decimal" placeholder="0" />
+          <div class="suffix">Incl.</div>
+        </div>
+        <div class="price-meta" id="purchaseInMeta">
+          <span class="meta-current"><span class="mini-symbol">€</span><span class="meta-current-value"></span></span>
+          <span class="meta-discounted"><span class="mini-symbol">€</span><span class="meta-discounted-value"></span></span>
         </div>
       </div>
     </div>
 
     <div class="section">
       <div class="section-title">Selling</div>
-      <div class="row2">
+      <div class="row2" id="sellGrid">
         <div class="price-card" id="sellExWrap">
           <div class="price-main">
             <div class="prefix">€</div>
@@ -393,38 +405,36 @@
     </div>
 
     <div class="section">
-      <div class="section-title">Discount</div>
+      <div class="section-title" id="discountSectionTitle" style="display:none">Discount</div>
       <div class="discount-row" id="discountsRow">
         <div class="discount-grid">
-          <div>
+          <div class="discount-col">
             <div class="section-title">Purchase</div>
-            <div class="discount-fields">
-              <div class="input">
-                <div class="prefix">%</div>
-                <input type="number" id="pDiscPct" min="0" max="99" inputmode="decimal" placeholder="0" />
-              </div>
-              <div class="input">
-                <div class="prefix">€</div>
-                <input type="number" id="pDiscEur" min="0" inputmode="decimal" placeholder="0" />
-              </div>
+            <div class="input">
+              <div class="prefix">%</div>
+              <input type="number" id="pDiscPct" min="0" max="99" inputmode="decimal" placeholder="0" />
+            </div>
+            <div class="input">
+              <div class="prefix">€</div>
+              <input type="number" id="pDiscEur" min="0" inputmode="decimal" placeholder="0" />
             </div>
           </div>
 
-          <div>
+          <div class="discount-col">
             <div class="section-title">Selling</div>
-            <div class="discount-fields">
-              <div class="input">
-                <div class="prefix">%</div>
-                <input type="number" id="discPct" min="0" max="99" inputmode="decimal" placeholder="0" />
-              </div>
-              <div class="input">
-                <div class="prefix">€</div>
-                <input type="number" id="discEur" min="0" inputmode="decimal" placeholder="0" />
-              </div>
+            <div class="input">
+              <div class="prefix">%</div>
+              <input type="number" id="discPct" min="0" max="99" inputmode="decimal" placeholder="0" />
+            </div>
+            <div class="input">
+              <div class="prefix">€</div>
+              <input type="number" id="discEur" min="0" inputmode="decimal" placeholder="0" />
             </div>
           </div>
         </div>
       </div>
+    </div>
+
     </div>
 
     <div class="summary">
@@ -470,7 +480,7 @@
 
   <script>
     const VAT = 1.21;
-    const STORAGE_KEY = "margins_tool_state_v12_clean2";
+    const STORAGE_KEY = "margins_tool_state_v12";
     const el = (id) => document.getElementById(id);
 
     const raw = (id) => el(id).value;
@@ -509,7 +519,7 @@
         return;
       }
 
-      current.textContent = "";
+      current.textContent = formatNum(currentVal);
       discounted.textContent = formatNum(discountedVal);
       node.classList.add("show");
     }
@@ -569,6 +579,8 @@
       const purchaseInWrap = el("purchaseInWrap");
       const sellExWrap = el("sellExWrap");
       const sellInWrap = el("sellInWrap");
+      const sellGrid = el("sellGrid");
+      const purchaseGrid = el("purchaseGrid");
 
       [purchaseExWrap, purchaseInWrap, sellExWrap, sellInWrap].forEach(node => {
         node.classList.remove("required", "is-hidden");
@@ -579,9 +591,13 @@
         sellExWrap.classList.add("required");
         purchaseInWrap.classList.add("is-hidden");
         sellInWrap.classList.add("is-hidden");
+        sellGrid.style.gridTemplateColumns = "1fr";
+        purchaseGrid.style.gridTemplateColumns = "1fr";
       } else {
         purchaseExWrap.classList.add("required");
         sellInWrap.classList.add("required");
+        sellGrid.style.gridTemplateColumns = "1fr 1fr";
+        purchaseGrid.style.gridTemplateColumns = "1fr 1fr";
       }
     }
 
@@ -595,7 +611,7 @@
     function getPurchaseBaseIn(){
       const ex = num("purchaseEx");
       const inc = num("purchaseIn");
-      if (taxMode === "margin") return null;
+      if (taxMode === "margin") return ex !== null ? ex * VAT : null;
       if (inc !== null) return inc;
       return ex !== null ? ex * VAT : null;
     }
@@ -610,7 +626,7 @@
     function getSellBaseIn(){
       const ex = num("sellEx");
       const inc = num("sellIn");
-      if (taxMode === "margin") return null;
+      if (taxMode === "margin") return ex !== null ? ex * VAT : null;
       if (inc !== null) return inc;
       return ex !== null ? ex * VAT : null;
     }
@@ -787,8 +803,8 @@
     }
 
     function updatePurchaseMeta(){
-      const currentEx = getPurchaseBaseEx();
-      const currentIn = getPurchaseBaseIn();
+      const originalEx = getPurchaseBaseEx();
+      const originalIn = getPurchaseBaseIn();
       const discountedEx = getDiscountedPurchaseEx();
       const discountedIn = getDiscountedPurchaseIn();
       const discountOn = hasVal("pDiscPct") || hasVal("pDiscEur");
@@ -799,13 +815,13 @@
         return;
       }
 
-      setMeta("purchaseExMeta", currentEx, discountedEx);
-      setMeta("purchaseInMeta", currentIn, discountedIn);
+      setMeta("purchaseExMeta", originalEx, discountedEx);
+      setMeta("purchaseInMeta", originalIn, discountedIn);
     }
 
     function updateSellMeta(){
-      const currentEx = getSellBaseEx();
-      const currentIn = getSellBaseIn();
+      const originalEx = getSellBaseEx();
+      const originalIn = getSellBaseIn();
       const discountedEx = getDiscountedSellEx();
       const discountedIn = getDiscountedSellIn();
       const discountOn = hasVal("discPct") || hasVal("discEur");
@@ -816,8 +832,8 @@
         return;
       }
 
-      setMeta("sellExMeta", currentEx, discountedEx);
-      setMeta("sellInMeta", currentIn, discountedIn);
+      setMeta("sellExMeta", originalEx, discountedEx);
+      setMeta("sellInMeta", originalIn, discountedIn);
     }
 
     function updateDiscountPanels(){
@@ -825,11 +841,12 @@
       const sellHasValue = hasVal("discPct") || hasVal("discEur");
       const anyHasValue = purchaseHasValue || sellHasValue;
 
-      el("discountsToggle").classList.toggle("has-value", anyHasValue);
+      el("discountToggle").classList.toggle("has-value", anyHasValue);
 
-      const open = anyHasValue || discountsManualOpen;
-      el("discountsRow").classList.toggle("show", open);
-      el("discountsToggle").classList.toggle("active", open);
+      const open = anyHasValue || discountManualOpen;
+      el("discountShell").classList.toggle("show", open);
+      el("discountRow").classList.toggle("show", open);
+      el("discountToggle").classList.toggle("active", open);
     }
 
     function setMarginDash(){
