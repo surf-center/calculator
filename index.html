@@ -11,6 +11,7 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="theme-color" content="#ffffff">
   <link rel="manifest" href="manifest.json">
+
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
 
   <style>
@@ -45,12 +46,12 @@
     .section + .section{border-top:1px solid #f1f1f1}
 
     .section-title{
-      font-size:11px;
+      font-size:12px;
       font-weight:800;
       color:#111;
       opacity:1;
-      letter-spacing:.03em;
-      text-transform:uppercase;
+      letter-spacing:.02em;
+      text-transform:none;
       margin-left:2px;
     }
 
@@ -68,7 +69,7 @@
       border-radius:14px;
       background:#fff;
       overflow:hidden;
-      min-height:68px;
+      min-height:60px;
       position:relative;
       transition:border-color .18s ease, box-shadow .18s ease, opacity .18s ease;
     }
@@ -86,9 +87,9 @@
       justify-content:space-between;
       width:100%;
       background:#fff;
-      padding:7px 12px 18px;
-      gap:4px;
-      min-height:68px;
+      padding:6px 12px 10px;
+      gap:2px;
+      min-height:60px;
     }
 
     .value-wrap{
@@ -99,7 +100,6 @@
       flex:1;
       min-width:0;
       gap:0;
-      padding-right:2px;
     }
 
     .field-note{
@@ -110,7 +110,7 @@
       line-height:1;
       text-transform:uppercase;
       letter-spacing:.03em;
-      margin-top:-1px;
+      margin-top:-3px;
     }
 
     .affix{
@@ -118,11 +118,11 @@
       font-weight:900;
       color:#111;
       opacity:1;
-      min-width:12px;
+      min-width:10px;
       line-height:1;
-      padding-top:6px;
+      padding-top:4px;
       text-align:center;
-      flex:0 0 12px;
+      flex:0 0 10px;
     }
 
     .field input[type="number"],
@@ -142,7 +142,9 @@
       font-family:"Poppins",sans-serif;
     }
 
-    .field input::placeholder{color:#b4b4b4}
+    .field input::placeholder,
+    .biginput input::placeholder,
+    .input input::placeholder{color:#b4b4b4}
 
     input[type="number"]::-webkit-outer-spin-button,
     input[type="number"]::-webkit-inner-spin-button{ -webkit-appearance:none; margin:0; }
@@ -157,14 +159,13 @@
       align-items:center;
       justify-content:flex-end;
       gap:6px;
-      padding:0;
       font-variant-numeric:tabular-nums;
       min-height:18px;
       visibility:hidden;
       opacity:0;
       transition:opacity .18s ease;
       pointer-events:none;
-      max-width:44%;
+      max-width:46%;
     }
 
     .price-meta.show{
@@ -172,29 +173,28 @@
       opacity:1;
     }
 
-    .meta-current,
+    .meta-current{
+      display:none;
+    }
+
     .meta-discounted{
       display:flex;
-      align-items:flex-end;
+      align-items:baseline;
       gap:2px;
       line-height:1;
       white-space:nowrap;
-    }
-
-    .meta-current{display:none}
-
-    .meta-discounted{
       color:#007bff;
-      font-size:19px;
+      font-size:22px;
       font-weight:900;
     }
 
     .money-symbol,
     .bigprefix{
-      font-size:11px;
+      font-size:12px;
       font-weight:900;
       line-height:1;
       opacity:1;
+      color:inherit;
     }
 
     .money-value{font-size:1em;line-height:1}
@@ -217,7 +217,6 @@
       grid-template-columns:64px 1fr 1fr;
       gap:8px;
       align-items:center;
-      min-height:42px;
     }
 
     .discount-label{
@@ -234,12 +233,18 @@
       display:flex;
       align-items:center;
       border:1px solid #d8d8d8;
-      border-radius:999px;
+      border-radius:12px;
       background:#fff;
-      min-height:42px;
+      min-height:40px;
       overflow:hidden;
       padding:0 10px;
-      gap:8px;
+      gap:6px;
+    }
+
+    .input .affix{
+      padding-top:0;
+      min-width:auto;
+      flex:0 0 auto;
     }
 
     .input input{
@@ -260,18 +265,9 @@
 
     .summary{
       margin-top:12px;
-      padding:14px;
-      border-radius:14px;
-      background:#007bff;
-      color:#fff;
-    }
-
-    .summary-title{
-      font-size:12px;
-      font-weight:900;
-      letter-spacing:.03em;
-      text-transform:uppercase;
-      margin-bottom:10px;
+      color:#111;
+      background:transparent;
+      padding:0;
     }
 
     .summary-grid{
@@ -282,32 +278,37 @@
 
     .pill{
       border-radius:14px;
-      padding:12px;
-      background:rgba(255,255,255,.14);
-      border:1px solid rgba(255,255,255,.22);
+      padding:0;
+      background:transparent;
+      border:none;
     }
 
     .pill .k{
       font-size:12px;
-      opacity:.95;
-      font-weight:900;
-      margin-bottom:8px;
+      opacity:1;
+      color:#111;
+      font-weight:800;
+      margin-bottom:6px;
       letter-spacing:.02em;
-      min-height:14px;
+      text-transform:none;
     }
 
     .biginput{
       display:flex;
       align-items:baseline;
-      gap:6px;
+      gap:4px;
+      background:#fff;
+      border:1px solid #d8d8d8;
+      border-radius:14px;
+      padding:10px 12px;
     }
 
     .biginput input{
       border:none;
       outline:none;
       background:transparent;
-      color:#fff;
-      font-size:26px;
+      color:#111;
+      font-size:24px;
       font-weight:900;
       width:100%;
       padding:0;
@@ -315,8 +316,6 @@
       text-align:left;
       font-family:"Poppins",sans-serif;
     }
-
-    .biginput input::placeholder{color:rgba(255,255,255,.75)}
 
     .toolbar{
       display:flex;
@@ -446,60 +445,10 @@
           </div>
         </div>
       </div>
-
-      <div class="discount-shell" id="discountShell">
-        <div class="section-title">Discount</div>
-        <div class="discount-bar">
-          <div class="discount-row">
-            <div class="discount-label">Purchase</div>
-            <div class="input">
-              <div class="affix">%</div>
-              <input type="number" id="pDiscPct" min="0" max="99" inputmode="decimal" placeholder="0" />
-            </div>
-            <div class="input">
-              <div class="affix">€</div>
-              <input type="number" id="pDiscEur" min="0" inputmode="decimal" placeholder="0" />
-            </div>
-          </div>
-
-          <div class="discount-row">
-            <div class="discount-label">Selling</div>
-            <div class="input">
-              <div class="affix">%</div>
-              <input type="number" id="discPct" min="0" max="99" inputmode="decimal" placeholder="0" />
-            </div>
-            <div class="input">
-              <div class="affix">€</div>
-              <input type="number" id="discEur" min="0" inputmode="decimal" placeholder="0" />
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-          </div>
-          <div class="price-meta" id="sellInMeta">
-            <span class="meta-current"><span class="money-symbol">€</span><span class="money-value"></span></span>
-            <span class="meta-discounted"><span class="money-symbol">€</span><span class="money-value"></span></span>
-          </div>
-        </div>
-
-        <div class="field" id="sellExWrap">
-          <div class="field-top">
-            <div class="affix">€</div>
-            <div class="value-wrap">
-              <input type="number" id="sellEx" min="0" inputmode="decimal" placeholder="0" />
-              <div class="field-note">Excl.</div>
-            </div>
-          </div>
-          <div class="price-meta" id="sellExMeta">
-            <span class="meta-current"><span class="money-symbol">€</span><span class="money-value"></span></span>
-            <span class="meta-discounted"><span class="money-symbol">€</span><span class="money-value"></span></span>
-          </div>
-        </div>
-      </div>
     </div>
 
-    <!-- moved into selling section -->
+    <div class="section discount-shell" id="discountShell">
+      <div class="section-title">Discount</div>
       <div class="discount-bar">
         <div class="discount-row">
           <div class="discount-label">Purchase</div>
@@ -528,17 +477,16 @@
     </div>
 
     <div class="summary">
-      <div class="summary-title">MARGIN</div>
       <div class="summary-grid">
         <div class="pill">
-          <div class="k"></div>
+          <div class="k">Margin</div>
           <div class="biginput">
             <span class="bigprefix">%</span>
             <input type="text" id="mPct" inputmode="decimal" />
           </div>
         </div>
         <div class="pill">
-          <div class="k"></div>
+          <div class="k">Margin</div>
           <div class="biginput">
             <span class="bigprefix">€</span>
             <input type="text" id="mEur" inputmode="decimal" />
@@ -887,7 +835,6 @@
       };
       localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
     }
-
     function queueSave(){ clearTimeout(window.__saveT); window.__saveT = setTimeout(saveToLocal, 120); }
 
     function loadFromLocal(){
