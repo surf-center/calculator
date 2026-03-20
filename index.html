@@ -290,15 +290,6 @@
       box-shadow:0 4px 12px rgba(0,123,255,.18);
     }
 
-    .discount-hint{
-      font-size:10px;
-      font-weight:700;
-      color:#6d6d6d;
-      letter-spacing:.01em;
-      padding-left:2px;
-      min-height:12px;
-    }
-
     .discount-hidden{display:none !important}
 
     .summary{
@@ -508,28 +499,26 @@
         <div class="discount-row" data-scope="purchase">
           <label class="discount-label" for="pDiscValue">Purchase</label>
           <div class="discount-control">
-            <input type="number" id="pDiscValue" class="discount-input" inputmode="decimal" placeholder="0" min="0" step="0.01" autocomplete="off" aria-describedby="pDiscHint">
+            <input type="number" id="pDiscValue" class="discount-input" inputmode="decimal" placeholder="0" min="0" step="0.01" autocomplete="off">
             <div class="discount-toggle" role="group" aria-label="Purchase discount unit">
               <button type="button" id="pDiscModePct" class="active" aria-pressed="true">%</button>
               <button type="button" id="pDiscModeEur" aria-pressed="false">€</button>
             </div>
             <input type="hidden" id="pDiscPct" class="discount-hidden">
             <input type="hidden" id="pDiscEur" class="discount-hidden">
-            <div class="discount-hint" id="pDiscHint">Voer korting in procenten in</div>
           </div>
         </div>
 
         <div class="discount-row" data-scope="selling">
           <label class="discount-label" for="discValue">Selling</label>
           <div class="discount-control">
-            <input type="number" id="discValue" class="discount-input" inputmode="decimal" placeholder="0" min="0" step="0.01" autocomplete="off" aria-describedby="discHint">
+            <input type="number" id="discValue" class="discount-input" inputmode="decimal" placeholder="0" min="0" step="0.01" autocomplete="off">
             <div class="discount-toggle" role="group" aria-label="Selling discount unit">
               <button type="button" id="discModePct" class="active" aria-pressed="true">%</button>
               <button type="button" id="discModeEur" aria-pressed="false">€</button>
             </div>
             <input type="hidden" id="discPct" class="discount-hidden">
             <input type="hidden" id="discEur" class="discount-hidden">
-            <div class="discount-hint" id="discHint">Voer korting in procenten in</div>
           </div>
         </div>
       </div>
@@ -559,7 +548,7 @@
 
   <script>
     const VAT = 1.21;
-    const STORAGE_KEY = "margins_tool_state_v14";
+    const STORAGE_KEY = "margins_tool_state_v15";
     const el = (id) => document.getElementById(id);
 
     const raw = (id) => el(id).value;
@@ -630,7 +619,9 @@
     }
 
     function unlockMarginIfNeeded(){
-      if (["purchaseEx","purchaseIn","sellIn","sellEx","discValue","pDiscValue","discPct","discEur","pDiscPct","pDiscEur"].includes(lastEdited)) marginLock = null;
+      if (["purchaseEx","purchaseIn","sellIn","sellEx","discValue","pDiscValue","discPct","discEur","pDiscPct","pDiscEur"].includes(lastEdited)) {
+        marginLock = null;
+      }
     }
 
     function updateModeVisuals(){
@@ -644,13 +635,11 @@
 
       const pctBtn = el(isPurchase ? "pDiscModePct" : "discModePct");
       const eurBtn = el(isPurchase ? "pDiscModeEur" : "discModeEur");
-      const hint = el(isPurchase ? "pDiscHint" : "discHint");
 
       pctBtn.classList.toggle("active", unit === "pct");
       eurBtn.classList.toggle("active", unit === "eur");
       pctBtn.setAttribute("aria-pressed", unit === "pct" ? "true" : "false");
       eurBtn.setAttribute("aria-pressed", unit === "eur" ? "true" : "false");
-      hint.textContent = unit === "pct" ? "Voer korting in procenten in" : "Voer korting in euro in";
     }
 
     function updateRequiredFields(){
@@ -687,66 +676,6 @@
     function getBasePurchaseValue(){ return taxMode === "margin" ? getPurchaseBaseEx() : getPurchaseBaseIn(); }
     function getBaseSellValue(){ return taxMode === "margin" ? getSellBaseEx() : getSellBaseIn(); }
 
-    function setDiscountMode(scope, unit){
-      const inputId = scope === "purchase" ? "pDiscValue" : "discValue";
-      const pctId = scope === "purchase" ? "pDiscPct" : "discPct";
-      const eurId = scope === "purchase" ? "pDiscEur" : "discEur";
-      const currentVisible = num(inputId);
-
-      if (scope === "purchase") pDiscUnit = unit;
-      else discUnit = unit;
-
-      if (currentVisible === null) {
-        clear([pctId, eurId]);
-      } else {
-        if (unit === "pct") {
-          setVal(pctId, currentVisible);
-          clear([eurId]);
-        } else {
-          setVal(eurId, currentVisible);
-          clear([pctId]);
-        }
-      }
-
-      updateDiscountModeUI(scope);
-      lastEdited = inputId;
-      recalc();
-      queueSave();
-    }
-
-    function syncDiscountHiddenFromVisible(){
-      if (hasVal("pDiscValue")) {
-        if (pDiscUnit === "pct") {
-          setVal("pDiscPct", num("pDiscValue"));
-          clear(["pDiscEur"]);
-        } else {
-          setVal("pDiscEur", num("pDiscValue"));
-          clear(["pDiscPct"]);
-        }
-      } else {
-        clear(["pDiscPct","pDiscEur"]);
-      }
-
-      if (hasVal("discValue")) {
-        if (discUnit === "pct") {
-          setVal("discPct", num("discValue"));
-          clear(["discEur"]);
-        } else {
-          setVal("discEur", num("discValue"));
-          clear(["discPct"]);
-        }
-      } else {
-        clear(["discPct","discEur"]);
-      }
-    }
-
-    function syncDiscountVisibleFromHidden(){
-      el("pDiscValue").value = pDiscUnit === "pct" ? raw("pDiscPct") : raw("pDiscEur");
-      el("discValue").value = discUnit === "pct" ? raw("discPct") : raw("discEur");
-      updateDiscountModeUI("purchase");
-      updateDiscountModeUI("selling");
-    }
-
     function getDiscountedPurchaseEx(){
       const baseEx = getPurchaseBaseEx(); if (baseEx===null) return null;
       if (hasVal("pDiscPct")) { const p=num("pDiscPct"); if (p!==null) return Math.max(baseEx*(1-clamp(p,0,99)/100),0); }
@@ -778,6 +707,7 @@
     function setTaxMode(mode){
       const nextMode = mode === "margin" ? "margin" : "vat";
       if (taxMode === nextMode) return;
+
       taxMode = nextMode;
       updateModeVisuals();
 
@@ -808,14 +738,20 @@
         return;
       }
 
-      if (hasVal("pDiscPct")) {
-        const pct=num("pDiscPct"); if (pct===null) return;
-        const p=clamp(pct,0,99), eur=basePurchase*(p/100);
-        setVal("pDiscPct",p); setVal("pDiscEur",eur);
-      } else if (hasVal("pDiscEur")) {
-        const eur=num("pDiscEur"); if (eur===null) return;
-        const e=Math.max(eur,0), pct=basePurchase>0?(e/basePurchase)*100:0;
-        setVal("pDiscEur",e); setVal("pDiscPct",clamp(pct,0,99));
+      if (pDiscUnit === "pct" && hasVal("pDiscValue")) {
+        const pct = num("pDiscValue"); if (pct === null) return;
+        const p = clamp(pct,0,99);
+        const eur = basePurchase * (p / 100);
+        setVal("pDiscPct", p);
+        setVal("pDiscEur", eur);
+      }
+
+      if (pDiscUnit === "eur" && hasVal("pDiscValue")) {
+        const eur = num("pDiscValue"); if (eur === null) return;
+        const e = Math.max(eur,0);
+        const pct = basePurchase > 0 ? (e / basePurchase) * 100 : 0;
+        setVal("pDiscEur", e);
+        setVal("pDiscPct", clamp(pct,0,99));
       }
     }
 
@@ -832,15 +768,68 @@
         return;
       }
 
-      if (hasVal("discPct")) {
-        const pct=num("discPct"); if (pct===null) return;
-        const p=clamp(pct,0,99), eur=baseSell*(p/100);
-        setVal("discPct",p); setVal("discEur",eur);
-      } else if (hasVal("discEur")) {
-        const eur=num("discEur"); if (eur===null) return;
-        const e=Math.max(eur,0), pct=baseSell>0?(e/baseSell)*100:0;
-        setVal("discEur",e); setVal("discPct",clamp(pct,0,99));
+      if (discUnit === "pct" && hasVal("discValue")) {
+        const pct = num("discValue"); if (pct === null) return;
+        const p = clamp(pct,0,99);
+        const eur = baseSell * (p / 100);
+        setVal("discPct", p);
+        setVal("discEur", eur);
       }
+
+      if (discUnit === "eur" && hasVal("discValue")) {
+        const eur = num("discValue"); if (eur === null) return;
+        const e = Math.max(eur,0);
+        const pct = baseSell > 0 ? (e / baseSell) * 100 : 0;
+        setVal("discEur", e);
+        setVal("discPct", clamp(pct,0,99));
+      }
+    }
+
+    function syncDiscountVisibleFromHidden(){
+      el("pDiscValue").value = pDiscUnit === "pct" ? raw("pDiscPct") : raw("pDiscEur");
+      el("discValue").value = discUnit === "pct" ? raw("discPct") : raw("discEur");
+      updateDiscountModeUI("purchase");
+      updateDiscountModeUI("selling");
+    }
+
+    function getCurrentPurchaseDisplayValue(){
+      if (!hasVal("pDiscValue")) return null;
+      const basePurchase = getBasePurchaseValue();
+      const current = num("pDiscValue");
+      if (current === null || !basePurchase || basePurchase <= 0) return current;
+
+      if (pDiscUnit === "pct") return basePurchase * (clamp(current,0,99) / 100);
+      return (current / basePurchase) * 100;
+    }
+
+    function getCurrentSellingDisplayValue(){
+      if (!hasVal("discValue")) return null;
+      const baseSell = getBaseSellValue();
+      const current = num("discValue");
+      if (current === null || !baseSell || baseSell <= 0) return current;
+
+      if (discUnit === "pct") return baseSell * (clamp(current,0,99) / 100);
+      return (current / baseSell) * 100;
+    }
+
+    function setDiscountMode(scope, unit){
+      const isPurchase = scope === "purchase";
+      const inputId = isPurchase ? "pDiscValue" : "discValue";
+      const converted = isPurchase ? getCurrentPurchaseDisplayValue() : getCurrentSellingDisplayValue();
+
+      if (isPurchase) pDiscUnit = unit;
+      else discUnit = unit;
+
+      if (converted === null || Number.isNaN(converted)) {
+        el(inputId).value = "";
+      } else {
+        el(inputId).value = floorOrEmpty(converted);
+      }
+
+      updateDiscountModeUI(scope);
+      lastEdited = inputId;
+      recalc();
+      queueSave();
     }
 
     function updatePurchaseMeta(){
@@ -916,7 +905,6 @@
       syncPair("purchaseIn","purchaseEx",VAT);
       syncPair("sellIn","sellEx",VAT);
 
-      syncDiscountHiddenFromVisible();
       unlockMarginIfNeeded();
       captureMarginLock();
 
@@ -1005,8 +993,10 @@
     function loadFromQueryString(){
       const qs = new URLSearchParams(window.location.search);
       const p=qs.get("p"), pi=qs.get("pi"), pdp=qs.get("pdp"), pde=qs.get("pde"), s=qs.get("s"), se=qs.get("se"), dp=qs.get("dp"), de=qs.get("de"), tm=qs.get("tm");
+
       if (tm === "vat" || tm === "margin") taxMode = tm;
-      updateModeVisuals(); updateRequiredFields();
+      updateModeVisuals();
+      updateRequiredFields();
 
       const obj = {};
       if (p) obj.purchaseEx=parseFloat(p);
@@ -1050,6 +1040,7 @@
         if (!s) return false;
 
         const data = JSON.parse(s);
+
         if (data.taxMode === "vat" || data.taxMode === "margin") taxMode = data.taxMode;
         if (data.pDiscUnit === "pct" || data.pDiscUnit === "eur") pDiscUnit = data.pDiscUnit;
         if (data.discUnit === "pct" || data.discUnit === "eur") discUnit = data.discUnit;
@@ -1086,6 +1077,7 @@
 
     function resetAll(){
       updating = true;
+
       [
         "purchaseEx","purchaseIn","pDiscValue","pDiscPct","pDiscEur",
         "sellIn","sellEx","discValue","discPct","discEur","mPct","mEur"
