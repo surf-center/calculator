@@ -59,7 +59,6 @@
       display:grid;
       grid-template-columns:1fr 1fr;
       gap:10px;
-      align-items:start;
     }
 
     .input{
@@ -107,7 +106,7 @@
     .price-meta{
       display:none;
       align-items:center;
-      justify-content:flex-end;
+      justify-content:space-between;
       gap:10px;
       padding:8px 10px 10px;
       font-variant-numeric:tabular-nums;
@@ -126,7 +125,7 @@
       white-space:nowrap;
     }
 
-    .meta-current{display:none}
+    .meta-current{color:#111}
     .meta-discounted{color:#007bff;margin-left:auto}
 
     .mini-symbol,
@@ -162,7 +161,6 @@
       line-height:1;
       text-align:left;
       font-variant-numeric:tabular-nums;
-      font-family:"Poppins",sans-serif;
     }
 
     input[type="number"]::placeholder,
@@ -224,13 +222,6 @@
     .discount-grid{
       display:grid;
       grid-template-columns:1fr 1fr;
-      gap:10px;
-      align-items:start;
-    }
-
-    .discount-fields{
-      display:grid;
-      grid-template-columns:1fr;
       gap:10px;
     }
 
@@ -336,29 +327,28 @@
 
     <div class="section">
       <div class="section-title">Purchase</div>
-      <div class="row2">
-        <div class="price-card" id="purchaseExWrap">
-          <div class="price-main">
-            <div class="prefix">€</div>
-            <input type="number" id="purchaseEx" min="0" inputmode="decimal" placeholder="0" />
-            <div class="suffix">Excl.</div>
-          </div>
-          <div class="price-meta" id="purchaseExMeta">
-            <span class="meta-current"><span class="mini-symbol">€</span><span class="meta-current-value"></span></span>
-            <span class="meta-discounted"><span class="mini-symbol">€</span><span class="meta-discounted-value"></span></span>
-          </div>
-        </div>
 
-        <div class="price-card" id="purchaseInWrap">
-          <div class="price-main">
-            <div class="prefix">€</div>
-            <input type="number" id="purchaseIn" min="0" inputmode="decimal" placeholder="0" />
-            <div class="suffix">Incl.</div>
-          </div>
-          <div class="price-meta" id="purchaseInMeta">
-            <span class="meta-current"><span class="mini-symbol">€</span><span class="meta-current-value"></span></span>
-            <span class="meta-discounted"><span class="mini-symbol">€</span><span class="meta-discounted-value"></span></span>
-          </div>
+      <div class="price-card" id="purchaseExWrap">
+        <div class="price-main">
+          <div class="prefix">€</div>
+          <input type="number" id="purchaseEx" min="0" inputmode="decimal" placeholder="0" />
+          <div class="suffix">Excl.</div>
+        </div>
+        <div class="price-meta" id="purchaseExMeta">
+          <span class="meta-current"><span class="mini-symbol">€</span><span class="meta-current-value"></span></span>
+          <span class="meta-discounted"><span class="mini-symbol">€</span><span class="meta-discounted-value"></span></span>
+        </div>
+      </div>
+
+      <div class="price-card" id="purchaseInWrap">
+        <div class="price-main">
+          <div class="prefix">€</div>
+          <input type="number" id="purchaseIn" min="0" inputmode="decimal" placeholder="0" />
+          <div class="suffix">Incl.</div>
+        </div>
+        <div class="price-meta" id="purchaseInMeta">
+          <span class="meta-current"><span class="mini-symbol">€</span><span class="meta-current-value"></span></span>
+          <span class="meta-discounted"><span class="mini-symbol">€</span><span class="meta-discounted-value"></span></span>
         </div>
       </div>
     </div>
@@ -398,7 +388,7 @@
         <div class="discount-grid">
           <div>
             <div class="section-title">Purchase</div>
-            <div class="discount-fields">
+            <div class="row2">
               <div class="input">
                 <div class="prefix">%</div>
                 <input type="number" id="pDiscPct" min="0" max="99" inputmode="decimal" placeholder="0" />
@@ -412,7 +402,7 @@
 
           <div>
             <div class="section-title">Selling</div>
-            <div class="discount-fields">
+            <div class="row2">
               <div class="input">
                 <div class="prefix">%</div>
                 <input type="number" id="discPct" min="0" max="99" inputmode="decimal" placeholder="0" />
@@ -470,7 +460,7 @@
 
   <script>
     const VAT = 1.21;
-    const STORAGE_KEY = "margins_tool_state_v12_clean2";
+    const STORAGE_KEY = "margins_tool_state_v12";
     const el = (id) => document.getElementById(id);
 
     const raw = (id) => el(id).value;
@@ -509,7 +499,7 @@
         return;
       }
 
-      current.textContent = "";
+      current.textContent = formatNum(currentVal);
       discounted.textContent = formatNum(discountedVal);
       node.classList.add("show");
     }
@@ -595,7 +585,7 @@
     function getPurchaseBaseIn(){
       const ex = num("purchaseEx");
       const inc = num("purchaseIn");
-      if (taxMode === "margin") return null;
+      if (taxMode === "margin") return ex !== null ? ex * VAT : null;
       if (inc !== null) return inc;
       return ex !== null ? ex * VAT : null;
     }
@@ -610,7 +600,7 @@
     function getSellBaseIn(){
       const ex = num("sellEx");
       const inc = num("sellIn");
-      if (taxMode === "margin") return null;
+      if (taxMode === "margin") return ex !== null ? ex * VAT : null;
       if (inc !== null) return inc;
       return ex !== null ? ex * VAT : null;
     }
