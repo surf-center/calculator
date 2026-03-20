@@ -125,7 +125,9 @@
     .sale-result,
     .purchase-result{
       display:none;
-      justify-content:flex-end;
+      flex-direction:column;
+      align-items:flex-end;
+      gap:8px;
       margin-top:4px;
       padding:4px 2px 0;
     }
@@ -157,6 +159,72 @@
       font-weight:900;
       color:#111;
       line-height:1;
+    }
+
+    .result-meta{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+    }
+
+    .meta-pill{
+      font-size:12px;
+      font-weight:800;
+      color:#4b5b73;
+      background:#f3f7ff;
+      border:1px solid #dbe8ff;
+      border-radius:999px;
+      padding:6px 10px;
+      white-space:nowrap;
+    }
+
+    .fold-trigger{
+      width:100%;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      border:none;
+      background:transparent;
+      padding:0;
+      cursor:pointer;
+    }
+
+    .fold-trigger .section-title{
+      margin-left:0;
+    }
+
+    .fold-icon{
+      width:24px;
+      height:24px;
+      border-radius:999px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background:#f4f4f4;
+      border:1px solid #e3e3e3;
+      color:#667085;
+      font-size:12px;
+      font-weight:900;
+      transition:transform .18s ease, background .18s ease, color .18s ease;
+      flex:0 0 24px;
+    }
+
+    .fold-section.open .fold-icon{
+      transform:rotate(180deg);
+      background:#eef5ff;
+      color:#007bff;
+    }
+
+    .fold-body{
+      display:none;
+      flex-direction:column;
+      gap:8px;
+    }
+
+    .fold-section.open .fold-body{
+      display:flex;
     }
 
     .summary{
@@ -309,23 +377,33 @@
       </div>
     </div>
 
-    <div class="section">
-      <div class="section-title">Purchase Discount</div>
-      <div class="row2">
-        <div class="input">
-          <div class="prefix">%</div>
-          <input type="number" id="pDiscPct" min="0" max="99" inputmode="decimal" placeholder="0" />
-        </div>
-        <div class="input">
-          <div class="prefix">€</div>
-          <input type="number" id="pDiscEur" min="0" inputmode="decimal" placeholder="0" />
-        </div>
-      </div>
+    <div class="section fold-section" id="purchaseDiscountSection">
+      <button type="button" class="fold-trigger" id="purchaseDiscountToggle" aria-expanded="false">
+        <div class="section-title">Purchase Discount</div>
+        <div class="fold-icon">⌄</div>
+      </button>
 
-      <div class="purchase-result" id="purchaseResult">
-        <div class="purchase-result-values">
-          <span class="purchase-old" id="purchaseOld"></span>
-          <span class="purchase-new" id="purchaseNew"></span>
+      <div class="fold-body" id="purchaseDiscountBody">
+        <div class="row2">
+          <div class="input">
+            <div class="prefix">%</div>
+            <input type="number" id="pDiscPct" min="0" max="99" inputmode="decimal" placeholder="0" />
+          </div>
+          <div class="input">
+            <div class="prefix">€</div>
+            <input type="number" id="pDiscEur" min="0" inputmode="decimal" placeholder="0" />
+          </div>
+        </div>
+
+        <div class="purchase-result" id="purchaseResult">
+          <div class="purchase-result-values">
+            <span class="purchase-old" id="purchaseOld"></span>
+            <span class="purchase-new" id="purchaseNew"></span>
+          </div>
+          <div class="result-meta">
+            <span class="meta-pill" id="purchaseNewExMeta"></span>
+            <span class="meta-pill" id="purchaseNewInMeta"></span>
+          </div>
         </div>
       </div>
     </div>
@@ -345,24 +423,35 @@
         </div>
       </div>
 
-      <div class="sale-result" id="saleResult">
-        <div class="sale-result-values">
-          <span class="sale-old" id="priceOld"></span>
-          <span class="sale-new" id="priceNew"></span>
-        </div>
       </div>
-    </div>
 
-    <div class="section">
-      <div class="section-title">Discount</div>
-      <div class="row2">
-        <div class="input">
-          <div class="prefix">%</div>
-          <input type="number" id="discPct" min="0" max="99" inputmode="decimal" placeholder="0" />
+    <div class="section fold-section" id="sellDiscountSection">
+      <button type="button" class="fold-trigger" id="sellDiscountToggle" aria-expanded="false">
+        <div class="section-title">Discount</div>
+        <div class="fold-icon">⌄</div>
+      </button>
+
+      <div class="fold-body" id="sellDiscountBody">
+        <div class="row2">
+          <div class="input">
+            <div class="prefix">%</div>
+            <input type="number" id="discPct" min="0" max="99" inputmode="decimal" placeholder="0" />
+          </div>
+          <div class="input">
+            <div class="prefix">€</div>
+            <input type="number" id="discEur" min="0" inputmode="decimal" placeholder="0" />
+          </div>
         </div>
-        <div class="input">
-          <div class="prefix">€</div>
-          <input type="number" id="discEur" min="0" inputmode="decimal" placeholder="0" />
+
+        <div class="sale-result" id="saleResult">
+          <div class="sale-result-values">
+            <span class="sale-old" id="priceOld"></span>
+            <span class="sale-new" id="priceNew"></span>
+          </div>
+          <div class="result-meta">
+            <span class="meta-pill" id="saleNewExMeta"></span>
+            <span class="meta-pill" id="saleNewInMeta"></span>
+          </div>
         </div>
       </div>
     </div>
@@ -534,9 +623,37 @@
       return num("purchaseIn");
     }
 
+    function getRawPurchaseEx(){
+      return num("purchaseEx");
+    }
+
+    function getRawPurchaseIn(){
+      const ex = num("purchaseEx");
+      const inc = num("purchaseIn");
+      if (taxMode === "margin") return ex !== null ? ex * VAT : null;
+      if (inc !== null) return inc;
+      return ex !== null ? ex * VAT : null;
+    }
+
     function getBaseSellValue(){
       if (taxMode === "margin") return num("sellEx");
       return num("sellIn");
+    }
+
+    function getRawSellEx(){
+      const ex = num("sellEx");
+      const inc = num("sellIn");
+      if (taxMode === "margin") return ex;
+      if (ex !== null) return ex;
+      return inc !== null ? inc / VAT : null;
+    }
+
+    function getRawSellIn(){
+      const ex = num("sellEx");
+      const inc = num("sellIn");
+      if (taxMode === "margin") return ex !== null ? ex * VAT : null;
+      if (inc !== null) return inc;
+      return ex !== null ? ex * VAT : null;
     }
 
     function syncPurchaseDiscountFields(){
@@ -661,42 +778,77 @@
       const wrap = el("purchaseResult");
       const oldEl = el("purchaseOld");
       const newEl = el("purchaseNew");
+      const newExMeta = el("purchaseNewExMeta");
+      const newInMeta = el("purchaseNewInMeta");
 
       const basePurchase = getBasePurchaseValue();
       const discounted = getDiscountedBasePurchase();
       const discountOn = hasVal("pDiscPct") || hasVal("pDiscEur");
+      const newEx = getRawPurchaseEx();
+      const newIn = getRawPurchaseIn();
 
       if (!discountOn || basePurchase === null || discounted === null || Math.floor(basePurchase) === Math.floor(discounted)) {
         wrap.classList.remove("show");
         oldEl.textContent = "";
         newEl.textContent = "";
+        newExMeta.textContent = "";
+        newInMeta.textContent = "";
         return;
       }
 
       wrap.classList.add("show");
       oldEl.textContent = euro(basePurchase);
       newEl.textContent = euro(discounted);
+      newExMeta.textContent = `New excl. ${euro(newEx)}`;
+      newInMeta.textContent = `New incl. ${euro(newIn)}`;
     }
 
     function updateSaleResult(){
       const wrap = el("saleResult");
       const oldEl = el("priceOld");
       const newEl = el("priceNew");
+      const newExMeta = el("saleNewExMeta");
+      const newInMeta = el("saleNewInMeta");
 
       const baseSell = getBaseSellValue();
       const discounted = getDiscountedBaseSell();
       const discountOn = hasVal("discPct") || hasVal("discEur");
+      const newEx = getRawSellEx();
+      const newIn = getRawSellIn();
 
       if (!discountOn || baseSell === null || discounted === null || Math.floor(baseSell) === Math.floor(discounted)) {
         wrap.classList.remove("show");
         oldEl.textContent = "";
         newEl.textContent = "";
+        newExMeta.textContent = "";
+        newInMeta.textContent = "";
         return;
       }
 
       wrap.classList.add("show");
       oldEl.textContent = euro(baseSell);
       newEl.textContent = euro(discounted);
+      newExMeta.textContent = `New excl. ${euro(newEx)}`;
+      newInMeta.textContent = `New incl. ${euro(newIn)}`;
+    }
+
+    function setDiscountPanelState(sectionId, toggleId, isOpen){
+      const section = el(sectionId);
+      const toggle = el(toggleId);
+      section.classList.toggle("open", isOpen);
+      toggle.setAttribute("aria-expanded", isOpen ? "true" : "false");
+    }
+
+    function updateDiscountPanels(){
+      const purchaseOpen = hasVal("pDiscPct") || hasVal("pDiscEur");
+      const sellOpen = hasVal("discPct") || hasVal("discEur");
+      setDiscountPanelState("purchaseDiscountSection", "purchaseDiscountToggle", purchaseOpen);
+      setDiscountPanelState("sellDiscountSection", "sellDiscountToggle", sellOpen);
+    }
+
+    function toggleDiscountPanel(sectionId, toggleId){
+      const isOpen = !el(sectionId).classList.contains("open");
+      setDiscountPanelState(sectionId, toggleId, isOpen);
     }
 
     function setMarginDash(){
@@ -794,6 +946,7 @@
       syncDiscountFields();
       updatePurchaseResult();
       updateSaleResult();
+      updateDiscountPanels();
       updateMarginFromCurrent();
 
       updating = false;
@@ -963,6 +1116,8 @@
       el("modeVat").addEventListener("click", () => setTaxMode("vat"));
       el("modeMargin").addEventListener("click", () => setTaxMode("margin"));
       el("resetBtn").addEventListener("click", resetAll);
+      el("purchaseDiscountToggle").addEventListener("click", () => toggleDiscountPanel("purchaseDiscountSection", "purchaseDiscountToggle"));
+      el("sellDiscountToggle").addEventListener("click", () => toggleDiscountPanel("sellDiscountSection", "sellDiscountToggle"));
 
       updateModeVisuals();
       updateRequiredFields();
