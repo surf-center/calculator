@@ -5,6 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
   <title>Margins</title>
 
+  <link rel="icon" type="image/png" sizes="192x192" href="android-chrome-192x192.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="theme-color" content="#ffffff">
+  <link rel="manifest" href="manifest.json">
+
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
 
   <style>
@@ -49,24 +56,18 @@
     }
 
     .row-2,
-    .price-stack,
-    .summary-grid{
+    .price-stack{
       display:grid;
       grid-template-columns:1fr 1fr;
       gap:10px;
     }
 
-    .field,
-    .biginput,
-    .input{
-      border:1px solid #d8d8d8;
-      border-radius:14px;
-      background:#fff;
-    }
-
     .field{
       display:flex;
       flex-direction:column;
+      border:1px solid #d8d8d8;
+      border-radius:14px;
+      background:#fff;
       overflow:hidden;
       min-height:60px;
       position:relative;
@@ -101,8 +102,7 @@
       gap:0;
     }
 
-    .field-note,
-    .discount-label{
+    .field-note{
       font-size:10px;
       font-weight:900;
       color:#111;
@@ -110,64 +110,36 @@
       line-height:1;
       text-transform:uppercase;
       letter-spacing:.03em;
-    }
-
-    .field-note{margin-top:-3px}
-    .discount-label{padding-left:2px}
-
-    .affix,
-    .bigprefix{
-      font-size:12px;
-      font-weight:900;
-      color:inherit;
-      opacity:1;
-      line-height:1;
+      margin-top:-3px;
     }
 
     .affix{
+      font-size:12px;
+      font-weight:900;
+      color:#111;
+      opacity:1;
       min-width:10px;
+      line-height:1;
       padding-top:4px;
       text-align:center;
       flex:0 0 10px;
     }
 
     .field input[type="number"],
-    .field input[type="text"],
-    .input input,
-    .biginput input{
+    .field input[type="text"]{
       width:100%;
       min-width:0;
       border:none;
       outline:none;
+      padding:0;
+      font-size:24px;
       font-weight:900;
+      color:#111;
+      background:#fff;
       line-height:1;
+      text-align:left;
       font-variant-numeric:tabular-nums;
       font-family:"Poppins",sans-serif;
-    }
-
-    .field input[type="number"],
-    .field input[type="text"]{
-      padding:0;
-      font-size:24px;
-      color:#111;
-      background:#fff;
-      text-align:left;
-    }
-
-    .input input{
-      padding:8px 0;
-      font-size:16px;
-      color:#111;
-      background:#fff;
-      text-align:left;
-    }
-
-    .biginput input{
-      background:transparent;
-      color:#fff;
-      font-size:24px;
-      padding:0;
-      text-align:left;
     }
 
     .field input::placeholder,
@@ -184,220 +156,905 @@
       top:50%;
       transform:translateY(-50%);
       display:flex;
-      align-items:center;
-      justify-content:flex-end;
-      gap:6px;
-      font-variant-numeric:tabular-nums;
-      min-height:18px;
-      visibility:hidden;
+      flex-direction:column;
+      align-items:flex-end;
+      gap:2px;
+      font-size:10px;
+      line-height:1.05;
+      pointer-events:none;
       opacity:0;
       transition:opacity .18s ease;
-      pointer-events:none;
-      max-width:46%;
     }
 
-    .price-meta.show{
-      visibility:visible;
-      opacity:1;
+    .price-meta.show{opacity:1}
+
+    .meta-line{
+      display:flex;
+      align-items:center;
+      gap:4px;
+      white-space:nowrap;
+      font-weight:800;
     }
 
-    .meta-current{display:none}
+    .meta-line .money{
+      display:inline-flex;
+      align-items:center;
+      gap:2px;
+    }
+
+    .meta-current{
+      color:#b6b6b6;
+      text-decoration:line-through;
+      text-decoration-thickness:1.5px;
+    }
 
     .meta-discounted{
-      display:flex;
-      align-items:baseline;
-      gap:2px;
-      line-height:1;
-      white-space:nowrap;
       color:#007bff;
-      font-size:22px;
-      font-weight:900;
     }
 
-    .money-symbol{font-size:12px;font-weight:900;line-height:1;color:inherit}
-    .money-value{font-size:1em;line-height:1}
-
-    .discount-shell{display:none}
-    .discount-shell.show{display:block}
-
-    .discount-bar{
-      display:grid;
-      grid-template-columns:1fr;
-      gap:10px;
-      padding:8px;
-      border:1px solid #d8d8d8;
-      border-radius:14px;
-      background:#fff;
-      margin-bottom:8px;
-    }
-
-    .discount-row{
-      display:grid;
-      grid-template-columns:70px 1fr 90px;
-      gap:8px;
-      align-items:center;
-    }
-
-    .input{
-      display:flex;
-      align-items:center;
-      min-height:40px;
-      overflow:hidden;
-      padding:0 10px;
-      gap:6px;
-    }
-
-    .summary{margin-top:12px}
-
-    .biginput{
-      background:#007bff;
-      color:#fff;
-      border:none;
-      box-shadow:0 4px 12px rgba(0,123,255,.2);
-      padding:10px 12px;
-      display:flex;
-      align-items:baseline;
-      gap:6px;
-      min-height:52px;
-    }
-
-    .toolbar{
-      display:flex;
-      align-items:center;
-      gap:10px;
-    }
-
-    .discount-toggle,
-    .icon-btn{
-      width:42px;
-      height:42px;
-      border:none;
-      border-radius:999px;
-      background:#f4f4f4;
-      color:#666;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      cursor:pointer;
-      flex:0 0 42px;
-      transition:all .18s ease;
-      border:1px solid #e3e3e3;
-      font-family:"Poppins",sans-serif;
-    }
-
-    .discount-toggle{ font-size:16px; font-weight:900; }
-    .discount-toggle:hover,.icon-btn:hover{ background:#ededed; color:#111; }
-    .discount-toggle:active,.icon-btn:active{ transform:scale(.96) }
-    .discount-toggle.active,.discount-toggle.has-value{ background:#eef5ff; color:#007bff; border-color:#d7e7ff; }
-
-    .mode-switch{
+    .mode-toggle{
       display:grid;
       grid-template-columns:1fr 1fr;
-      background:#eef5ff;
-      border:1px solid #d7e7ff;
-      border-radius:999px;
-      padding:4px;
-      gap:4px;
-      flex:1;
+      gap:8px;
+      margin-top:2px;
     }
 
     .mode-btn{
       appearance:none;
       border:none;
+      background:#f5f5f5;
+      color:#6a6a6a;
+      border-radius:12px;
+      padding:10px 12px;
+      font-size:13px;
+      font-weight:800;
+      cursor:pointer;
+      transition:all .18s ease;
+      font-family:"Poppins",sans-serif;
+    }
+
+    .mode-btn.active{
+      background:#007bff;
+      color:#fff;
+      box-shadow:0 6px 14px rgba(0,123,255,.18);
+    }
+
+    .discount-toggle{
+      appearance:none;
+      width:100%;
+      border:none;
+      background:#f7f7f7;
+      color:#111;
+      border-radius:12px;
+      padding:12px 14px;
+      font-size:14px;
+      font-weight:800;
+      cursor:pointer;
+      text-align:left;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      transition:all .18s ease;
+      font-family:"Poppins",sans-serif;
+    }
+
+    .discount-toggle.active,
+    .discount-toggle.has-value{
+      background:#eef5ff;
+      color:#007bff;
+    }
+
+    .discount-toggle .chev{
+      transition:transform .18s ease;
+      font-size:13px;
+    }
+
+    .discount-toggle.active .chev{transform:rotate(180deg)}
+
+    .discount-shell{
+      display:none;
+      flex-direction:column;
+      gap:10px;
+      padding-top:2px;
+    }
+
+    .discount-shell.show{display:flex}
+
+    .discount-row{
+      display:grid;
+      grid-template-columns:92px 1fr;
+      gap:10px;
+      align-items:center;
+    }
+
+    .discount-label{
+      font-size:13px;
+      font-weight:800;
+      color:#111;
+    }
+
+    .input{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      border:1px solid #d8d8d8;
+      border-radius:14px;
+      padding:0 12px;
+      min-height:52px;
+      background:#fff;
+    }
+
+    .input .affix{
+      padding-top:0;
+      flex:0 0 auto;
+      min-width:auto;
+      font-size:14px;
+    }
+
+    .input input{
+      width:100%;
+      min-width:0;
+      border:none;
+      outline:none;
+      padding:8px 0;
+      font-size:16px;
+      font-weight:900;
+      color:#111;
+      background:#fff;
+      line-height:1;
+      text-align:left;
+      font-variant-numeric:tabular-nums;
+      font-family:"Poppins",sans-serif;
+    }
+
+    .discount-combo{
+      position:relative;
+    }
+
+    .discount-combo .input{
+      position:relative;
+    }
+
+    .discount-combo .input .affix{
+      display:none;
+    }
+
+    .field input.discount-proxy{
+      font-size:18px;
+      padding-right:92px;
+    }
+
+    .mini-toggle{
+      position:absolute;
+      right:8px;
+      top:50%;
+      transform:translateY(-50%);
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:4px;
+      padding:4px;
+      border-radius:999px;
+      background:#eef5ff;
+      border:1px solid #d7e7ff;
+    }
+
+    .mini-toggle .unit-btn{
+      appearance:none;
+      border:none;
       background:transparent;
       color:#4b5b73;
       font-family:"Poppins",sans-serif;
-      font-size:14px;
+      font-size:12px;
       font-weight:800;
-      padding:10px 14px;
+      padding:6px 10px;
       border-radius:999px;
       cursor:pointer;
       transition:all .18s ease;
+      line-height:1;
     }
 
-    .mode-btn.active{ background:#007bff; color:#fff; box-shadow:0 4px 12px rgba(0,123,255,.18); }
-    .icon-btn svg{ width:18px; height:18px; display:block; }
+    .mini-toggle .unit-btn.active{
+      background:#007bff;
+      color:#fff;
+      box-shadow:0 4px 12px rgba(0,123,255,.18);
+    }
+
+    .summary{
+      margin-top:12px;
+      padding:14px;
+      border-radius:14px;
+      background:#eef5ff;
+      color:#007bff;
+      border:1px solid #d7e7ff;
+    }
+
+    .summary-grid{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:12px;
+    }
+
+    .pill{
+      border-radius:14px;
+      padding:12px;
+      background:#f7fbff;
+      border:1px solid #d7e7ff;
+    }
+
+    .pill .k{
+      font-size:12px;
+      opacity:1;
+      color:#007bff;
+      font-weight:800;
+      margin-bottom:8px;
+      letter-spacing:.02em;
+      text-transform:uppercase;
+    }
+
+    .biginput{
+      display:flex;
+      align-items:flex-start;
+      gap:8px;
+    }
+
+    .biginput .affix{
+      color:#007bff;
+      opacity:1;
+      font-size:18px;
+      padding-top:2px;
+    }
+
+    .biginput input{
+      border:none;
+      outline:none;
+      background:transparent;
+      color:#007bff;
+      font-size:24px;
+      font-weight:900;
+      width:100%;
+      padding:0;
+      line-height:1.05;
+      text-align:left;
+      font-family:"Poppins",sans-serif;
+    }
+
+    .actions{
+      display:flex;
+      justify-content:flex-end;
+      gap:8px;
+      margin-top:10px;
+    }
+
+    .link-btn{
+      appearance:none;
+      border:none;
+      background:transparent;
+      color:#007bff;
+      font-size:12px;
+      font-weight:800;
+      cursor:pointer;
+      padding:6px 2px;
+      font-family:"Poppins",sans-serif;
+    }
   </style>
 </head>
 <body>
+  <div class="card">
+    <div class="logo">
+      <img src="logo.png" alt="Logo" />
+    </div>
 
-<div class="card">
-
-  <div class="section">
-    <div class="section-title">PURCHASE</div>
-    <div class="grid-2">
-      <div class="field main">
-        <div class="row"><span class="affix">€</span><input placeholder="0"></div>
-        <div class="note">EXCL.</div>
-        <div class="price-meta">120</div>
-      </div>
-      <div class="field">
-        <div class="row"><span class="affix">€</span><input placeholder="0"></div>
-        <div class="note">INCL.</div>
+    <div class="section">
+      <div class="section-title">Mode</div>
+      <div class="mode-toggle">
+        <button class="mode-btn active" id="modeVat" type="button">VAT</button>
+        <button class="mode-btn" id="modeMargin" type="button">Margin</button>
       </div>
     </div>
-  </div>
 
-  <div class="section">
-    <div class="section-title">SELLING</div>
-    <div class="grid-2">
-      <div class="field main">
-        <div class="row"><span class="affix">€</span><input placeholder="0"></div>
-        <div class="note">INCL.</div>
-      </div>
-      <div class="field">
-        <div class="row"><span class="affix">€</span><input placeholder="0"></div>
-        <div class="note">EXCL.</div>
-      </div>
-    </div>
-  </div>
+    <div class="section">
+      <div class="section-title">Purchase</div>
+      <div class="price-stack" id="purchaseGrid">
+        <div class="field main" id="purchaseExWrap">
+          <div class="field-top">
+            <div class="value-wrap">
+              <div class="field-note">Ex VAT</div>
+              <input type="number" id="purchaseEx" inputmode="decimal" placeholder="0" />
+            </div>
+            <div class="affix">€</div>
+          </div>
+          <div class="price-meta" id="purchaseExMeta">
+            <div class="meta-line meta-current"><span class="money"><span>€</span><span class="money-value"></span></span></div>
+            <div class="meta-line meta-discounted"><span class="money"><span>€</span><span class="money-value"></span></span></div>
+          </div>
+        </div>
 
-  <div class="section">
-    <div class="section-title">DISCOUNT</div>
-    <div class="discount-bar">
-
-      <div class="discount-row">
-        <div class="discount-label">PURCHASE</div>
-        <input placeholder="0">
-        <div class="switch">
-          <button class="active">%</button>
-          <button>€</button>
+        <div class="field" id="purchaseInWrap">
+          <div class="field-top">
+            <div class="value-wrap">
+              <div class="field-note">Inc VAT</div>
+              <input type="number" id="purchaseIn" inputmode="decimal" placeholder="0" />
+            </div>
+            <div class="affix">€</div>
+          </div>
+          <div class="price-meta" id="purchaseInMeta">
+            <div class="meta-line meta-current"><span class="money"><span>€</span><span class="money-value"></span></span></div>
+            <div class="meta-line meta-discounted"><span class="money"><span>€</span><span class="money-value"></span></span></div>
+          </div>
         </div>
       </div>
+    </div>
 
-      <div class="discount-row">
-        <div class="discount-label">SELLING</div>
-        <input placeholder="0">
-        <div class="switch">
-          <button class="active">%</button>
-          <button>€</button>
+    <div class="section">
+      <button class="discount-toggle" id="discountToggle" type="button">
+        <span>Discount</span>
+        <span class="chev">⌄</span>
+      </button>
+
+      <div class="discount-shell" id="discountShell">
+        <div class="discount-row">
+          <div class="discount-label">Purchase</div>
+          <div class="discount-combo">
+            <div class="input">
+              <input type="number" class="discount-proxy" id="pDiscValue" min="0" inputmode="decimal" placeholder="0" />
+              <div class="mini-toggle" aria-label="Purchase discount unit">
+                <button type="button" class="unit-btn active" id="pDiscModePct">%</button>
+                <button type="button" class="unit-btn" id="pDiscModeEur">€</button>
+              </div>
+            </div>
+            <input type="hidden" id="pDiscPct" />
+            <input type="hidden" id="pDiscEur" />
+          </div>
+        </div>
+
+        <div class="discount-row">
+          <div class="discount-label">Selling</div>
+          <div class="discount-combo">
+            <div class="input">
+              <input type="number" class="discount-proxy" id="discValue" min="0" inputmode="decimal" placeholder="0" />
+              <div class="mini-toggle" aria-label="Selling discount unit">
+                <button type="button" class="unit-btn active" id="discModePct">%</button>
+                <button type="button" class="unit-btn" id="discModeEur">€</button>
+              </div>
+            </div>
+            <input type="hidden" id="discPct" />
+            <input type="hidden" id="discEur" />
+          </div>
         </div>
       </div>
+    </div>
 
+    <div class="section">
+      <div class="section-title">Selling</div>
+      <div class="price-stack" id="sellGrid">
+        <div class="field main" id="sellInWrap">
+          <div class="field-top">
+            <div class="value-wrap">
+              <div class="field-note">Inc VAT</div>
+              <input type="number" id="sellIn" inputmode="decimal" placeholder="0" />
+            </div>
+            <div class="affix">€</div>
+          </div>
+          <div class="price-meta" id="sellInMeta">
+            <div class="meta-line meta-current"><span class="money"><span>€</span><span class="money-value"></span></span></div>
+            <div class="meta-line meta-discounted"><span class="money"><span>€</span><span class="money-value"></span></span></div>
+          </div>
+        </div>
+
+        <div class="field" id="sellExWrap">
+          <div class="field-top">
+            <div class="value-wrap">
+              <div class="field-note">Ex VAT</div>
+              <input type="number" id="sellEx" inputmode="decimal" placeholder="0" />
+            </div>
+            <div class="affix">€</div>
+          </div>
+          <div class="price-meta" id="sellExMeta">
+            <div class="meta-line meta-current"><span class="money"><span>€</span><span class="money-value"></span></span></div>
+            <div class="meta-line meta-discounted"><span class="money"><span>€</span><span class="money-value"></span></span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="summary">
+      <div class="summary-grid">
+        <div class="pill">
+          <div class="k">Margin %</div>
+          <div class="biginput">
+            <input type="text" id="mPct" placeholder="0" />
+            <div class="affix">%</div>
+          </div>
+        </div>
+        <div class="pill">
+          <div class="k">Margin €</div>
+          <div class="biginput">
+            <div class="affix">€</div>
+            <input type="text" id="mEur" placeholder="0" />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button class="link-btn" id="resetBtn" type="button">Reset</button>
     </div>
   </div>
 
-  <div class="section">
-    <div class="section-title">MARGIN</div>
-    <div class="margin-grid">
-      <div class="margin-field">
-        <span>%</span>
-        <input placeholder="0">
-      </div>
-      <div class="margin-field">
-        <span>€</span>
-        <input placeholder="0">
-      </div>
-    </div>
-  </div>
+  <script>
+    const VAT = 1.21;
+    const STORAGE_KEY = "margins_state_v10";
 
-  <div class="toolbar">
-    <button class="btn">%</button>
-    <button class="btn">↺</button>
-  </div>
+    const el = id => document.getElementById(id);
+    const raw = id => el(id).value;
+    const hasVal = id => raw(id).trim() !== "";
+    const num = id => {
+      const v = raw(id).replace(",", ".").trim();
+      if (v === "" || v === "-") return null;
+      const n = parseFloat(v);
+      return Number.isFinite(n) ? n : null;
+    };
+    const clamp = (n, min, max) => Math.min(Math.max(n, min), max);
+    const floorOrEmpty = v => (v === null || v === undefined || Number.isNaN(v)) ? "" : String(Math.floor(v));
+    const ceilOrEmpty = v => (v === null || v === undefined || Number.isNaN(v)) ? "" : String(Math.ceil(v));
 
-</div>
+    function setVal(id, n){
+      el(id).value = floorOrEmpty(n);
+    }
 
+    function setText(id, text){
+      el(id).value = text;
+    }
+
+    function clear(ids){
+      ids.forEach(id => el(id).value = "");
+    }
+
+    let updating = false;
+    let lastEdited = null;
+    let marginLock = null;
+    let taxMode = "vat";
+    let discountManualOpen = false;
+    let purchaseDiscountMode = "pct";
+    let sellDiscountMode = "pct";
+
+    function formatNum(v){ return String(Math.floor(Math.max(v || 0, 0))); }
+
+    function updateDiscountModeButtons(){
+      el("pDiscModePct").classList.toggle("active", purchaseDiscountMode === "pct");
+      el("pDiscModeEur").classList.toggle("active", purchaseDiscountMode === "eur");
+      el("discModePct").classList.toggle("active", sellDiscountMode === "pct");
+      el("discModeEur").classList.toggle("active", sellDiscountMode === "eur");
+    }
+
+    function syncDiscountProxyFromHidden(){
+      if (purchaseDiscountMode === "pct") {
+        el("pDiscValue").value = raw("pDiscPct");
+        el("pDiscValue").max = "99";
+      } else {
+        el("pDiscValue").value = raw("pDiscEur");
+        el("pDiscValue").removeAttribute("max");
+      }
+
+      if (sellDiscountMode === "pct") {
+        el("discValue").value = raw("discPct");
+        el("discValue").max = "99";
+      } else {
+        el("discValue").value = raw("discEur");
+        el("discValue").removeAttribute("max");
+      }
+
+      updateDiscountModeButtons();
+    }
+
+    function detectDiscountModes(){
+      if (hasVal("pDiscEur") && !hasVal("pDiscPct")) purchaseDiscountMode = "eur";
+      else if (hasVal("pDiscPct")) purchaseDiscountMode = "pct";
+
+      if (hasVal("discEur") && !hasVal("discPct")) sellDiscountMode = "eur";
+      else if (hasVal("discPct")) sellDiscountMode = "pct";
+    }
+
+    function setDiscountMode(scope, mode){
+      if (scope === "purchase") {
+        purchaseDiscountMode = mode;
+      } else {
+        sellDiscountMode = mode;
+      }
+      syncDiscountProxyFromHidden();
+      queueSave();
+    }
+
+    function handleDiscountProxyInput(scope){
+      if (scope === "purchase") {
+        if (purchaseDiscountMode === "pct") {
+          el("pDiscPct").value = el("pDiscValue").value;
+          el("pDiscEur").value = "";
+          lastEdited = "pDiscPct";
+        } else {
+          el("pDiscEur").value = el("pDiscValue").value;
+          el("pDiscPct").value = "";
+          lastEdited = "pDiscEur";
+        }
+      } else {
+        if (sellDiscountMode === "pct") {
+          el("discPct").value = el("discValue").value;
+          el("discEur").value = "";
+          lastEdited = "discPct";
+        } else {
+          el("discEur").value = el("discValue").value;
+          el("discPct").value = "";
+          lastEdited = "discEur";
+        }
+      }
+      recalc();
+      syncDiscountProxyFromHidden();
+      queueSave();
+    }
+
+    function setMeta(id, currentVal, discountedVal){
+      const node = el(id);
+      const current = node.querySelector(".meta-current .money-value");
+      const discounted = node.querySelector(".meta-discounted .money-value");
+
+      if (currentVal === null || discountedVal === null || Math.floor(currentVal) === Math.floor(discountedVal)) {
+        current.textContent = "";
+        discounted.textContent = "";
+        node.classList.remove("show");
+        return;
+      }
+
+      current.textContent = formatNum(currentVal);
+      discounted.textContent = formatNum(discountedVal);
+      node.classList.add("show");
+    }
+
+    function syncPair(aId, bId, mult){
+      if (taxMode === "margin") return;
+      if (lastEdited === aId && raw(aId).trim() === "") { clear([bId]); return; }
+      if (lastEdited === bId && raw(bId).trim() === "") { clear([aId]); return; }
+      const a = num(aId); const b = num(bId);
+      if (lastEdited === bId && b !== null) setVal(aId, b * mult);
+      else if (lastEdited === aId && a !== null) setVal(bId, a / mult);
+      else {
+        if (a === null && b !== null) setVal(aId, b * mult);
+        if (b === null && a !== null) setVal(bId, a / mult);
+      }
+    }
+
+    function captureMarginLock(){
+      if (lastEdited === "mPct") {
+        if (!hasVal("mPct") || raw("mPct").trim() === "-") { marginLock = null; return; }
+        const p = num("mPct"); if (p === null) return;
+        marginLock = { mode:"pct", value: clamp(p,0,99) };
+      }
+      if (lastEdited === "mEur") {
+        if (!hasVal("mEur") || raw("mEur").trim() === "-") { marginLock = null; return; }
+        const e = num("mEur"); if (e === null) return;
+        marginLock = { mode:"eur", value: Math.max(e,0) };
+      }
+    }
+
+    function unlockMarginIfNeeded(){
+      if (["purchaseEx","purchaseIn","sellIn","sellEx","discPct","discEur","pDiscPct","pDiscEur"].includes(lastEdited)) marginLock = null;
+    }
+
+    function updateModeVisuals(){
+      el("modeVat").classList.toggle("active", taxMode === "vat");
+      el("modeMargin").classList.toggle("active", taxMode === "margin");
+    }
+
+    function updateRequiredFields(){
+      const purchaseExWrap = el("purchaseExWrap");
+      const purchaseInWrap = el("purchaseInWrap");
+      const sellExWrap = el("sellExWrap");
+      const sellInWrap = el("sellInWrap");
+      const sellGrid = el("sellGrid");
+      const purchaseGrid = el("purchaseGrid");
+
+      [purchaseExWrap, purchaseInWrap, sellExWrap, sellInWrap].forEach(node => {
+        node.classList.remove("main", "hidden");
+      });
+
+      if (taxMode === "margin") {
+        purchaseExWrap.classList.add("main");
+        sellExWrap.classList.add("main");
+        purchaseInWrap.classList.add("hidden");
+        sellInWrap.classList.add("hidden");
+        sellGrid.style.gridTemplateColumns = "1fr";
+        purchaseGrid.style.gridTemplateColumns = "1fr";
+      } else {
+        purchaseExWrap.classList.add("main");
+        sellInWrap.classList.add("main");
+        sellGrid.style.gridTemplateColumns = "1fr 1fr";
+        purchaseGrid.style.gridTemplateColumns = "1fr 1fr";
+      }
+    }
+
+    function getPurchaseBaseEx(){ const ex=num("purchaseEx"); const inc=num("purchaseIn"); if (ex!==null) return ex; return inc!==null ? inc/VAT : null; }
+    function getPurchaseBaseIn(){ const ex=num("purchaseEx"); const inc=num("purchaseIn"); if (taxMode==="margin") return null; if (inc!==null) return inc; return ex!==null ? ex*VAT : null; }
+    function getSellBaseEx(){ const ex=num("sellEx"); const inc=num("sellIn"); if (ex!==null) return ex; return inc!==null ? inc/VAT : null; }
+    function getSellBaseIn(){ const ex=num("sellEx"); const inc=num("sellIn"); if (taxMode==="margin") return null; if (inc!==null) return inc; return ex!==null ? ex*VAT : null; }
+    function getBasePurchaseValue(){ return taxMode === "margin" ? getPurchaseBaseEx() : getPurchaseBaseIn(); }
+    function getBaseSellValue(){ return taxMode === "margin" ? getSellBaseEx() : getSellBaseIn(); }
+
+    function getDiscountedPurchaseEx(){
+      const baseEx = getPurchaseBaseEx(); if (baseEx===null) return null;
+      if (hasVal("pDiscPct")) { const p=num("pDiscPct"); if (p!==null) return Math.max(baseEx*(1-clamp(p,0,99)/100),0); }
+      if (hasVal("pDiscEur")) { const e=num("pDiscEur"); if (e!==null) return Math.max(baseEx-(taxMode==="margin"?Math.max(e,0):Math.max(e,0)/VAT),0); }
+      return baseEx;
+    }
+    function getDiscountedPurchaseIn(){
+      const baseIn = getPurchaseBaseIn(); if (baseIn===null) return null;
+      if (hasVal("pDiscPct")) { const p=num("pDiscPct"); if (p!==null) return Math.max(baseIn*(1-clamp(p,0,99)/100),0); }
+      if (hasVal("pDiscEur")) { const e=num("pDiscEur"); if (e!==null) return Math.max(baseIn-Math.max(e,0),0); }
+      return baseIn;
+    }
+    function getDiscountedSellEx(){
+      const baseEx = getSellBaseEx(); if (baseEx===null) return null;
+      if (hasVal("discPct")) { const p=num("discPct"); if (p!==null) return Math.max(baseEx*(1-clamp(p,0,99)/100),0); }
+      if (hasVal("discEur")) { const e=num("discEur"); if (e!==null) return Math.max(baseEx-(taxMode==="margin"?Math.max(e,0):Math.max(e,0)/VAT),0); }
+      return baseEx;
+    }
+    function getDiscountedSellIn(){
+      const baseIn = getSellBaseIn(); if (baseIn===null) return null;
+      if (hasVal("discPct")) { const p=num("discPct"); if (p!==null) return Math.max(baseIn*(1-clamp(p,0,99)/100),0); }
+      if (hasVal("discEur")) { const e=num("discEur"); if (e!==null) return Math.max(baseIn-Math.max(e,0),0); }
+      return baseIn;
+    }
+
+    function setTaxMode(mode){
+      const nextMode = mode === "margin" ? "margin" : "vat";
+      if (taxMode === nextMode) return;
+      taxMode = nextMode;
+      updateModeVisuals();
+      if (taxMode === "margin") {
+        clear(["purchaseIn","sellIn"]);
+      } else {
+        const purchaseEx=num("purchaseEx"), sellEx=num("sellEx");
+        if (purchaseEx!==null) setVal("purchaseIn", purchaseEx*VAT);
+        if (sellEx!==null) setVal("sellIn", sellEx*VAT);
+      }
+      clear(["discPct","discEur","pDiscPct","pDiscEur"]);
+      updateRequiredFields();
+      saveToLocal();
+      recalc();
+    }
+
+    function syncPurchaseDiscountFields(){
+      const basePurchase = getBasePurchaseValue();
+      if (["pDiscPct","pDiscEur"].includes(lastEdited) && !hasVal(lastEdited)) { clear(["pDiscPct","pDiscEur"]); return; }
+      if (!basePurchase || basePurchase <= 0) { if (["pDiscPct","pDiscEur"].includes(lastEdited)) clear(["pDiscPct","pDiscEur"]); return; }
+      if (lastEdited === "pDiscPct") {
+        const pct=num("pDiscPct"); if (pct===null) return;
+        const p=clamp(pct,0,99), eur=basePurchase*(p/100);
+        setVal("pDiscPct",p); setVal("pDiscEur",eur);
+      }
+      if (lastEdited === "pDiscEur") {
+        const eur=num("pDiscEur"); if (eur===null) return;
+        const e=Math.max(eur,0), pct=basePurchase>0?(e/basePurchase)*100:0;
+        setVal("pDiscEur",e); setVal("pDiscPct",clamp(pct,0,99));
+      }
+    }
+
+    function syncDiscountFields(){
+      const baseSell = getBaseSellValue();
+      if (["discPct","discEur"].includes(lastEdited) && !hasVal(lastEdited)) { clear(["discPct","discEur"]); return; }
+      if (!baseSell || baseSell <= 0) { if (["discPct","discEur"].includes(lastEdited)) clear(["discPct","discEur"]); return; }
+      if (lastEdited === "discPct") {
+        const pct=num("discPct"); if (pct===null) return;
+        const p=clamp(pct,0,99), eur=baseSell*(p/100);
+        setVal("discPct",p); setVal("discEur",eur);
+      }
+      if (lastEdited === "discEur") {
+        const eur=num("discEur"); if (eur===null) return;
+        const e=Math.max(eur,0), pct=baseSell>0?(e/baseSell)*100:0;
+        setVal("discEur",e); setVal("discPct",clamp(pct,0,99));
+      }
+    }
+
+    function updatePurchaseMeta(){
+      const originalEx = getPurchaseBaseEx();
+      const originalIn = getPurchaseBaseIn();
+      const discountedEx = getDiscountedPurchaseEx();
+      const discountedIn = getDiscountedPurchaseIn();
+      const discountOn = hasVal("pDiscPct") || hasVal("pDiscEur");
+      if (!discountOn) { setMeta("purchaseExMeta", null, null); setMeta("purchaseInMeta", null, null); return; }
+      setMeta("purchaseExMeta", originalEx, discountedEx);
+      setMeta("purchaseInMeta", originalIn, discountedIn);
+    }
+
+    function updateSellMeta(){
+      const originalEx = getSellBaseEx();
+      const originalIn = getSellBaseIn();
+      const discountedEx = getDiscountedSellEx();
+      const discountedIn = getDiscountedSellIn();
+      const discountOn = hasVal("discPct") || hasVal("discEur");
+      if (!discountOn) { setMeta("sellExMeta", null, null); setMeta("sellInMeta", null, null); return; }
+      setMeta("sellExMeta", originalEx, discountedEx);
+      setMeta("sellInMeta", originalIn, discountedIn);
+    }
+
+    function updateDiscountPanels(){
+      const purchaseHasValue = hasVal("pDiscPct") || hasVal("pDiscEur");
+      const sellHasValue = hasVal("discPct") || hasVal("discEur");
+      const anyHasValue = purchaseHasValue || sellHasValue;
+      el("discountToggle").classList.toggle("has-value", anyHasValue);
+      const open = anyHasValue || discountManualOpen;
+      el("discountShell").classList.toggle("show", open);
+      el("discountToggle").classList.toggle("active", open);
+    }
+
+    function setMarginDash(){ setText("mPct","-"); setText("mEur","-"); }
+
+    function applyMarginIfPossible(){
+      const purchaseEx = getDiscountedPurchaseEx();
+      if (!purchaseEx || purchaseEx <= 0 || !marginLock) return;
+      clear(["discPct","discEur"]);
+      if (marginLock.mode === "pct") {
+        const p=clamp(marginLock.value,0,99), net=purchaseEx/(1-(p/100)), profit=net-purchaseEx;
+        setVal("sellEx",net); if (taxMode==="vat") setVal("sellIn",net*VAT);
+        setText("mEur",Math.floor(profit)); setText("mPct",Math.floor(p));
+      } else {
+        const profit=Math.max(marginLock.value,0), net=purchaseEx+profit, pct=net>0?(profit/net)*100:0;
+        setVal("sellEx",net); if (taxMode==="vat") setVal("sellIn",net*VAT);
+        setText("mPct",Math.floor(clamp(pct,0,99))); setText("mEur",Math.floor(profit));
+      }
+    }
+
+    function updateMarginFromCurrent(){
+      if (lastEdited === "mPct" || lastEdited === "mEur") return;
+      const purchaseEx=getDiscountedPurchaseEx(), discountedSellEx=getDiscountedSellEx();
+      if (!purchaseEx || !discountedSellEx || purchaseEx<=0) { clear(["mPct","mEur"]); return; }
+      const net=discountedSellEx; if (!(net>0)) { clear(["mPct","mEur"]); return; }
+      const profit=net-purchaseEx, pct=(profit/net)*100;
+      if (profit<=0 || pct<=0) { setMarginDash(); return; }
+      setText("mPct", String(Math.floor(clamp(pct,0,99))));
+      setText("mEur", String(Math.floor(profit)));
+    }
+
+    function recalc(){
+      if (updating) return;
+      updating = true;
+      syncPair("purchaseIn","purchaseEx",VAT);
+      syncPair("sellIn","sellEx",VAT);
+      unlockMarginIfNeeded();
+      captureMarginLock();
+      if (["mPct","mEur"].includes(lastEdited)) {
+        applyMarginIfPossible();
+        syncPair("sellIn","sellEx",VAT);
+      }
+      syncPurchaseDiscountFields();
+      syncDiscountFields();
+      updatePurchaseMeta();
+      updateSellMeta();
+      updateDiscountPanels();
+      detectDiscountModes();
+      syncDiscountProxyFromHidden();
+      updateMarginFromCurrent();
+      updating = false;
+    }
+
+    function bind(id){
+      const input = el(id); if (!input) return;
+      input.addEventListener("input", ()=>{ lastEdited=id; recalc(); queueSave(); });
+      input.addEventListener("focus", ()=>{ setTimeout(()=>{ try{input.select();}catch(e){} },0); });
+    }
+
+    function setPrices({ purchaseEx=null, purchaseIn=null, pDiscPct=null, pDiscEur=null, sellIn=null, sellEx=null, discPct=null, discEur=null } = {}){
+      updating = true;
+      if (purchaseEx !== null) el("purchaseEx").value = ceilOrEmpty(purchaseEx);
+      if (purchaseIn !== null) el("purchaseIn").value = ceilOrEmpty(purchaseIn);
+      if (pDiscPct !== null) el("pDiscPct").value = floorOrEmpty(pDiscPct);
+      if (pDiscEur !== null) el("pDiscEur").value = floorOrEmpty(pDiscEur);
+      if (sellIn !== null) el("sellIn").value = floorOrEmpty(sellIn);
+      if (sellEx !== null) el("sellEx").value = floorOrEmpty(sellEx);
+      if (discPct !== null) el("discPct").value = floorOrEmpty(discPct);
+      if (discEur !== null) el("discEur").value = floorOrEmpty(discEur);
+      marginLock = null; lastEdited = null;
+      if (taxMode === "vat") {
+        syncPair("purchaseIn","purchaseEx",VAT);
+        syncPair("sellIn","sellEx",VAT);
+      }
+      updating = false;
+      lastEdited = taxMode === "margin" ? "sellEx" : "sellIn";
+      recalc();
+    }
+
+    function loadFromQueryString(){
+      const qs = new URLSearchParams(window.location.search);
+      const p=qs.get("p"), pi=qs.get("pi"), pdp=qs.get("pdp"), pde=qs.get("pde"), s=qs.get("s"), se=qs.get("se"), dp=qs.get("dp"), de=qs.get("de"), tm=qs.get("tm");
+      if (tm === "vat" || tm === "margin") taxMode = tm;
+      updateModeVisuals(); updateRequiredFields(); updateDiscountModeButtons();
+      const obj = {};
+      if (p) obj.purchaseEx=parseFloat(p);
+      if (pi) obj.purchaseIn=parseFloat(pi);
+      if (pdp) obj.pDiscPct=parseFloat(pdp);
+      if (pde) obj.pDiscEur=parseFloat(pde);
+      if (s) obj.sellIn=parseFloat(s);
+      if (se) obj.sellEx=parseFloat(se);
+      if (dp) obj.discPct=parseFloat(dp);
+      if (de) obj.discEur=parseFloat(de);
+      if (Object.keys(obj).length) setPrices(obj);
+    }
+
+    function saveToLocal(){
+      const data = {
+        purchaseEx: raw("purchaseEx"), purchaseIn: raw("purchaseIn"), pDiscPct: raw("pDiscPct"), pDiscEur: raw("pDiscEur"),
+        sellIn: raw("sellIn"), sellEx: raw("sellEx"), discPct: raw("discPct"), discEur: raw("discEur"),
+        taxMode, discountManualOpen, purchaseDiscountMode, sellDiscountMode
+      };
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    }
+    function queueSave(){ clearTimeout(window.__saveT); window.__saveT = setTimeout(saveToLocal, 120); }
+
+    function loadFromLocal(){
+      try {
+        const s = localStorage.getItem(STORAGE_KEY); if (!s) return false;
+        const data = JSON.parse(s);
+        if (data.taxMode === "vat" || data.taxMode === "margin") taxMode = data.taxMode;
+        discountManualOpen = !!data.discountManualOpen;
+        if (data.purchaseDiscountMode === "pct" || data.purchaseDiscountMode === "eur") purchaseDiscountMode = data.purchaseDiscountMode;
+        if (data.sellDiscountMode === "pct" || data.sellDiscountMode === "eur") sellDiscountMode = data.sellDiscountMode;
+        updateModeVisuals(); updateRequiredFields();
+        const any=["purchaseEx","purchaseIn","pDiscPct","pDiscEur","sellIn","sellEx","discPct","discEur"].some(k => (data[k] ?? "").toString().trim() !== "");
+        if (!any) return false;
+        setPrices({
+          purchaseEx: data.purchaseEx !== "" ? parseFloat(data.purchaseEx) : null,
+          purchaseIn: data.purchaseIn !== "" ? parseFloat(data.purchaseIn) : null,
+          pDiscPct: data.pDiscPct !== "" ? parseFloat(data.pDiscPct) : null,
+          pDiscEur: data.pDiscEur !== "" ? parseFloat(data.pDiscEur) : null,
+          sellIn: data.sellIn !== "" ? parseFloat(data.sellIn) : null,
+          sellEx: data.sellEx !== "" ? parseFloat(data.sellEx) : null,
+          discPct: data.discPct !== "" ? parseFloat(data.discPct) : null,
+          discEur: data.discEur !== "" ? parseFloat(data.discEur) : null
+        });
+        return true;
+      } catch { return false; }
+    }
+
+    function resetAll(){
+      updating = true;
+      ["purchaseEx","purchaseIn","pDiscPct","pDiscEur","sellIn","sellEx","discPct","discEur","mPct","mEur"].forEach(id => el(id).value = "");
+      marginLock = null; lastEdited = null; discountManualOpen = false;
+      purchaseDiscountMode = "pct"; sellDiscountMode = "pct";
+      updating = false;
+      localStorage.removeItem(STORAGE_KEY);
+      setMeta("purchaseExMeta", null, null); setMeta("purchaseInMeta", null, null); setMeta("sellExMeta", null, null); setMeta("sellInMeta", null, null);
+      updateRequiredFields(); recalc();
+    }
+
+    window.addEventListener("DOMContentLoaded", ()=>{
+      ["purchaseEx","purchaseIn","sellIn","sellEx","mPct","mEur"].forEach(bind);
+      el("pDiscValue").addEventListener("input", ()=>handleDiscountProxyInput("purchase"));
+      el("discValue").addEventListener("input", ()=>handleDiscountProxyInput("selling"));
+      el("pDiscValue").addEventListener("focus", ()=>{ setTimeout(()=>{ try{el("pDiscValue").select();}catch(e){} },0); });
+      el("discValue").addEventListener("focus", ()=>{ setTimeout(()=>{ try{el("discValue").select();}catch(e){} },0); });
+      el("pDiscModePct").addEventListener("click", ()=>setDiscountMode("purchase","pct"));
+      el("pDiscModeEur").addEventListener("click", ()=>setDiscountMode("purchase","eur"));
+      el("discModePct").addEventListener("click", ()=>setDiscountMode("selling","pct"));
+      el("discModeEur").addEventListener("click", ()=>setDiscountMode("selling","eur"));
+      el("modeVat").addEventListener("click", ()=>setTaxMode("vat"));
+      el("modeMargin").addEventListener("click", ()=>setTaxMode("margin"));
+      el("resetBtn").addEventListener("click", resetAll);
+      el("discountToggle").addEventListener("click", ()=>{
+        const willOpen = !el("discountShell").classList.contains("show");
+        discountManualOpen = willOpen;
+        if (!willOpen) {
+          clear(["pDiscPct","pDiscEur","discPct","discEur"]);
+          lastEdited = "pDiscPct";
+          recalc();
+        } else {
+          updateDiscountPanels();
+        }
+        queueSave();
+      });
+      updateModeVisuals(); updateRequiredFields();
+      const loadedLocal = loadFromLocal();
+      loadFromQueryString();
+      if (!loadedLocal && !window.location.search) recalc();
+      window.setPrices = setPrices;
+    });
+  </script>
 </body>
 </html>
-
