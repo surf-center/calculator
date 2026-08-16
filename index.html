@@ -406,29 +406,29 @@
       <div class="price-stack" id="purchaseGrid">
         <div class="field main" id="purchaseExWrap">
           <div class="field-top">
-            <div class="affix">€</div>
+            <div class="affix">‚Ç¨</div>
             <div class="value-wrap">
               <input type="number" id="purchaseEx" min="0" inputmode="decimal" placeholder="0" />
               <div class="field-note">Excl.</div>
             </div>
           </div>
           <div class="price-meta" id="purchaseExMeta">
-            <span class="meta-current"><span class="money-symbol">€</span><span class="money-value"></span></span>
-            <span class="meta-discounted"><span class="money-symbol">€</span><span class="money-value"></span></span>
+            <span class="meta-current"><span class="money-symbol">‚Ç¨</span><span class="money-value"></span></span>
+            <span class="meta-discounted"><span class="money-symbol">‚Ç¨</span><span class="money-value"></span></span>
           </div>
         </div>
 
         <div class="field" id="purchaseInWrap">
           <div class="field-top">
-            <div class="affix">€</div>
+            <div class="affix">‚Ç¨</div>
             <div class="value-wrap">
               <input type="number" id="purchaseIn" min="0" inputmode="decimal" placeholder="0" />
               <div class="field-note">Incl.</div>
             </div>
           </div>
           <div class="price-meta" id="purchaseInMeta">
-            <span class="meta-current"><span class="money-symbol">€</span><span class="money-value"></span></span>
-            <span class="meta-discounted"><span class="money-symbol">€</span><span class="money-value"></span></span>
+            <span class="meta-current"><span class="money-symbol">‚Ç¨</span><span class="money-value"></span></span>
+            <span class="meta-discounted"><span class="money-symbol">‚Ç¨</span><span class="money-value"></span></span>
           </div>
         </div>
       </div>
@@ -439,29 +439,29 @@
       <div class="row-2" id="sellGrid">
         <div class="field main" id="sellInWrap">
           <div class="field-top">
-            <div class="affix">€</div>
+            <div class="affix">‚Ç¨</div>
             <div class="value-wrap">
               <input type="number" id="sellIn" min="0" inputmode="decimal" placeholder="0" />
               <div class="field-note">Incl.</div>
             </div>
           </div>
           <div class="price-meta" id="sellInMeta">
-            <span class="meta-current"><span class="money-symbol">€</span><span class="money-value"></span></span>
-            <span class="meta-discounted"><span class="money-symbol">€</span><span class="money-value"></span></span>
+            <span class="meta-current"><span class="money-symbol">‚Ç¨</span><span class="money-value"></span></span>
+            <span class="meta-discounted"><span class="money-symbol">‚Ç¨</span><span class="money-value"></span></span>
           </div>
         </div>
 
         <div class="field" id="sellExWrap">
           <div class="field-top">
-            <div class="affix">€</div>
+            <div class="affix">‚Ç¨</div>
             <div class="value-wrap">
               <input type="number" id="sellEx" min="0" inputmode="decimal" placeholder="0" />
               <div class="field-note">Excl.</div>
             </div>
           </div>
           <div class="price-meta" id="sellExMeta">
-            <span class="meta-current"><span class="money-symbol">€</span><span class="money-value"></span></span>
-            <span class="meta-discounted"><span class="money-symbol">€</span><span class="money-value"></span></span>
+            <span class="meta-current"><span class="money-symbol">‚Ç¨</span><span class="money-value"></span></span>
+            <span class="meta-discounted"><span class="money-symbol">‚Ç¨</span><span class="money-value"></span></span>
           </div>
         </div>
       </div>
@@ -479,7 +479,7 @@
           </div>
           <div class="pill">
             <div class="biginput">
-              <span class="bigprefix">€</span>
+              <span class="bigprefix">‚Ç¨</span>
               <input type="text" id="mEur" inputmode="decimal" />
             </div>
           </div>
@@ -497,7 +497,7 @@
             <input type="number" id="pDiscValue" class="discount-input" inputmode="decimal" placeholder="0" min="0" step="0.01" autocomplete="off">
             <div class="discount-toggle" role="group" aria-label="Purchase discount unit">
               <button type="button" id="pDiscModePct" class="active" aria-pressed="true">%</button>
-              <button type="button" id="pDiscModeEur" aria-pressed="false">€</button>
+              <button type="button" id="pDiscModeEur" aria-pressed="false">‚Ç¨</button>
             </div>
             <input type="hidden" id="pDiscPct" class="discount-hidden">
             <input type="hidden" id="pDiscEur" class="discount-hidden">
@@ -510,7 +510,7 @@
             <input type="number" id="discValue" class="discount-input" inputmode="decimal" placeholder="0" min="0" step="0.01" autocomplete="off">
             <div class="discount-toggle" role="group" aria-label="Selling discount unit">
               <button type="button" id="discModePct" class="active" aria-pressed="true">%</button>
-              <button type="button" id="discModeEur" aria-pressed="false">€</button>
+              <button type="button" id="discModeEur" aria-pressed="false">‚Ç¨</button>
             </div>
             <input type="hidden" id="discPct" class="discount-hidden">
             <input type="hidden" id="discEur" class="discount-hidden">
@@ -673,8 +673,11 @@
 
     function getDiscountedPurchaseEx(){
       const baseEx = getPurchaseBaseEx(); if (baseEx===null) return null;
-      if (hasVal("pDiscPct")) { const p=num("pDiscPct"); if (p!==null) return Math.max(baseEx*(1-clamp(p,0,99)/100),0); }
-      if (hasVal("pDiscEur")) { const e=num("pDiscEur"); if (e!==null) return Math.max(baseEx-Math.max(e,0),0); }
+      if (pDiscUnit === "eur") {
+        if (hasVal("pDiscEur")) { const e=num("pDiscEur"); if (e!==null) return Math.max(baseEx-Math.max(e,0),0); }
+      } else if (hasVal("pDiscPct")) {
+        const p=num("pDiscPct"); if (p!==null) return Math.max(baseEx*(1-clamp(p,0,99)/100),0);
+      }
       return baseEx;
     }
 
@@ -686,15 +689,21 @@
 
     function getDiscountedSellEx(){
       const baseEx = getSellBaseEx(); if (baseEx===null) return null;
-      if (hasVal("discPct")) { const p=num("discPct"); if (p!==null) return Math.max(baseEx*(1-clamp(p,0,99)/100),0); }
-      if (hasVal("discEur")) { const e=num("discEur"); if (e!==null) return Math.max(baseEx-(taxMode==="margin"?Math.max(e,0):Math.max(e,0)/VAT),0); }
+      if (discUnit === "eur") {
+        if (hasVal("discEur")) { const e=num("discEur"); if (e!==null) return Math.max(baseEx-(taxMode==="margin"?Math.max(e,0):Math.max(e,0)/VAT),0); }
+      } else if (hasVal("discPct")) {
+        const p=num("discPct"); if (p!==null) return Math.max(baseEx*(1-clamp(p,0,99)/100),0);
+      }
       return baseEx;
     }
 
     function getDiscountedSellIn(){
       const baseIn = getSellBaseIn(); if (baseIn===null) return null;
-      if (hasVal("discPct")) { const p=num("discPct"); if (p!==null) return Math.max(baseIn*(1-clamp(p,0,99)/100),0); }
-      if (hasVal("discEur")) { const e=num("discEur"); if (e!==null) return Math.max(baseIn-Math.max(e,0),0); }
+      if (discUnit === "eur") {
+        if (hasVal("discEur")) { const e=num("discEur"); if (e!==null) return Math.max(baseIn-Math.max(e,0),0); }
+      } else if (hasVal("discPct")) {
+        const p=num("discPct"); if (p!==null) return Math.max(baseIn*(1-clamp(p,0,99)/100),0);
+      }
       return baseIn;
     }
 
