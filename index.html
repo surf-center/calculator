@@ -318,9 +318,6 @@
       font-size:13px;
       font-weight:800;
     }
-    .cost-note{display:none;margin-top:10px;font-size:12px;font-weight:600;color:rgba(255,255,255,.9);padding-left:2px}
-    .cost-note.show{display:block}
-    .cost-note b{font-weight:900;color:#fff}
     @media (max-width:520px){
       .discount-input{font-size:22px;min-height:52px}
     }
@@ -604,7 +601,6 @@
             </div>
           </div>
         </div>
-        <div class="cost-note" id="costNote"></div>
       </div>
     </div>
 
@@ -943,13 +939,6 @@
       return ex === null ? null : ex + getShipping();
     }
 
-    function updateCostNote(){
-      const ship = getShipping(), cost = getPurchaseCostEx();
-      const show = ship > 0 && cost !== null;
-      el("costNote").classList.toggle("show", show);
-      el("costNote").innerHTML = show ? "Incl. &euro;" + formatNum(ship) + " shipping &middot; cost price <b>&euro;" + formatNum(cost) + "</b> excl." : "";
-    }
-
     function updateDiscountPanels(){
       const purchaseHasValue = hasVal("pDiscValue");
       const sellHasValue = hasVal("discValue");
@@ -1036,7 +1025,6 @@
       updateSellMeta();
       updateDiscountPanels();
       updateMarginFromCurrent();
-      updateCostNote();
 
       updating = false;
     }
