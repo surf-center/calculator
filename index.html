@@ -206,6 +206,7 @@
     .money-value{font-size:1em;line-height:1}
 
     .discount-shell{display:none}
+    .discount-shell .section-title{margin-bottom:8px}
     .discount-shell.show{display:block}
 
     .discount-card{
@@ -296,6 +297,18 @@
     }
 
     .discount-hidden{display:none !important}
+
+    /* Kortingsblok: label boven het veld; veld en %/EUR-knop naast elkaar */
+    .discount-card{border-radius:16px;padding:12px;gap:14px;background:#f4f5f7;border-color:#f4f5f7}
+    .discount-row{grid-template-columns:1fr;gap:6px}
+    .discount-label{padding:0 0 0 2px;font-size:11px;letter-spacing:.06em}
+    .discount-control{flex-direction:row;align-items:stretch;gap:8px}
+    .discount-input{flex:1;font-size:20px;min-height:48px;border-color:#e3e5e8}
+    .discount-toggle{flex:0 0 112px;align-items:stretch}
+    .discount-toggle button{padding:0 8px;font-size:15px}
+    @media (max-width:520px){
+      .discount-input{font-size:22px;min-height:52px}
+    }
 
     .summary{
       margin-top:0;
@@ -415,55 +428,75 @@
         min-height:100%;
         overflow-y:visible;
         background:#fff;
-        padding:calc(env(safe-area-inset-top) + 12px) 0 0;
+        padding:calc(env(safe-area-inset-top) + 36px) 0 0;
       }
       .card{
         max-width:none;
         border:none;
         border-radius:0;
         box-shadow:none;
-        padding:0 16px calc(env(safe-area-inset-bottom) + 92px);
+        padding:0 16px calc(env(safe-area-inset-bottom) + 96px);
       }
-      .logo{padding:2px 0 4px}
-      .logo img{width:auto;height:22px}
-      .section{gap:10px;padding:14px 0}
-      .section-title{font-size:11px}
-      .field,.field-top{min-height:80px}
-      .field-top{padding:12px 14px 12px 12px;gap:4px}
+      .logo{padding:0 0 22px}
+      .logo img{width:auto;height:26px}
+
+      /* Rustiger: geen scheidingslijnen, vaste ruimte tussen de blokken */
+      .section{gap:8px;padding:10px 0 12px}
+      .section + .section{border-top:none}
+      .section-title{font-size:12px;letter-spacing:.06em;margin-left:2px}
+
+      /* Velden: invoerveld wit met blauwe rand, uitgerekend veld lichtgrijs */
+      .row-2,.price-stack{gap:10px}
+      .field{border-radius:16px;min-height:0;border:1px solid #e3e5e8}
+      .field.main{border:2px solid #007bff;box-shadow:0 0 0 4px rgba(0,123,255,.08)}
+      .field:not(.main){background:#f4f5f7;border-color:#f4f5f7}
+      .field:not(.main) .field-top,
+      .field:not(.main) input[type="number"]{background:transparent}
+      .field-top{min-height:0;padding:12px 14px 12px;gap:6px;align-items:baseline;background:transparent}
       .field input[type="number"],
-      .field input[type="text"]{font-size:32px}
-      .affix{font-size:15px;flex-basis:12px;padding-top:6px}
-      .field-note{font-size:11px;margin-top:4px}
-      /* Prijs na korting op een eigen regel onder het bedrag (niet erover heen) */
-      .price-meta{position:static;transform:none;display:none;justify-content:flex-start;max-width:none;padding:0 0 3px;margin:-5px 0 0}
+      .field input[type="text"]{font-size:32px;line-height:1.1;height:36px;background:transparent}
+      .affix{font-size:18px;flex:0 0 13px;width:13px;min-width:0;padding-top:0;line-height:1;align-self:baseline;text-align:left}
+      .value-wrap{gap:2px}
+      .field-note{font-size:11px;margin:2px 0 0 -19px;letter-spacing:.06em}
+
+      /* Prijs na korting op een eigen regel direct onder het bedrag */
+      .price-meta{position:static;transform:none;display:none;justify-content:flex-start;max-width:none;padding:0;margin:-2px 0 0 -19px}
       .price-meta.show{display:flex}
       .meta-discounted{font-size:17px}
+
+      /* Marge */
       .summary{padding:12px}
       .pill{padding:16px 14px}
       .biginput input{font-size:34px}
       .bigprefix{font-size:16px}
-      .discount-input{font-size:20px;min-height:52px}
+
+
+      /* Werkbalk vast onderaan */
       .toolbar-section{
         position:fixed;
         left:0;
         right:0;
         bottom:0;
         z-index:10;
-        padding:10px 16px calc(env(safe-area-inset-bottom) + 10px);
-        background:rgba(255,255,255,.94);
-        -webkit-backdrop-filter:blur(12px);
-        backdrop-filter:blur(12px);
-        border-top:1px solid #eee !important;
+        padding:10px 16px calc(env(safe-area-inset-bottom) + 8px);
+        background:rgba(255,255,255,.92);
+        -webkit-backdrop-filter:blur(14px);
+        backdrop-filter:blur(14px);
+        border-top:1px solid #eef0f2 !important;
       }
-      .toolbar-toggle,.icon-btn{width:50px;height:50px;flex-basis:50px}
-      .mode-btn{padding:13px 14px;font-size:15px}
+      .toolbar{gap:12px}
+      .toolbar-toggle,.icon-btn{width:48px;height:48px;flex-basis:48px}
+      .mode-switch{border-radius:16px}
+      .mode-btn{padding:12px 14px;font-size:15px;border-radius:12px}
     }
     @media (max-width:380px){
       .field input[type="number"],
-      .field input[type="text"]{font-size:26px}
+      .field input[type="text"]{font-size:26px;height:30px}
       .biginput input{font-size:28px}
-      .field,.field-top{min-height:70px}
-      .field-top{padding:10px 10px 10px 10px}
+      .affix{font-size:15px;flex-basis:11px;width:11px}
+      .field-note,.price-meta{margin-left:-17px}
+      .field-top{padding:10px 11px}
+      .pill{padding:12px}
     }
   </style>
 </head>
@@ -480,7 +513,7 @@
           <div class="field-top">
             <div class="affix">&euro;</div>
             <div class="value-wrap">
-              <input type="number" id="purchaseEx" min="0" inputmode="decimal" placeholder="0" />
+              <input type="number" id="purchaseEx" min="0" inputmode="decimal" enterkeyhint="done" placeholder="0" />
               <div class="price-meta" id="purchaseExMeta">
                 <span class="meta-current"><span class="money-symbol">&euro;</span><span class="money-value"></span></span>
                 <span class="meta-discounted"><span class="money-symbol">&euro;</span><span class="money-value"></span></span>
@@ -494,7 +527,7 @@
           <div class="field-top">
             <div class="affix">&euro;</div>
             <div class="value-wrap">
-              <input type="number" id="purchaseIn" min="0" inputmode="decimal" placeholder="0" />
+              <input type="number" id="purchaseIn" min="0" inputmode="decimal" enterkeyhint="done" placeholder="0" />
               <div class="price-meta" id="purchaseInMeta">
                 <span class="meta-current"><span class="money-symbol">&euro;</span><span class="money-value"></span></span>
                 <span class="meta-discounted"><span class="money-symbol">&euro;</span><span class="money-value"></span></span>
@@ -513,7 +546,7 @@
           <div class="field-top">
             <div class="affix">&euro;</div>
             <div class="value-wrap">
-              <input type="number" id="sellIn" min="0" inputmode="decimal" placeholder="0" />
+              <input type="number" id="sellIn" min="0" inputmode="decimal" enterkeyhint="done" placeholder="0" />
               <div class="price-meta" id="sellInMeta">
                 <span class="meta-current"><span class="money-symbol">&euro;</span><span class="money-value"></span></span>
                 <span class="meta-discounted"><span class="money-symbol">&euro;</span><span class="money-value"></span></span>
@@ -527,7 +560,7 @@
           <div class="field-top">
             <div class="affix">&euro;</div>
             <div class="value-wrap">
-              <input type="number" id="sellEx" min="0" inputmode="decimal" placeholder="0" />
+              <input type="number" id="sellEx" min="0" inputmode="decimal" enterkeyhint="done" placeholder="0" />
               <div class="price-meta" id="sellExMeta">
                 <span class="meta-current"><span class="money-symbol">&euro;</span><span class="money-value"></span></span>
                 <span class="meta-discounted"><span class="money-symbol">&euro;</span><span class="money-value"></span></span>
@@ -546,13 +579,13 @@
           <div class="pill">
             <div class="biginput">
               <span class="bigprefix">%</span>
-              <input type="text" id="mPct" inputmode="decimal" />
+              <input type="text" id="mPct" inputmode="decimal" enterkeyhint="done" />
             </div>
           </div>
           <div class="pill">
             <div class="biginput">
               <span class="bigprefix">&euro;</span>
-              <input type="text" id="mEur" inputmode="decimal" />
+              <input type="text" id="mEur" inputmode="decimal" enterkeyhint="done" />
             </div>
           </div>
         </div>
@@ -564,9 +597,9 @@
 
       <div class="discount-card" id="discountCard">
         <div class="discount-row" data-scope="purchase">
-          <label class="discount-label" for="pDiscValue">Purchase</label>
+          <label class="discount-label" for="pDiscValue">Purchase condition</label>
           <div class="discount-control">
-            <input type="number" id="pDiscValue" class="discount-input" inputmode="decimal" placeholder="0" min="0" step="0.01" autocomplete="off">
+            <input type="number" id="pDiscValue" class="discount-input" inputmode="decimal" enterkeyhint="done" placeholder="0" min="0" step="0.01" autocomplete="off">
             <div class="discount-toggle" role="group" aria-label="Purchase discount unit">
               <button type="button" id="pDiscModePct" class="active" aria-pressed="true">%</button>
               <button type="button" id="pDiscModeEur" aria-pressed="false">&euro;</button>
@@ -577,9 +610,9 @@
         </div>
 
         <div class="discount-row" data-scope="selling">
-          <label class="discount-label" for="discValue">Selling</label>
+          <label class="discount-label" for="discValue">Selling discount</label>
           <div class="discount-control">
-            <input type="number" id="discValue" class="discount-input" inputmode="decimal" placeholder="0" min="0" step="0.01" autocomplete="off">
+            <input type="number" id="discValue" class="discount-input" inputmode="decimal" enterkeyhint="done" placeholder="0" min="0" step="0.01" autocomplete="off">
             <div class="discount-toggle" role="group" aria-label="Selling discount unit">
               <button type="button" id="discModePct" class="active" aria-pressed="true">%</button>
               <button type="button" id="discModeEur" aria-pressed="false">&euro;</button>
@@ -973,6 +1006,7 @@
       const input = el(id); if (!input) return;
       input.addEventListener("input", ()=>{ lastEdited=id; recalc(); queueSave(); });
       input.addEventListener("focus", ()=>{ setTimeout(()=>{ try{input.select();}catch(e){} },0); });
+      input.addEventListener("keydown", (e)=>{ if (e.key === "Enter") { e.preventDefault(); input.blur(); } });
     }
 
     function setPrices({
