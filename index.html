@@ -306,6 +306,21 @@
     .discount-input{flex:1;font-size:20px;min-height:48px;border-color:#e3e5e8}
     .discount-toggle{flex:0 0 112px;align-items:stretch}
     .discount-toggle button{padding:0 8px;font-size:15px}
+    .discount-unit{
+      flex:0 0 112px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      border:1px solid #e3e5e8;
+      border-radius:14px;
+      background:#fff;
+      color:#4b5b73;
+      font-size:13px;
+      font-weight:800;
+    }
+    .cost-note{display:none;margin-top:10px;font-size:12px;font-weight:600;color:rgba(255,255,255,.9);padding-left:2px}
+    .cost-note.show{display:block}
+    .cost-note b{font-weight:900;color:#fff}
     @media (max-width:520px){
       .discount-input{font-size:22px;min-height:52px}
     }
@@ -589,6 +604,7 @@
             </div>
           </div>
         </div>
+        <div class="cost-note" id="costNote"></div>
       </div>
     </div>
 
@@ -606,6 +622,14 @@
             </div>
             <input type="hidden" id="pDiscPct" class="discount-hidden">
             <input type="hidden" id="pDiscEur" class="discount-hidden">
+          </div>
+        </div>
+
+        <div class="discount-row" data-scope="shipping">
+          <label class="discount-label" for="shipCost">Shipping costs</label>
+          <div class="discount-control">
+            <input type="number" id="shipCost" class="discount-input" inputmode="decimal" enterkeyhint="done" placeholder="0" min="0" step="0.01" autocomplete="off">
+            <div class="discount-unit" aria-hidden="true">&euro; excl.</div>
           </div>
         </div>
 
@@ -727,7 +751,7 @@
     }
 
     function unlockMarginIfNeeded(){
-      if (["purchaseEx","purchaseIn","sellIn","sellEx","discValue","pDiscValue","discPct","discEur","pDiscPct","pDiscEur"].includes(lastEdited)) {
+      if (["purchaseEx","purchaseIn","sellIn","sellEx","discValue","pDiscValue","discPct","discEur","pDiscPct","pDiscEur","shipCost"].includes(lastEdited)) {
         marginLock = null;
       }
     }
@@ -912,10 +936,24 @@
       setMeta("sellInMeta", originalIn, discountedIn);
     }
 
+    // Verzendkosten op de inkoopfactuur (excl. btw) tellen mee als kosten in de margeberekening.
+    function getShipping(){ const v = num("shipCost"); return v !== null && v > 0 ? v : 0; }
+    function getPurchaseCostEx(){
+      const ex = getDiscountedPurchaseEx();
+      return ex === null ? null : ex + getShipping();
+    }
+
+    function updateCostNote(){
+      const ship = getShipping(), cost = getPurchaseCostEx();
+      const show = ship > 0 && cost !== null;
+      el("costNote").classList.toggle("show", show);
+      el("costNote").innerHTML = show ? "Incl. &euro;" + formatNum(ship) + " shipping &middot; cost price <b>&euro;" + formatNum(cost) + "</b> excl." : "";
+    }
+
     function updateDiscountPanels(){
       const purchaseHasValue = hasVal("pDiscValue");
       const sellHasValue = hasVal("discValue");
-      const anyHasValue = purchaseHasValue || sellHasValue;
+      const anyHasValue = purchaseHasValue || sellHasValue || getShipping() > 0;
       el("discountToggle").classList.toggle("has-value", anyHasValue);
       const open = anyHasValue || discountManualOpen;
       el("discountShell").classList.toggle("show", open);
@@ -925,7 +963,7 @@
     function setMarginDash(){ setText("mPct","-"); setText("mEur","-"); }
 
     function applyMarginIfPossible(){
-      const purchaseEx = getDiscountedPurchaseEx();
+      const purchaseEx = getPurchaseCostEx();
       if (!purchaseEx || purchaseEx <= 0 || !marginLock) return;
 
       clear(["discPct","discEur","discValue"]);
@@ -957,7 +995,7 @@
 
     function updateMarginFromCurrent(){
       if (lastEdited === "mPct" || lastEdited === "mEur") return;
-      const purchaseEx=getDiscountedPurchaseEx(), discountedSellEx=getDiscountedSellEx();
+      const purchaseEx=getPurchaseCostEx(), discountedSellEx=getDiscountedSellEx();
       if (!purchaseEx || !discountedSellEx || purchaseEx<=0) { clear(["mPct","mEur"]); return; }
       const net=discountedSellEx; if (!(net>0)) { clear(["mPct","mEur"]); return; }
       const profit=net-purchaseEx, pct=(profit/net)*100;
@@ -998,6 +1036,7 @@
       updateSellMeta();
       updateDiscountPanels();
       updateMarginFromCurrent();
+      updateCostNote();
 
       updating = false;
     }
@@ -1050,7 +1089,7 @@
 
     function loadFromQueryString(){
       const qs = new URLSearchParams(window.location.search);
-      const p=qs.get("p"), pi=qs.get("pi"), pdp=qs.get("pdp"), pde=qs.get("pde"), s=qs.get("s"), se=qs.get("se"), dp=qs.get("dp"), de=qs.get("de"), tm=qs.get("tm");
+      const p=qs.get("p"), pi=qs.get("pi"), pdp=qs.get("pdp"), pde=qs.get("pde"), s=qs.get("s"), se=qs.get("se"), dp=qs.get("dp"), de=qs.get("de"), tm=qs.get("tm"), sh=qs.get("sh");
 
       if (tm === "vat" || tm === "margin") taxMode = tm;
       updateModeVisuals();
@@ -1065,8 +1104,10 @@
       if (se) obj.sellEx=parseFloat(se);
       if (dp) obj.discPct=parseFloat(dp);
       if (de) obj.discEur=parseFloat(de);
+      if (sh) el("shipCost").value = sh;
 
       if (Object.keys(obj).length) setPrices(obj);
+      else if (sh) { lastEdited = "shipCost"; recalc(); }
     }
 
     function saveToLocal(){
@@ -1079,6 +1120,7 @@
         sellEx: raw("sellEx"),
         discPct: raw("discPct"),
         discEur: raw("discEur"),
+        shipCost: raw("shipCost"),
         taxMode,
         discountManualOpen,
         pDiscUnit,
@@ -1111,9 +1153,11 @@
         updateDiscountModeUI("purchase");
         updateDiscountModeUI("selling");
 
+        el("shipCost").value = (data.shipCost ?? "").toString();
+
         const any=[
           "purchaseEx","purchaseIn","pDiscPct","pDiscEur",
-          "sellIn","sellEx","discPct","discEur"
+          "sellIn","sellEx","discPct","discEur","shipCost"
         ].some(k => (data[k] ?? "").toString().trim() !== "");
 
         if (!any) return false;
@@ -1155,7 +1199,7 @@
 
       [
         "purchaseEx","purchaseIn","pDiscValue","pDiscPct","pDiscEur",
-        "sellIn","sellEx","discValue","discPct","discEur","mPct","mEur"
+        "sellIn","sellEx","discValue","discPct","discEur","mPct","mEur","shipCost"
       ].forEach(id => el(id).value = "");
 
       pDiscUnit = "pct";
@@ -1183,7 +1227,7 @@
     window.addEventListener("DOMContentLoaded", ()=>{
       [
         "purchaseEx","purchaseIn","sellIn","sellEx",
-        "pDiscValue","discValue","mPct","mEur"
+        "pDiscValue","shipCost","discValue","mPct","mEur"
       ].forEach(bind);
 
       el("modeVat").addEventListener("click", ()=>setTaxMode("vat"));
@@ -1201,7 +1245,7 @@
         discountManualOpen = willOpen;
 
         if (!willOpen) {
-          clear(["pDiscValue","discValue","pDiscPct","pDiscEur","discPct","discEur"]);
+          clear(["pDiscValue","discValue","pDiscPct","pDiscEur","discPct","discEur","shipCost"]);
           pDiscSrc = null;
           discSrc = null;
           lastEdited = "pDiscValue";
