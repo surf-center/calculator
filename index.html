@@ -2,13 +2,15 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover" />
   <title>Margins</title>
 
-  <link rel="icon" type="image/png" sizes="192x192" href="android-chrome-192x192.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
   <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
   <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Margins">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="theme-color" content="#ffffff">
   <link rel="manifest" href="manifest.json">
 
@@ -80,6 +82,12 @@
 
     .field.hidden{display:none !important}
 
+    /* Bij korting: oorspronkelijke prijs doorstrepen */
+    .field.discounted input[type="number"]{
+      text-decoration:line-through;
+      text-decoration-thickness:2px;
+    }
+
     .field-top{
       display:flex;
       align-items:flex-start;
@@ -136,6 +144,7 @@
       line-height:1;
       text-align:left;
       font-variant-numeric:tabular-nums;
+      letter-spacing:-0.03em;
       font-family:"Poppins",sans-serif;
     }
 
@@ -180,6 +189,7 @@
       gap:2px;
       line-height:1;
       white-space:nowrap;
+      letter-spacing:-0.02em;
       color:#007bff;
       font-size:22px;
       font-weight:900;
@@ -325,6 +335,7 @@
       padding:0;
       line-height:1.05;
       text-align:left;
+      letter-spacing:-0.03em;
       font-family:"Poppins",sans-serif;
     }
 
@@ -393,6 +404,67 @@
     }
 
     .icon-btn svg{ width:18px; height:18px; display:block; }
+
+    /* Mobiel: schermvullend, grotere cijfers en knoppen, werkbalk vast onderaan */
+    @media (max-width:520px){
+      /* De hele pagina laten scrollen (niet alleen body): anders blijft iOS na het
+         sluiten van het toetsenbord omhoog geschoven en is de bovenkant onbereikbaar. */
+      html,body{height:auto}
+      body{
+        display:block;
+        min-height:100%;
+        overflow-y:visible;
+        background:#fff;
+        padding:calc(env(safe-area-inset-top) + 12px) 0 0;
+      }
+      .card{
+        max-width:none;
+        border:none;
+        border-radius:0;
+        box-shadow:none;
+        padding:0 16px calc(env(safe-area-inset-bottom) + 92px);
+      }
+      .logo{padding:2px 0 4px}
+      .logo img{width:auto;height:22px}
+      .section{gap:10px;padding:14px 0}
+      .section-title{font-size:11px}
+      .field,.field-top{min-height:80px}
+      .field-top{padding:12px 14px 12px 12px;gap:4px}
+      .field input[type="number"],
+      .field input[type="text"]{font-size:32px}
+      .affix{font-size:15px;flex-basis:12px;padding-top:6px}
+      .field-note{font-size:11px;margin-top:4px}
+      /* Prijs na korting op een eigen regel onder het bedrag (niet erover heen) */
+      .price-meta{position:static;transform:none;display:none;justify-content:flex-start;max-width:none;padding:0 0 3px;margin:-5px 0 0}
+      .price-meta.show{display:flex}
+      .meta-discounted{font-size:17px}
+      .summary{padding:12px}
+      .pill{padding:16px 14px}
+      .biginput input{font-size:34px}
+      .bigprefix{font-size:16px}
+      .discount-input{font-size:20px;min-height:52px}
+      .toolbar-section{
+        position:fixed;
+        left:0;
+        right:0;
+        bottom:0;
+        z-index:10;
+        padding:10px 16px calc(env(safe-area-inset-bottom) + 10px);
+        background:rgba(255,255,255,.94);
+        -webkit-backdrop-filter:blur(12px);
+        backdrop-filter:blur(12px);
+        border-top:1px solid #eee !important;
+      }
+      .toolbar-toggle,.icon-btn{width:50px;height:50px;flex-basis:50px}
+      .mode-btn{padding:13px 14px;font-size:15px}
+    }
+    @media (max-width:380px){
+      .field input[type="number"],
+      .field input[type="text"]{font-size:26px}
+      .biginput input{font-size:28px}
+      .field,.field-top{min-height:70px}
+      .field-top{padding:10px 10px 10px 10px}
+    }
   </style>
 </head>
 <body>
@@ -402,19 +474,19 @@
     </div>
 
     <div class="section">
-      <div class="section-title">Purchase</div>
+      <div class="section-title">Purchase price</div>
       <div class="price-stack" id="purchaseGrid">
         <div class="field main" id="purchaseExWrap">
           <div class="field-top">
             <div class="affix">&euro;</div>
             <div class="value-wrap">
               <input type="number" id="purchaseEx" min="0" inputmode="decimal" placeholder="0" />
+              <div class="price-meta" id="purchaseExMeta">
+                <span class="meta-current"><span class="money-symbol">&euro;</span><span class="money-value"></span></span>
+                <span class="meta-discounted"><span class="money-symbol">&euro;</span><span class="money-value"></span></span>
+              </div>
               <div class="field-note">Excl.</div>
             </div>
-          </div>
-          <div class="price-meta" id="purchaseExMeta">
-            <span class="meta-current"><span class="money-symbol">&euro;</span><span class="money-value"></span></span>
-            <span class="meta-discounted"><span class="money-symbol">&euro;</span><span class="money-value"></span></span>
           </div>
         </div>
 
@@ -423,31 +495,31 @@
             <div class="affix">&euro;</div>
             <div class="value-wrap">
               <input type="number" id="purchaseIn" min="0" inputmode="decimal" placeholder="0" />
+              <div class="price-meta" id="purchaseInMeta">
+                <span class="meta-current"><span class="money-symbol">&euro;</span><span class="money-value"></span></span>
+                <span class="meta-discounted"><span class="money-symbol">&euro;</span><span class="money-value"></span></span>
+              </div>
               <div class="field-note">Incl.</div>
             </div>
-          </div>
-          <div class="price-meta" id="purchaseInMeta">
-            <span class="meta-current"><span class="money-symbol">&euro;</span><span class="money-value"></span></span>
-            <span class="meta-discounted"><span class="money-symbol">&euro;</span><span class="money-value"></span></span>
           </div>
         </div>
       </div>
     </div>
 
     <div class="section">
-      <div class="section-title">Selling</div>
+      <div class="section-title">Selling price</div>
       <div class="row-2" id="sellGrid">
         <div class="field main" id="sellInWrap">
           <div class="field-top">
             <div class="affix">&euro;</div>
             <div class="value-wrap">
               <input type="number" id="sellIn" min="0" inputmode="decimal" placeholder="0" />
+              <div class="price-meta" id="sellInMeta">
+                <span class="meta-current"><span class="money-symbol">&euro;</span><span class="money-value"></span></span>
+                <span class="meta-discounted"><span class="money-symbol">&euro;</span><span class="money-value"></span></span>
+              </div>
               <div class="field-note">Incl.</div>
             </div>
-          </div>
-          <div class="price-meta" id="sellInMeta">
-            <span class="meta-current"><span class="money-symbol">&euro;</span><span class="money-value"></span></span>
-            <span class="meta-discounted"><span class="money-symbol">&euro;</span><span class="money-value"></span></span>
           </div>
         </div>
 
@@ -456,12 +528,12 @@
             <div class="affix">&euro;</div>
             <div class="value-wrap">
               <input type="number" id="sellEx" min="0" inputmode="decimal" placeholder="0" />
+              <div class="price-meta" id="sellExMeta">
+                <span class="meta-current"><span class="money-symbol">&euro;</span><span class="money-value"></span></span>
+                <span class="meta-discounted"><span class="money-symbol">&euro;</span><span class="money-value"></span></span>
+              </div>
               <div class="field-note">Excl.</div>
             </div>
-          </div>
-          <div class="price-meta" id="sellExMeta">
-            <span class="meta-current"><span class="money-symbol">&euro;</span><span class="money-value"></span></span>
-            <span class="meta-discounted"><span class="money-symbol">&euro;</span><span class="money-value"></span></span>
           </div>
         </div>
       </div>
@@ -519,7 +591,7 @@
       </div>
     </div>
 
-    <div class="section">
+    <div class="section toolbar-section">
       <div class="toolbar">
         <button type="button" class="toolbar-toggle" id="discountToggle" aria-label="Discount" title="Discount">%</button>
 
@@ -567,6 +639,10 @@
     let discountManualOpen = false;
     let pDiscUnit = "pct";
     let discUnit = "pct";
+    // Korting zoals de gebruiker hem invulde. Wisselen tussen % en EUR verandert alleen de
+    // weergave; de berekening blijft op deze waarde gebaseerd (geen afrondingsdrift).
+    let pDiscSrc = null;
+    let discSrc = null;
 
     function formatNum(v){ return String(Math.floor(Math.max(v || 0, 0))); }
 
@@ -575,16 +651,20 @@
       const current = node.querySelector(".meta-current .money-value");
       const discounted = node.querySelector(".meta-discounted .money-value");
 
+      const field = node.closest(".field");
+
       if (currentVal === null || discountedVal === null || Math.floor(currentVal) === Math.floor(discountedVal)) {
         current.textContent = "";
         discounted.textContent = "";
         node.classList.remove("show");
+        if (field) field.classList.remove("discounted");
         return;
       }
 
       current.textContent = formatNum(currentVal);
       discounted.textContent = formatNum(discountedVal);
       node.classList.add("show");
+      if (field) field.classList.add("discounted");
     }
 
     function syncPair(aId, bId, mult){
@@ -665,7 +745,8 @@
 
     function getPurchaseBaseEx(){ const ex=num("purchaseEx"); const inc=num("purchaseIn"); if (ex!==null) return ex; return inc!==null ? inc/VAT : null; }
     function getPurchaseBaseIn(){ const ex=num("purchaseEx"); const inc=num("purchaseIn"); if (taxMode==="margin") return null; if (inc!==null) return inc; return ex!==null ? ex*VAT : null; }
-    function getSellBaseEx(){ const ex=num("sellEx"); const inc=num("sellIn"); if (ex!==null) return ex; return inc!==null ? inc/VAT : null; }
+    // In Sales-modus is de prijs incl. leidend; het excl.-veld is daarvan een afgeronde weergave.
+    function getSellBaseEx(){ const ex=num("sellEx"); const inc=num("sellIn"); if (taxMode==="vat" && inc!==null) return inc/VAT; if (ex!==null) return ex; return inc!==null ? inc/VAT : null; }
     function getSellBaseIn(){ const ex=num("sellEx"); const inc=num("sellIn"); if (taxMode==="margin") return null; if (inc!==null) return inc; return ex!==null ? ex*VAT : null; }
 
     function getBasePurchaseValue(){ return getPurchaseBaseEx(); }
@@ -723,119 +804,55 @@
       }
 
       clear(["discPct","discEur","pDiscPct","pDiscEur","discValue","pDiscValue"]);
+      discSrc = null;
+      pDiscSrc = null;
       updateRequiredFields();
       saveToLocal();
       recalc();
     }
 
+    function discountFromSource(src, base){
+      if (!src || !base || base <= 0) return null;
+      const pct = src.unit === "pct" ? clamp(src.value,0,99) : clamp((Math.max(src.value,0) / base) * 100,0,99);
+      const eur = src.unit === "eur" ? Math.max(src.value,0) : base * (pct / 100);
+      return { pct, eur };
+    }
+
     function syncPurchaseDiscountFields(){
-      const basePurchase = getBasePurchaseValue();
-
-      if (["pDiscValue","pDiscPct","pDiscEur"].includes(lastEdited) && !hasVal("pDiscValue")) {
-        clear(["pDiscPct","pDiscEur"]);
-        return;
-      }
-
-      if (!basePurchase || basePurchase <= 0) {
-        if (["pDiscValue","pDiscPct","pDiscEur"].includes(lastEdited)) clear(["pDiscPct","pDiscEur"]);
-        return;
-      }
-
-      if (pDiscUnit === "pct" && hasVal("pDiscValue")) {
-        const pct = num("pDiscValue"); if (pct === null) return;
-        const p = clamp(pct,0,99);
-        const eur = basePurchase * (p / 100);
-        setVal("pDiscPct", p);
-        setVal("pDiscEur", eur);
-      }
-
-      if (pDiscUnit === "eur" && hasVal("pDiscValue")) {
-        const eur = num("pDiscValue"); if (eur === null) return;
-        const e = Math.max(eur,0);
-        const pct = basePurchase > 0 ? (e / basePurchase) * 100 : 0;
-        setVal("pDiscEur", e);
-        setVal("pDiscPct", clamp(pct,0,99));
-      }
+      const d = discountFromSource(pDiscSrc, getBasePurchaseValue());
+      if (!d) { clear(["pDiscPct","pDiscEur"]); return; }
+      el("pDiscPct").value = d.pct;
+      el("pDiscEur").value = d.eur;
     }
 
     function syncDiscountFields(){
-      const baseSell = getBaseSellValue();
+      const d = discountFromSource(discSrc, getBaseSellValue());
+      if (!d) { clear(["discPct","discEur"]); return; }
+      el("discPct").value = d.pct;
+      el("discEur").value = d.eur;
+    }
 
-      if (["discValue","discPct","discEur"].includes(lastEdited) && !hasVal("discValue")) {
-        clear(["discPct","discEur"]);
-        return;
-      }
-
-      if (!baseSell || baseSell <= 0) {
-        if (["discValue","discPct","discEur"].includes(lastEdited)) clear(["discPct","discEur"]);
-        return;
-      }
-
-      if (discUnit === "pct" && hasVal("discValue")) {
-        const pct = num("discValue"); if (pct === null) return;
-        const p = clamp(pct,0,99);
-        const eur = baseSell * (p / 100);
-        setVal("discPct", p);
-        setVal("discEur", eur);
-      }
-
-      if (discUnit === "eur" && hasVal("discValue")) {
-        const eur = num("discValue"); if (eur === null) return;
-        const e = Math.max(eur,0);
-        const pct = baseSell > 0 ? (e / baseSell) * 100 : 0;
-        setVal("discEur", e);
-        setVal("discPct", clamp(pct,0,99));
-      }
+    function discountDisplay(src, unit, pctId, eurId){
+      if (!src) return "";
+      if (src.unit === unit) return String(src.value);
+      const v = num(unit === "pct" ? pctId : eurId);
+      if (v === null) return "";
+      return unit === "pct" ? String(Math.round(v * 10) / 10) : String(Math.round(v));
     }
 
     function syncDiscountVisibleFromHidden(){
-      el("pDiscValue").value = pDiscUnit === "pct" ? raw("pDiscPct") : raw("pDiscEur");
-      el("discValue").value = discUnit === "pct" ? raw("discPct") : raw("discEur");
+      // Het veld waarin nu getypt wordt niet overschrijven.
+      if (lastEdited !== "pDiscValue") el("pDiscValue").value = discountDisplay(pDiscSrc, pDiscUnit, "pDiscPct", "pDiscEur");
+      if (lastEdited !== "discValue") el("discValue").value = discountDisplay(discSrc, discUnit, "discPct", "discEur");
       updateDiscountModeUI("purchase");
       updateDiscountModeUI("selling");
     }
 
-    function getCurrentPurchaseDisplayValue(){
-      if (!hasVal("pDiscValue")) return null;
-
-      const basePurchaseEx = getPurchaseBaseEx();
-      const current = num("pDiscValue");
-
-      if (current === null || !basePurchaseEx || basePurchaseEx <= 0) return current;
-
-      if (pDiscUnit === "pct") {
-        return basePurchaseEx * (clamp(current,0,99) / 100);
-      }
-
-      return (current / basePurchaseEx) * 100;
-    }
-
-    function getCurrentSellingDisplayValue(){
-      if (!hasVal("discValue")) return null;
-      const baseSell = getBaseSellValue();
-      const current = num("discValue");
-      if (current === null || !baseSell || baseSell <= 0) return current;
-
-      if (discUnit === "pct") return baseSell * (clamp(current,0,99) / 100);
-      return (current / baseSell) * 100;
-    }
-
     function setDiscountMode(scope, unit){
-      const isPurchase = scope === "purchase";
-      const inputId = isPurchase ? "pDiscValue" : "discValue";
-      const converted = isPurchase ? getCurrentPurchaseDisplayValue() : getCurrentSellingDisplayValue();
-
-      if (isPurchase) pDiscUnit = unit;
+      if (scope === "purchase") pDiscUnit = unit;
       else discUnit = unit;
-
-      if (converted === null || Number.isNaN(converted)) {
-        el(inputId).value = "";
-      } else {
-        el(inputId).value = floorOrEmpty(converted);
-      }
-
       updateDiscountModeUI(scope);
-      lastEdited = inputId;
+      lastEdited = scope === "purchase" ? "pDiscMode" : "discMode";
       recalc();
       queueSave();
     }
@@ -879,17 +896,27 @@
       if (!purchaseEx || purchaseEx <= 0 || !marginLock) return;
 
       clear(["discPct","discEur","discValue"]);
+      discSrc = null;
 
+      // Verkoopprijs naar boven afronden, zodat de marge nooit onder de ingevulde waarde uitkomt
+      // (ook niet nadat de marge later opnieuw uit de afgeronde prijs wordt berekend).
+      const setSellFromNet = (net) => {
+        if (taxMode==="vat") {
+          const inc = Math.ceil(net*VAT - 1e-9);
+          el("sellIn").value = inc;
+          setVal("sellEx", inc/VAT);
+        } else {
+          el("sellEx").value = Math.ceil(net - 1e-9);
+        }
+      };
       if (marginLock.mode === "pct") {
         const p=clamp(marginLock.value,0,99), net=purchaseEx/(1-(p/100)), profit=net-purchaseEx;
-        setVal("sellEx",net);
-        if (taxMode==="vat") setVal("sellIn",net*VAT);
+        setSellFromNet(net);
         setText("mEur",Math.floor(profit));
         setText("mPct",Math.floor(p));
       } else {
         const profit=Math.max(marginLock.value,0), net=purchaseEx+profit, pct=net>0?(profit/net)*100:0;
-        setVal("sellEx",net);
-        if (taxMode==="vat") setVal("sellIn",net*VAT);
+        setSellFromNet(net);
         setText("mPct",Math.floor(clamp(pct,0,99)));
         setText("mEur",Math.floor(profit));
       }
@@ -912,6 +939,15 @@
 
       syncPair("purchaseIn","purchaseEx",VAT);
       syncPair("sellIn","sellEx",VAT);
+
+      if (lastEdited === "pDiscValue") {
+        const v = num("pDiscValue");
+        pDiscSrc = (hasVal("pDiscValue") && v !== null) ? { unit: pDiscUnit, value: v } : null;
+      }
+      if (lastEdited === "discValue") {
+        const v = num("discValue");
+        discSrc = (hasVal("discValue") && v !== null) ? { unit: discUnit, value: v } : null;
+      }
 
       unlockMarginIfNeeded();
       captureMarginLock();
@@ -954,36 +990,16 @@
       if (purchaseEx !== null) el("purchaseEx").value = ceilOrEmpty(purchaseEx);
       if (purchaseIn !== null) el("purchaseIn").value = ceilOrEmpty(purchaseIn);
 
-      if (pDiscPct !== null) {
-        pDiscUnit = "pct";
-        el("pDiscPct").value = floorOrEmpty(pDiscPct);
-        el("pDiscEur").value = "";
-      } else if (pDiscEur !== null) {
-        pDiscUnit = "eur";
-        el("pDiscEur").value = floorOrEmpty(pDiscEur);
-        el("pDiscPct").value = "";
-      } else {
-        el("pDiscPct").value = "";
-        el("pDiscEur").value = "";
-      }
+      if (pDiscPct !== null) { pDiscUnit = "pct"; pDiscSrc = { unit: "pct", value: pDiscPct }; }
+      else if (pDiscEur !== null) { pDiscUnit = "eur"; pDiscSrc = { unit: "eur", value: pDiscEur }; }
+      else pDiscSrc = null;
 
       if (sellIn !== null) el("sellIn").value = floorOrEmpty(sellIn);
       if (sellEx !== null) el("sellEx").value = floorOrEmpty(sellEx);
 
-      if (discPct !== null) {
-        discUnit = "pct";
-        el("discPct").value = floorOrEmpty(discPct);
-        el("discEur").value = "";
-      } else if (discEur !== null) {
-        discUnit = "eur";
-        el("discEur").value = floorOrEmpty(discEur);
-        el("discPct").value = "";
-      } else {
-        el("discPct").value = "";
-        el("discEur").value = "";
-      }
-
-      syncDiscountVisibleFromHidden();
+      if (discPct !== null) { discUnit = "pct"; discSrc = { unit: "pct", value: discPct }; }
+      else if (discEur !== null) { discUnit = "eur"; discSrc = { unit: "eur", value: discEur }; }
+      else discSrc = null;
 
       marginLock = null;
       lastEdited = null;
@@ -1032,7 +1048,9 @@
         taxMode,
         discountManualOpen,
         pDiscUnit,
-        discUnit
+        discUnit,
+        pDiscSrc,
+        discSrc
       };
       localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
     }
@@ -1066,16 +1084,31 @@
 
         if (!any) return false;
 
+        const srcArgs = (src, unit, pct, eur) => {
+          if (src && (src.unit === "pct" || src.unit === "eur") && Number.isFinite(src.value)) return src.unit === "pct" ? [src.value, null] : [null, src.value];
+          // oudere opslag zonder bron: de eenheid gebruiken die zichtbaar was
+          const p = pct !== "" && pct != null ? parseFloat(pct) : null, e = eur !== "" && eur != null ? parseFloat(eur) : null;
+          return unit === "eur" ? [null, e ?? null] : [p ?? null, null];
+        };
+        const [pdp, pde] = srcArgs(data.pDiscSrc, data.pDiscUnit, data.pDiscPct, data.pDiscEur);
+        const [dp, de] = srcArgs(data.discSrc, data.discUnit, data.discPct, data.discEur);
+
         setPrices({
           purchaseEx: data.purchaseEx !== "" ? parseFloat(data.purchaseEx) : null,
           purchaseIn: data.purchaseIn !== "" ? parseFloat(data.purchaseIn) : null,
-          pDiscPct: data.pDiscPct !== "" ? parseFloat(data.pDiscPct) : null,
-          pDiscEur: data.pDiscEur !== "" ? parseFloat(data.pDiscEur) : null,
+          pDiscPct: pdp,
+          pDiscEur: pde,
           sellIn: data.sellIn !== "" ? parseFloat(data.sellIn) : null,
           sellEx: data.sellEx !== "" ? parseFloat(data.sellEx) : null,
-          discPct: data.discPct !== "" ? parseFloat(data.discPct) : null,
-          discEur: data.discEur !== "" ? parseFloat(data.discEur) : null
+          discPct: dp,
+          discEur: de
         });
+
+        // de eenheid die zichtbaar was terugzetten (kan afwijken van de ingevulde eenheid)
+        if (data.pDiscUnit === "pct" || data.pDiscUnit === "eur") pDiscUnit = data.pDiscUnit;
+        if (data.discUnit === "pct" || data.discUnit === "eur") discUnit = data.discUnit;
+        lastEdited = null;
+        recalc();
 
         return true;
       } catch {
@@ -1093,6 +1126,8 @@
 
       pDiscUnit = "pct";
       discUnit = "pct";
+      pDiscSrc = null;
+      discSrc = null;
       marginLock = null;
       lastEdited = null;
       discountManualOpen = false;
@@ -1133,6 +1168,8 @@
 
         if (!willOpen) {
           clear(["pDiscValue","discValue","pDiscPct","pDiscEur","discPct","discEur"]);
+          pDiscSrc = null;
+          discSrc = null;
           lastEdited = "pDiscValue";
           recalc();
         } else {
@@ -1154,6 +1191,36 @@
 
       window.setPrices = setPrices;
     });
+
+    // iOS schuift de pagina omhoog als het toetsenbord opent en zet hem niet altijd terug.
+    // Onthoud de scrollpositie van voor het typen en zet die terug zodra het toetsenbord dicht is.
+    (function keepTopAfterKeyboard(){
+      const isField = (n) => n && (n.tagName === "INPUT" || n.tagName === "TEXTAREA");
+      let savedY = null;
+      // laatste scrollpositie terwijl er geen veld actief was (dus voor het automatisch verschuiven)
+      let idleY = window.scrollY;
+      window.addEventListener("scroll", () => { if (!isField(document.activeElement)) idleY = window.scrollY; }, { passive: true });
+      document.addEventListener("pointerdown", () => { if (!isField(document.activeElement)) idleY = window.scrollY; }, true);
+      document.addEventListener("focusin", (e) => {
+        if (isField(e.target) && savedY === null) savedY = idleY;
+      });
+      const restore = () => {
+        if (savedY === null || isField(document.activeElement)) return;
+        const y = savedY; savedY = null;
+        window.scrollTo(0, y);
+      };
+      document.addEventListener("focusout", () => setTimeout(restore, 120));
+      if (window.visualViewport) {
+        window.visualViewport.addEventListener("resize", () => {
+          // toetsenbord dicht: zichtbare hoogte weer (bijna) gelijk aan de vensterhoogte
+          if (window.visualViewport.height >= window.innerHeight - 40) setTimeout(restore, 60);
+        });
+      }
+    })();
+
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", () => { navigator.serviceWorker.register("sw.js").catch(() => {}); });
+    }
   </script>
 </body>
 </html>
